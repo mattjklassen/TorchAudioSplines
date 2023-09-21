@@ -1,50 +1,32 @@
 # !/usr/bin/perl
 
-sub listcmp {
-    my ($aref, $bref) = @_;
-    my $i = 0;
-    my $s = 0;
-	foreach $a (@$aref) {
-   	   if ($a =~ m/$$bref[$i]/) {
-		$s = $s+1;	
-	   }		
-	   $i++;
-	}
-    return $s;
-}
-
-# $idfile = "ids.csv";
-# 
-# open(IDS, $idfile) or 
-#           die "Can't open $input.";
-# 
-# until (eof(IDS))
-#    {
-# 	my $line = <IDS>;
-#         chomp $line;
-#         push @idlines, $line;
-#         @id = split /,/, $line;
-#         push @idpairs, [ @id ];
-# #        print "@id\n";
-#    }
-# 
-# close IDS;
-
 @python_files = glob("*.py");
 
 # print "@python_files\n";
 
 $output = "../README.txt";
 $output = "> $output";
-$caption = "Summary of python files with brief description of each:\n";
 
 open(OUTPUT, $output) or
           die "Can't open $output.";
 
-print OUTPUT "$caption\n";
+$firstline = "These python scripts deal with the modeling of audio segments with cubic splines.\n";
+@introlines = ($firstline);
+$newline = "A segment is referred to as a cycle if it occurs inside a larger segment which has\n";
+push @introlines, $newline;
+$newline = "approximate fundamental frequency f_0, and the cycle has approximate length 1/f_0.\n";
+push @introlines, $newline;
+$newline = "\n";
+push @introlines, $newline;
+$intro = join "", @introlines;
+
+$caption = "Summary of python files with brief description of each:\n";
 
 $description_start = "----- Brief Description -----";
 $description_end = "----- ----- ----- ----- -----";
+
+print OUTPUT "$intro";
+print OUTPUT "$caption";
 
 $index = 1;
 $writing = 0;

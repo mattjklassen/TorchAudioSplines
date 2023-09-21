@@ -1,5 +1,8 @@
-Summary of python files with brief description of each:
+These python scripts deal with the modeling of audio segments with cubic splines.
+A segment is referred to as a cycle if it occurs inside a larger segment which has
+approximate fundamental frequency f_0, and the cycle has approximate length 1/f_0.
 
+Summary of python files with brief description of each:
 
 
 1  argMaxSpec.py

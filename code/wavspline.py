@@ -1,12 +1,17 @@
+# ----- Brief Description -----
+# 
 # This program takes the following input on the command line:
 # [1] wav file 
 # [2] start sample number
 # [3] end sample number
 # [4] n (number of spline interpolation points = dimension of cubic spline vector space)
-
 # output graph with matplot is the original audio graph as piecewise linear function
 # overlayed with spline curve in green and interpolation points highlighted in red.
+#
+# ----- ----- ----- ----- -----
 
+# ------- More Details --------
+# 
 # Important note: the spline interpolation points are not uniform. We did this when
 # forming splines to model cycles by choosing first a uniform sequence of k subintervals
 # for the cubic spline and a knot sequence for the basis of B-splines for the vector 
@@ -24,6 +29,10 @@
 # fit of the spline at the endpoints.  Since we are fitting to audio data of one cycle
 # at a time, this makes it more likely that there will be good agreement of derivatives 
 # where cycle splines join at the endpoints.
+#
+# ----- ----- ----- ----- -----
+
+
 
 import torch
 import wave

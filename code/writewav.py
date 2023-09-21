@@ -1,6 +1,13 @@
+# ----- Brief Description -----
+# 
 # read a wav file at sample_rate (like 16K), do linear interpolation bewteen samples
 # and write output at 3 * sample_rate (like 48K), wav file.  
 # Assume both files' data is 16-bit, short ints.
+#
+# ----- ----- ----- ----- -----
+
+# ------- More Details --------
+# ----- ----- ----- ----- -----
 
 # This script has no command line args
 
@@ -70,7 +77,7 @@ torchaudio.save(
     encoding="PCM_S", bits_per_sample=16)
 inspect_file(path)
 
-# sample output:
+# sample terminal output:
 
 # reading audio file input.wav
 # waveform.shape:  torch.Size([1, 32768])

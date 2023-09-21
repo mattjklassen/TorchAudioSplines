@@ -1,13 +1,18 @@
-# Goals: 
-# 1. Receive audio from mic or read wave file, then predict f_0 and select a cycle.
-# 2. Use this cycle to generate a waveform at the frequency f_0.
+# ----- Brief Description -----
+# 
+# get bcoeffs (B-spline coefficients) from a cycle (or segment) [a,b] in a waveform
+# inputs: waveform (tensor of audio data), cycle = [a,b], n = dimension of splines
+# return: bcoeffs vector 
+#
+# ----- ----- ----- ----- -----
 
-# use:  arg_max = getArgMax(waveform, RATE, N, hop_size) to get f_0
-# use:  getCycles(waveform, rate, freq) to get list of cycles
-# modify:  getCycles(waveform, rate, freq) and plotCycleSpline(waveform, cycle_num, a, b, n) 
-# to return B-spline coefficients
+# ------- More Details --------
+# 
+# Note: we are not assuming the endpoint values are zero, so also the bcoeffs c[0]
+# and c[n-1] are also not necessarily zero.
+#
+# ----- ----- ----- ----- -----
 
-# start with input.wav and get cycles list with bcoeffs
 
 import torch
 import torchaudio
@@ -16,12 +21,6 @@ import math
 from computeBsplineVal import newBsplineVal 
 from computeBsplineVal import computeSplineVal 
 
-# import matplotlib.pyplot as plt
-
-# from argMaxSpec import plotSpecArgMax, getArgMax
-# from cycleSpline import plotCycleSpline
-# from matplotlib.backends.backend_pdf import PdfPages
-# from findCycles import getCycles
 
 # Compute bcoeffs for one cycle = [a, b] using waveform data and dim=n
 # where a,b are float samples, ie. time values measured in samples (typically sub-sample)
@@ -245,21 +244,13 @@ def getBcoeffs(waveform, cycle, n) :
     
     return bcoeffs
 
-# Next function: Write cycle to waveform.  
-# This should be a function which takes interval [a,b] and bcoeffs (n B-spline coefficients) 
-# and sample rate, and produces waveform data.  The waveform data should be all samples in 
-# the interval [a,b] (where a and b are floats measured in decimal samples, so can be between samples) 
-# which are simply integer inputs, with float outputs computed by the deBoor algorithm from the bcoeffs.  
-# The waveform could be of length say 2 seconds, and the portion being written might be only say 100 samples.
-#  
-
 
 # assume waveform comes from read of this type: 
-waveform, sample_rate = torchaudio.load("input.wav")
+waveform, sample_rate = torchaudio.load("../audio/input.wav")
 np_waveform = waveform.numpy()
 num_channels, num_frames = np_waveform.shape
 segments = torch.tensor_split(waveform, 16, dim=1)
-waveform = segments[0]
+waveform = segments[2]
 
 np_waveform = waveform.numpy() 
 num_channels, num_frames = np_waveform.shape
@@ -278,10 +269,5 @@ print("bcoeffs from: input.wav")
 print("with interval: ", cycle)
 print("and dimension n = ", n)
 print(bcoeffs)
-
-
-
-
-
 
 

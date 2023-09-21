@@ -1,3 +1,18 @@
+# ----- Brief Description -----
+# 
+# getArgMax(waveform, rate, N, hop_size) computes weak f_0 using STFT 
+# where waveform is a torch tensor, returns argMax as weak f_0.
+# only use freq bins < (1/8)*Nyquist, so for sample rate 16000 this is 1000 Hz.
+# this is to get a weak f_0 less than 1000 Hz.
+# plotSpecArgMax does the same as getArgMax but also plots the magnitude spectrum
+# which is being used to get argMax.
+#
+# ----- ----- ----- ----- -----
+
+# ------- More Details --------
+# 
+#
+# ----- ----- ----- ----- -----
 
 import pyaudio
 import wave

@@ -1,10 +1,19 @@
-# ported from JUCE C++ functions (in AudioWithSplineModel) July 11, 2023
+# ----- Brief Description -----
+#
+# Plot cubic spline f(t) through n points (x,y) with x in [0,1], y in [-1,1]
+# with f(0)=0=f(1) and other y-values randomly generated.
+#
+# ----- ----- ----- ----- -----
 
-# This program finds B-spline coefficients for spline to interpolate n random target values.
+# ------- More Details --------
+#
+# This program finds B-spline coefficients for spline to interpolate n target values.
 # We use the default degree d=3 and k subintervals on [0,1], so the number of target values to
 # interpolate is n = k + d.  We also use the standard knot sequence:
 # 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1.  This makes it easy to start and end the spline
 # with value 0 simply by choosing bcoeffs[0] = bcoeffs[n-1] = 0, and compute the other n-2 bcoeffs.
+#
+# ----- ----- ----- ----- -----
 
 import torch
 import numpy as np
@@ -12,19 +21,21 @@ import random
 import matplotlib.pyplot as plt
 
 # The next two functions are imported to compute using the deBoor algorithm.  The first one computes
-# value of a single B-spline basis function for value t in [0,1].  This is necessary in order to
-# set up the linear system to solce for bcoeffs.  The second one computes a value for B-spline
-# function given all n=k+d bcoeffs.  
+# the value of a single B-spline basis function for value t in [0,1].  This is necessary in order to
+# set up the linear system to solve for bcoeffs (B-spline coefficients).  The second one computes a 
+# value for B-spline function given all n=k+d bcoeffs.  
 
 from computeBsplineVal import newBsplineVal 
 from computeBsplineVal import computeSplineVal 
 
-# change k here to increase the number of random interpolation points.
-k = 15
+# change n here to increase the number of random interpolation points.
+n = 15
 
 # leave d=3 for cubic splines
 d = 3
-n = k + d
+# k is number of subintervals
+k = n - d 
+# N is last index of knot sequence of length N+1
 N = n + d
 print("k, d, n, N:  ", k, d, n, N)
 

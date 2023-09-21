@@ -32,14 +32,45 @@ sub listcmp {
 
 @python_files = glob("*.py");
 
-print "@python_files\n";
-$index = 0;
+# print "@python_files\n";
 
-# foreach $file (@python_files)
-# {
-#     print "$index  $file\n";
-#     $index += 1;
-# }
+$output = "../README.txt";
+$output = "> $output";
+$caption = "Summary of python files with brief description of each:\n";
+
+open(OUTPUT, $output) or
+          die "Can't open $output.";
+
+print OUTPUT "$caption\n";
+
+$description_start = "----- Brief Description -----";
+$description_end = "----- ----- ----- ----- -----";
+
+$index = 1;
+$writing = 0;
+foreach $file (@python_files)
+{
+    print "$index  $file\n\n";
+    print OUTPUT "\n\n$index  $file\n\n";
+    open(INPUT, $file) or die "Can't open python file: $file.";
+    until (eof(INPUT))
+    {
+       my $line = <INPUT>;
+       chomp $line;
+       if ($line =~ m/$description_start/) {
+          $writing = 1;
+       }
+       if ($line =~ m/$description_end/) {
+          $writing = 0;
+       }
+       if ($writing == 1) {
+          print OUTPUT "$line\n";
+       }
+    }
+    $index += 1;
+}
+
+close OUTPUT;
 
 exit 0;
 

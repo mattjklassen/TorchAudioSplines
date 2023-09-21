@@ -1,20 +1,26 @@
+# ----- Brief Description -----
+# 
 # In this script we do three main things:
-# 1. find weak f_0 with getArgMax()
-# 2. find cycles with findCycles()
-# 3. produce output to pdf
+# 1. find weak f_0 with getArgMax() (for waveform about 2048 samples)
+# 2. find cycles (in waveform) with getCycles()
+# 3. produce output summary and graphs of cycles to pdf
+#
+# ----- ----- ----- ----- -----
 
+# ------- More Details --------
+# 
 # In the function findCycles we find "cycles" in an audio segment given weak f_0 (fundamental frequency).
 # The weak f_0 is found by the function getArgMax() and the cycles are then found with getCycles()
 # By "cycle" we mean a time interval [a,b] (with a and b time values in float samples)
 # where time is measured from 0 in the audio segment, and where b-a has length in samples
 # predicted by f_0, so b-a is approximately sample_rate * 1/f_0 (samples/cycle). 
-
+#
 # Cycles are computed based on zero crossings between samples, where the audio graph is computed
 # using linear interpolation between samples.  Zero crossings are assumed to have the pattern of
 # positive slope at t, so crossing of type f(x_i) < 0 and f(x_{i+1}) > 0 and x_i < t < x_{i+1}.
 # Cycles of this type are found at each such zero crossing of positive slope, by finding the next
 # such zero crossing which is closest to the project number of cycles per sample. Cycles may also overlap.
-
+#
 # We call f_0 "weak" since it can be applied in an audio segment which is not harmonic, meaning
 # that it might not be deemed to have a fundamental frequency.  For example, a noisy segment may not
 # have a clear f_0 but it can still be measured with STFT to produce weak f_0 which can simply be
@@ -22,47 +28,57 @@
 # over the short interval of one cycle can still be used to represent the signal in the entire segment
 # or an interval larger than one segment, using cycle interpolation.  Of course, the accuracy of such
 # a representation between cycles is another matter.
-
-# pdf output is summarized below
-
-import torch
-import torchaudio
-import numpy as np
-import matplotlib.pyplot as plt
-# import fpdf
-
-from argMaxSpec import plotSpecArgMax, getArgMax
-from cycleSpline import plotCycleSpline
-from matplotlib.backends.backend_pdf import PdfPages
-
-# input parameters to getCycles(waveform, rate, freq):
-
-# 1. waveform is a torch tensor which should come from a line like:
+#
+# description of input parameters to function getCycles(waveform, rate, freq):
+# 1. waveform -- is a torch tensor which should come from a line like:
 # waveform, sample_rate = torchaudio.load("output.wav"), where output.wav is 2 sec at 16K sample rate
 # shape of waveform is:  torch.Size([1, length]), where length is number of frames
 # also np_waveform = waveform.numpy() and num_channels, num_frames = np_waveform.shape
 # or could do segments = torch.tensor_split(waveform, 16, dim=1)
 # then do waveform = segments[i], then for output.wav get segment size = 2000 samples
-
-# 2. rate = audio sample rate
-
-# 3. freq = predicted weak f_0
+# 2. rate -- audio sample rate
+# 3. freq -- predicted weak f_0
 # it may also be interesting to have a measure of energy in the cycle, which can be computed
 # as an average sum of squares of sample values, or spectral values
-
 # output is written to pdf with title page first, then plot of waveform, and plots of all cycles found
+#
+# ----- ----- ----- ----- -----
 
-def getCycles(waveform, rate, freq) :
+import torch
+import torchaudio
+import numpy as np
+import matplotlib.pyplot as plt
 
-    # need to find time value a between samples t_i and t_{i+1} with y_i < 0 < y_{i+1}
+from argMaxSpec import plotSpecArgMax, getArgMax
+from cycleSpline import plotCycleSpline
+from matplotlib.backends.backend_pdf import PdfPages
+
+
+def getCycles(waveform, sample_rate, weakf0) :
+
+    # This function searches through waveform to find intervals [a, b] called cycles.
+    # Each cycle has the property that a and b are zero crossings of the piecewise linear
+    # graph of waveform samples, each with positive slope, which means a and b satisfy:
+    # a is a time value between some samples t_i and t_{i+1} with y_i < 0 < y_{i+1}
+    # b is a time value between some samples t_j and t_{j+1} with y_j < 0 < y_{j+1}
+    # and further we require that the distance b - a is chosen as close as possible to
+    # the predicted cycle length which should be approximately (sample_rate / weakf0) samples. 
+    # The function returns a list of the intervals as pairs a,b.  The interval [a,b] may overlap. 
+
+    # One more thing: It turns out to simplify things if we assume that zero crossings never
+    # occur exactly at sample values.  Since we don't have any exact information about the waveform 
+    # between samples it is not a stretch to move a zero crossing that occurs (almost) exactly at a
+    # sample value to the right or left by say 0.01 samples.  This could also be re-adjusted if we
+    # do a sample rate change.  Not sure if this will cause other problems yet. 
+
     a = 0.0  # left endpoint of cycle
     b = 0.0  # right endpoint of cycle
-    cycle_length = 0.0
+    weakT0 = 0.0
     np_waveform = waveform.numpy() 
     num_channels, num_frames = np_waveform.shape
-    # freq is cycles/sec, rate is samples/sec 
-    # rate/freq is samples/cycle = cycle length in samples
-    cycle_length = float(rate) / freq  # cycle length in samples
+    # weakf0 is cycles/sec, sample_rate is samples/sec 
+    # sample_rate/weakf0 is samples/cycle = cycle length in samples
+    weakT0 = float(sample_rate) / weakf0 # predicted cycle length in samples
 
     # print("shape of np_waveform  ", np_waveform.shape)
     y0 = 0.0
@@ -86,11 +102,14 @@ def getCycles(waveform, rate, freq) :
     # print("zeros:")
     # print(zeros)
 
+    previous_closest = 0
+    previous_diff = 1000
+    previous_error = 1000 
     num_zeros = len(zeros)
     last_zero = zeros[num_zeros-1]
     for i in range(num_zeros-1) :
         exceeded = False
-        temp = zeros[i] + cycle_length
+        temp = zeros[i] + weakT0 
         if temp > last_zero :
             # print("temp exceeds last_zero")
             exceeded = True
@@ -109,30 +128,45 @@ def getCycles(waveform, rate, freq) :
             closest = i + 1
         if closest > num_zeros - 1 :
             closest = num_zeros - 1
-        diff = zeros[closest] - zeros[i]
+        a = zeros[i]
+        b = zeros[closest]
+        diff = b - a
         # each cycle is a list [a, b]
-        cycles.append([zeros[i],zeros[closest]])
+        error = abs(diff - weakT0)
+        num_cycles = len(cycles)
+	# only append new cycle if it has a different b from previous, 
+        # or its error is smaller, ie. length diff is closer to weakT0 than previous.
+	# If this latter condition happens then delete previous cycle and append new.
+        if closest == previous_closest :
+            if error < previous_error :
+                cycles.pop()
+                cycles.append([a, b])
+        else :
+            cycles.append([a, b])
+
+        previous_closest = closest
+        previous_diff = diff
+        previous_error = error
 
     return cycles
 
-	    
-#    print("end_pts array:")
-#    print(end_pts)
-#    print(end_pts[2])
-
 # test the function getCycles with waveform data and write output to pdf
-# start with waveform of about 2 seconds length, at sample rate 16000
+# start with input of about 2 seconds length, at sample rate 16000
 
-path = "../audio/output.wav"
+# main part of script
+
+path = "../audio/input.wav"
 waveform, sample_rate = torchaudio.load(path)
 np_waveform = waveform.numpy()
 num_channels, num_frames = np_waveform.shape
 length = num_frames / sample_rate
+print("input audio file has ", num_frames, " samples, at rate ", sample_rate)
 
 #split waveform into 16 segments, each of length 2048 samples
 num_segments = 16
 segments = torch.tensor_split(waveform, num_segments, dim=1)
 segment_size = num_frames / num_segments
+print("splitting into ", num_segments, " segments")
 
 RATE = 16000
 N = 1024
@@ -143,7 +177,8 @@ energy = 0.0
 # waveform = segments[seg_num]
 
 # assigning a particular segment for testing
-current_segment = 5
+current_segment = 7
+print("testing with segment number ", current_segment)
 segment_start = segment_size * current_segment
 segment_end = segment_start + segment_size
 waveform = segments[current_segment]
@@ -154,15 +189,19 @@ num_channels, num_frames = np_waveform.shape
 
 # get the weak f_0 (approx fundamental frequency) with getArgMax
 arg_max = getArgMax(waveform, RATE, N, hop_size)
+arg_max_str = f'{arg_max:.2f}'
 samples_per_cycle_guess = RATE / arg_max
-print("arg_max:  ", arg_max)
-print("samples per cycle guess:  ", RATE / arg_max)
+spc_str = f'{samples_per_cycle_guess:.2f}'
+print("arg_max:  ", arg_max_str)
+print("samples per cycle guess:  ", spc_str)
 print("num_frames: ", num_frames)
 
 # get cycles according to predicted f_0
 cycles = getCycles(waveform, RATE, arg_max)
 num_cycles = len(cycles)
 
+# TO DO: make this function ...
+# def cycleReport(waveform, sample_rate, cycles) :
 # print pdf with title page first, then plot of waveform, and plots of all cycles found:
 pp = PdfPages('../doc/out.pdf')
 
@@ -170,7 +209,7 @@ firstPage = plt.figure(figsize=(15,8))
 firstPage.clf()
 txt1 = "Audio File read: " + path 
 txt1 += "      Length in seconds: " + str(length) 
-txt1 += "      Sample Rate:  " + str(RATE)
+txt1 += "      Sample Rate:  " + str(sample_rate)
 txt2 = "Number of Segments:  " + str(num_segments)
 txt2 += "      Segment Size:  " + str(segment_size)
 txt2 += "      FFT Size:  " + str(N)
@@ -190,9 +229,9 @@ firstPage.text(0.1,0.65,txt3, transform=firstPage.transFigure, size=14)
 
 lines = int(num_cycles / 10)
 remainder = num_cycles % 10
-print("lines: ", lines)
-print("remainder: ", remainder)
-print("lines * 10 + remainder - num_cycles :  ", lines * 10 + remainder - num_cycles)
+# print("lines: ", lines)
+# print("remainder: ", remainder)
+# print("lines * 10 + remainder - num_cycles :  ", lines * 10 + remainder - num_cycles)
 
 def printOneLine(line) :
     start = 0.23
@@ -252,10 +291,13 @@ plt.savefig(pp, format='pdf')
 for i in range(num_cycles) :
     a = cycles[i][0]
     b = cycles[i][1]
-    print("cycle ", i, " a: ", a, " b: ", b)
+    # a_str = f'{a:.2f}'
+    # b_str = f'{b:.2f}'
+    # print("cycle ", i, " a: ", a_str, " b: ", b_str)
     n = 30
-    fig = plotCycleSpline(waveform, i, a, b, n)
+    fig = plotCycleSpline(waveform, sample_rate, i, a, b, n)
     plt.savefig(pp, format='pdf')
+    plt.close()
 
 pp.close()
 

@@ -1,6 +1,17 @@
-# this program records one second of audio and saves as output.wav and then reopens
+# ----- Brief Description -----
+# 
+# this program is superceded by rec2spec.py with options to print pdf of spec or not
+# records one second of audio and saves as output.wav and then reopens
 # this file and does spectrogram and graph.
 # sample rate is 16K
+#
+# ----- ----- ----- ----- -----
+
+# ------- More Details --------
+# 
+#
+# ----- ----- ----- ----- -----
+
 
 import pyaudio
 import wave

@@ -1,8 +1,17 @@
+# ----- Brief Description -----
+# 
 # This program takes a wav file and begin and end sample numbers as command line input
 # and draws a plot of the wav file sample values with matplot as piecewise linear graph.
 # The sample values are also printed out as text on the command line.
+#
+# ----- ----- ----- ----- -----
 
+# ------- More Details --------
+# 
 # There is no error checking, for example to see if begin and end sample numbers are within range.
+#
+# ----- ----- ----- ----- -----
+
 
 import wave
 import matplotlib.pyplot as plt

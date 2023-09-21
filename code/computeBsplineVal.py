@@ -1,11 +1,24 @@
+# ----- Brief Description -----
+# 
+# inputs: t is float assumed from 0 to 1, and c is an array of n=k+d B-spline coefficients
+# compute value of spline f(t) for input t, with bcoeffs c, and the usual knot sequence t_i:
+# 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1  (so t_i goes from i=0 to N, with N=n+d+1=N+4 if d=3)
+# where f(t) = sum of c_i B^3_i(t) for i = 0,...,N-d-1=N-4
+#
+# computeSplineVal(d, k, c, t) computes f(t)
+# newBsplineVal(d, k, j, t) computes one B-spline B^d_j(t)
+#
+# ----- ----- ----- ----- -----
+
+# ------- More Details --------
+# 
+#
+# ----- ----- ----- ----- -----
+
 
 import numpy as np
 import torch
 
-# inputs: t is float assumed from 0 to 1, and c is an array of n=k+d B-spline coefficients
-# we will compute value of spline f(t) for input t, with bcoeffs c, and the usual knot sequence:
-# 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1
-# where f(t) = sum of c_i B^3_i(t) for i = 0,...,N-d-1=N-4
 
 # computes f(t)
 def computeSplineVal(d, k, c, t) :

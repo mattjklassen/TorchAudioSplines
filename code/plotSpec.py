@@ -1,3 +1,12 @@
+# ----- Brief Description -----
+# 
+# This first draft of script to read in audio file and plot spectrum.
+# reads in audio file left.wav and computes magnitude spectrum with stft and plots it.
+#
+# ----- ----- ----- ----- -----
+
+# ------- More Details --------
+# ----- ----- ----- ----- -----
 
 import torch
 import torchaudio
@@ -9,60 +18,13 @@ import os
 import shutil
 import requests
 
-from IPython.display import Audio, display
-
-waveform, sample_rate = torchaudio.load("left.wav")
+waveform, sample_rate = torchaudio.load("../audio/left.wav")
 print("sample rate of waveform: ")
 print(sample_rate)
 print("shape of waveform: ")
 print(waveform.shape)
 np_waveform = waveform.numpy()
 num_channels, num_frames = np_waveform.shape
-
-# waveform, sample_rate = torchaudio.load("beep.wav")
-# print(sample_rate)
-# print(waveform.shape)
-
-def play_audio(waveform, sample_rate):
-    waveform = waveform.numpy()
-    num_channels, num_frames = waveform.shape
-    if num_channels == 1:
-        display(Audio(waveform[0], rate=sample_rate))
-    elif num_channels == 2:
-        display(Audio((waveform[0], waveform[1]), rate=sample_rate))
-    else:
-        raise ValueError("waveform with > 2 channels not supported")
-
-# play_audio(waveform, sample_rate)
-
-def _plot(waveform, sample_rate, title):
-    waveform = waveform.numpy()
-    num_channels, num_frames = waveform.shape
-    time_axis = torch.arange(0, num_frames) / sample_rate
-    figure, axes = plt.subplots(num_channels, 1)
-    if num_channels == 1:
-        axes = [axes]
-    for c in range(num_channels):
-        if title == "Waveform":
-            axes[c].plot(time_axis, waveform[c], linewidth=1)
-            axes[c].grid(True)
-        else:
-            axes[c].specgram(waveform[c], Fs=sample_rate)
-        if num_channels > 1:
-            axes[c].set_ylabel(f'Channel {c+1}')
-    figure.suptitle(title)
-    plt.show()
-
-def plot_waveform(waveform, sample_rate):
-    _plot(waveform, sample_rate, title="Waveform")
-
-def plot_specgram(waveform, sample_rate):
-    _plot(waveform, sample_rate, title="Spectrogram")
-
-# plot_waveform(waveform, sample_rate)
-# plot_specgram(waveform, sample_rate)
-
-# wavedata = waveform[1]
 
 N = 1024
 print("FFT size is: ", N)

@@ -2,7 +2,20 @@ These python scripts deal with the modeling of audio segments with cubic splines
 A segment is referred to as a cycle if it occurs inside a larger segment which has
 approximate fundamental frequency f_0, and the cycle has approximate length 1/f_0.
 
-Summary of python files with brief description of each:
+Suggested tests to run:
+
+> python torchSpline.py
+
+... plots cubic spline on interval [0,1] interpolating 20 points with values in [-1,1]
+equal to zero at the ends and random values in between. Edit code to change n.
+
+> python wavspline.py ../audio/input.wav 200 500 20
+
+... computes and plots spline for audio segment from input.wav for samples 200 to 500
+with n = 20 interpolation points.
+
+
+Summary of python files (in alphabetical order) with brief description of each:
 
 
 1  argMaxSpec.py
@@ -63,7 +76,7 @@ Summary of python files with brief description of each:
 # ----- Brief Description -----
 # 
 # Generate one cycle as waveform, and return waveform.
-# inputs: cycle = [a,b], B-spline coefficients vector = c.
+# inputs: cycle = [a,b], B-spline coefficients vector = bcoeffs.
 # assume a and b are time values in samples between integer points, so that the
 # spline is computed on interval [a,b] and evaluated at M = floor(b)-floor(a) integer 
 # points or samples to produce waveform sample values. The waveform will have

@@ -20,12 +20,33 @@ $newline = "\n";
 push @introlines, $newline;
 $intro = join "", @introlines;
 
-$caption = "Summary of python files with brief description of each:\n";
+$firstline = "Suggested tests to run:\n\n";
+@guidelines = ($firstline);
+$newline = "> python torchSpline.py\n\n";
+push @guidelines, $newline;
+$newline = "... plots cubic spline on interval [0,1] interpolating 20 points with values in [-1,1]\n";
+push @guidelines, $newline;
+$newline = "equal to zero at the ends and random values in between. Edit code to change n.\n\n";
+push @guidelines, $newline;
+$newline = "> python wavspline.py ../audio/input.wav 200 500 20\n\n";
+push @guidelines, $newline;
+$newline = "... computes and plots spline for audio segment from input.wav for samples 200 to 500\n";
+push @guidelines, $newline;
+$newline = "with n = 20 interpolation points.\n";
+push @guidelines, $newline;
+$newline = "\n";
+push @guidelines, $newline;
+$newline = "\n";
+push @guidelines, $newline;
+$guide = join "", @guidelines;
+
+$caption = "Summary of python files (in alphabetical order) with brief description of each:\n";
 
 $description_start = "----- Brief Description -----";
 $description_end = "----- ----- ----- ----- -----";
 
 print OUTPUT "$intro";
+print OUTPUT "$guide";
 print OUTPUT "$caption";
 
 $index = 1;

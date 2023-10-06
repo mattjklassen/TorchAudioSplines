@@ -48,7 +48,7 @@ import math
 from computeBsplineVal import newBsplineVal 
 from computeBsplineVal import computeSplineVal 
 
-def plotSegmentSpline(waveform, a, b, n) :
+def plotSegmentSpline(waveform, sample_rate, a, b, n) :
 
     # example: waveform has 2048 samples x_0 to x_2047 and [a,b] = [15.6,235.1]
     # typically this means that 15.6 and 235.1 are zeros of the piecewise linear audio graph
@@ -296,29 +296,3 @@ def plotSegmentSpline(waveform, a, b, n) :
     plt.plot(interp_times, interp_data, 'ro')
     plt.show()
     
-    
-path = "../audio/"
-file = "left.wav"
-path += file
-waveform, sample_rate = torchaudio.load(path)
-np_waveform = waveform.numpy()
-num_channels, num_frames = np_waveform.shape
-print("audio file loaded: ", file)
-print("sample rate: ", sample_rate)
-print("length in samples: ", num_frames)
-num_segments = 16
-print("splitting file into ", num_segments, " segments")
-segments = torch.tensor_split(waveform, num_segments, dim=1)
-for j in range(num_segments) :
-    print("segment: ", j, " length in samples: ", segments[j].shape)
-current_segment = 3
-print("processing segment: ", current_segment)
-waveform = segments[current_segment]
-
-a = 200.5
-b = 350.2
-n = 30
-plotSegmentSpline(waveform, a, b, n)
-
-
-

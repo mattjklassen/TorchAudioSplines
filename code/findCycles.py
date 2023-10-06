@@ -52,132 +52,43 @@ import matplotlib.pyplot as plt
 from argMaxSpec import plotSpecArgMax, getArgMax
 from cycleSpline import plotCycleSpline
 from matplotlib.backends.backend_pdf import PdfPages
+from getCycles import getCycles
 
-
-def getCycles(waveform, sample_rate, weakf0) :
-
-    # This function searches through waveform to find intervals [a, b] called cycles.
-    # Each cycle has the property that a and b are zero crossings of the piecewise linear
-    # graph of waveform samples, each with positive slope, which means a and b satisfy:
-    # a is a time value between some samples t_i and t_{i+1} with y_i < 0 < y_{i+1}
-    # b is a time value between some samples t_j and t_{j+1} with y_j < 0 < y_{j+1}
-    # and further we require that the distance b - a is chosen as close as possible to
-    # the predicted cycle length which should be approximately (sample_rate / weakf0) samples. 
-    # The function returns a list of the intervals as pairs a,b.  The interval [a,b] may overlap. 
-
-    # One more thing: It turns out to simplify things if we assume that zero crossings never
-    # occur exactly at sample values.  Since we don't have any exact information about the waveform 
-    # between samples it is not a stretch to move a zero crossing that occurs (almost) exactly at a
-    # sample value to the right or left by say 0.01 samples.  This could also be re-adjusted if we
-    # do a sample rate change.  Not sure if this will cause other problems yet. 
-
-    a = 0.0  # left endpoint of cycle
-    b = 0.0  # right endpoint of cycle
-    weakT0 = 0.0
-    np_waveform = waveform.numpy() 
-    num_channels, num_frames = np_waveform.shape
-    # weakf0 is cycles/sec, sample_rate is samples/sec 
-    # sample_rate/weakf0 is samples/cycle = cycle length in samples
-    weakT0 = float(sample_rate) / weakf0 # predicted cycle length in samples
-
-    # print("shape of np_waveform  ", np_waveform.shape)
-    y0 = 0.0
-    y1 = 0.0
-    zero = 0.0
-    end_pts = []
-    zeros = []
-    cycles = []
-
-    # loop over samples in waveform to find a and b
-    for i in range(int(num_frames - 2)) :
-        y0 = np_waveform[0,i]
-        y1 = np_waveform[0,i+1]
-        if (y0 < 0) and (y1 > 0) :
-#            print("sample ", i, " : ", y0)
-#            print("sample ", i+1, " : ", y1)
-            m = y1 - y0  # line is y(t) = y0 + mt = 0 when t = -y0/m
-            zero = float(i) - y0 / m
-            end_pts.append([y0,y1])
-            zeros.append(zero)
-    # print("zeros:")
-    # print(zeros)
-
-    previous_closest = 0
-    previous_diff = 1000
-    previous_error = 1000 
-    num_zeros = len(zeros)
-    last_zero = zeros[num_zeros-1]
-    for i in range(num_zeros-1) :
-        exceeded = False
-        temp = zeros[i] + weakT0 
-        if temp > last_zero :
-            # print("temp exceeds last_zero")
-            exceeded = True
-        j = 0
-        while zeros[j] < temp :
-            j += 1
-            if j > num_zeros - 1 :
-                j = num_zeros - 1
-                break
-        closest = j
-        if abs(zeros[j] - temp) > abs(zeros[j-1] - temp) :
-            closest = j-1
-        if exceeded :
-            closest = num_zeros - 1
-        if closest == i :
-            closest = i + 1
-        if closest > num_zeros - 1 :
-            closest = num_zeros - 1
-        a = zeros[i]
-        b = zeros[closest]
-        diff = b - a
-        # each cycle is a list [a, b]
-        error = abs(diff - weakT0)
-        num_cycles = len(cycles)
-	# only append new cycle if it has a different b from previous, 
-        # or its error is smaller, ie. length diff is closer to weakT0 than previous.
-	# If this latter condition happens then delete previous cycle and append new.
-        if closest == previous_closest :
-            if error < previous_error :
-                cycles.pop()
-                cycles.append([a, b])
-        else :
-            cycles.append([a, b])
-
-        previous_closest = closest
-        previous_diff = diff
-        previous_error = error
-
-    return cycles
 
 # test the function getCycles with waveform data and write output to pdf
-# start with input of about 2 seconds length, at sample rate 16000
+# start with input of about 2 seconds length
 
 # main part of script
 
-path = "../audio/input.wav"
+# path = "../audio/input.wav"
+path = "../audio/A445.wav"
 waveform, sample_rate = torchaudio.load(path)
 np_waveform = waveform.numpy()
 num_channels, num_frames = np_waveform.shape
 length = num_frames / sample_rate
 print("input audio file has ", num_frames, " samples, at rate ", sample_rate)
 
-#split waveform into 16 segments, each of length 2048 samples
-num_segments = 16
+# split waveform into segments, 
+# example: sample rate = 16000, segments of length 2048 samples, num_segments = 16
+
+num_segments = int(num_frames / 2048)
 segments = torch.tensor_split(waveform, num_segments, dim=1)
 segment_size = num_frames / num_segments
 print("splitting into ", num_segments, " segments")
+# for i in range(num_segments) :
+#    print("size of segment ", i, " : ", segments[i].size())
 
-RATE = 16000
+RATE = sample_rate
 N = 1024
-hop_size = 256
+# hop_size = 256
+hop_size = 128
 energy = 0.0
 
 # for seg_num in range(16) :
 # waveform = segments[seg_num]
 
 # assigning a particular segment for testing
-current_segment = 7
+current_segment = 3
 print("testing with segment number ", current_segment)
 segment_start = segment_size * current_segment
 segment_end = segment_start + segment_size
@@ -188,13 +99,19 @@ data = torch.squeeze(waveform).numpy()
 num_channels, num_frames = np_waveform.shape
 
 # get the weak f_0 (approx fundamental frequency) with getArgMax
-arg_max = getArgMax(waveform, RATE, N, hop_size)
+max_f0 = 800
+arg_max = getArgMax(waveform, RATE, N, hop_size, max_f0)
 arg_max_str = f'{arg_max:.2f}'
 samples_per_cycle_guess = RATE / arg_max
 spc_str = f'{samples_per_cycle_guess:.2f}'
+num_hops = int((num_frames - N)/hop_size)+1
 print("arg_max:  ", arg_max_str)
 print("samples per cycle guess:  ", spc_str)
 print("num_frames: ", num_frames)
+print("FFT size N: ", N)
+print("hop_size: ", hop_size)
+print("number of hops: ", num_hops)
+print("(num_hops-1) * hop_size + N = ", (num_hops - 1) * hop_size + N)
 
 # get cycles according to predicted f_0
 cycles = getCycles(waveform, RATE, arg_max)
@@ -301,5 +218,8 @@ for i in range(num_cycles) :
 
 pp.close()
 
+print("bin    Hz")
+for i in range(15) :
+    print(i, " :   ", i/512.0 * 22050)
 
 

@@ -113,6 +113,3 @@ plt.show()
 # dB is 20*log10(A2/A1) for amplitude ratio A2/A1.  For float sample values between -1 and 1, dB = 0 corresponds
 # to float 1, so all values below 1 will be negative dB.  
     
-
-
-

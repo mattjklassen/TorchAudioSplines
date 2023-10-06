@@ -33,7 +33,7 @@ print("piano frequencies:")
 print("f:")
 print(f)
 
-# create tensor of int64 values from 0 to sampleRate-1
+# create tensor of int64 values from 0 to sampleRate-1 to use as 1 sec of time sample values
 t = torch.arange(sampleRate)
 print("type of t data and type of t:")
 print(t.dtype)
@@ -43,6 +43,7 @@ print(t.type())
 # print(f.unsqueeze(1))
 # t.unsqueeze(0) is a "row" tensor where each value of t is now a (col) 1-dim tensor with one element
 
+# Next create tensor y for input into torchyin:
 # convert tensor f.unsqueeze(1) first by mult by scalar (2*Pi) then multiply by t.unsqueeze(0)/SR.
 # result col * row so an outer product where each row i has freq given by f[i] multiplied by each time
 # value t/SR which covers one second of time.  Each value has sin() applied to it, so each row becomes a

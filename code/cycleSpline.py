@@ -55,6 +55,24 @@ from matplotlib.backends.backend_pdf import PdfPages
 from computeBsplineVal import newBsplineVal 
 from computeBsplineVal import computeSplineVal 
 
+def export_strings(file, strings) :
+    out_str = []
+    for i in range(len(strings)) :
+        out_str.append(strings[i])
+        out_str.append('\n')
+    with open(file, 'a') as f:
+        f.writelines(out_str)
+        f.close()
+
+def export_string(file, string) :
+    out_str = []
+    out_str.append(string)
+    out_str.append('\n')
+    with open(file, 'a') as f:
+        f.writelines(out_str)
+        f.close()
+
+
 def plotCycleSpline(waveform, sample_rate, cycle_num, a, b, n) :
 
     # example: waveform has 2048 samples x_0 to x_2047 and [a,b] = [15.6,235.1]
@@ -81,7 +99,11 @@ def plotCycleSpline(waveform, sample_rate, cycle_num, a, b, n) :
     count = int(end_sample - start_sample) + 1
     a_str = f'{a:.2f}'
     b_str = f'{b:.2f}'
-    print("cycle ", cycle_num, " a: ", a_str, " b: ", b_str, "   num samples:  ", count)
+    ba = b - a
+    ba_str = f'{ba:.2f}'
+    print("cycle ", cycle_num, " a: ", a_str, " b: ", b_str, "   length: ", ba_str, "   num samples:  ", count)
+    file = "lengths.txt"
+    export_string(file, ba_str)
     
     # assume waveform comes from read of this type: 
     # waveform, sample_rate = torchaudio.load("output.wav")

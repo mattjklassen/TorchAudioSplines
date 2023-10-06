@@ -19,7 +19,6 @@ import torchaudio
 import numpy as np
 import math
 from computeBsplineVal import newBsplineVal 
-from computeBsplineVal import computeSplineVal 
 
 
 # Compute bcoeffs for one cycle = [a, b] using waveform data and dim=n
@@ -27,7 +26,7 @@ from computeBsplineVal import computeSplineVal
 # and time zero is start of waveform, max time is last sample t_max, 0 \leq a < b \leq t_max.
 # Return a list of bcoeffs of size n.
 
-def getBcoeffs(waveform, cycle, n) :
+def getBcoeffs(waveform, sample_rate, cycle, n) :
 
     a = cycle[0]
     b = cycle[1]
@@ -245,29 +244,22 @@ def getBcoeffs(waveform, cycle, n) :
     return bcoeffs
 
 
-# assume waveform comes from read of this type: 
-waveform, sample_rate = torchaudio.load("../audio/input.wav")
-np_waveform = waveform.numpy()
-num_channels, num_frames = np_waveform.shape
-segments = torch.tensor_split(waveform, 16, dim=1)
-waveform = segments[2]
+def import_bcoeffs(file) :
+    bcoeffs_str = []
+    bcoeffs = []
+    with open(file, 'r') as f:
+        bcoeffs_str = f.readlines()
+        f.close()
+    for i in range(len(bcoeffs_str)) :
+        bcoeffs.append(float(bcoeffs_str[i]))
+    return bcoeffs
 
-np_waveform = waveform.numpy() 
-num_channels, num_frames = np_waveform.shape
-# i^th sample value is now np_waveform[0,i] (but becomes data below)
-# number of samples = num_frames
-    
-n = 15  # dimension of cubic splines
-a = 500.1
-b = 600.45
-cycle = [a, b]
-
-print("waveform.shape:  ", waveform.shape)
-
-bcoeffs = getBcoeffs(waveform, cycle, n)
-print("bcoeffs from: input.wav")
-print("with interval: ", cycle)
-print("and dimension n = ", n)
-print(bcoeffs)
-
+def export_bcoeffs(file, bcoeffs) :
+    bcoeffs_str = []
+    for i in range(len(bcoeffs)) :
+        bcoeffs_str.append(str(bcoeffs[i]))
+        bcoeffs_str.append('\n')
+    with open(file, 'w') as f:
+        f.writelines(bcoeffs_str)
+        f.close()
 

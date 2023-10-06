@@ -218,6 +218,7 @@ for i in range(num_cycles) :
 
 pp.close()
 
+print("resolution of FFT in Hz up to bin 15:")
 print("bin    Hz")
 for i in range(15) :
     print(i, " :   ", i/512.0 * 22050)

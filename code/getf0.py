@@ -1,12 +1,16 @@
 
 # ----- Brief Description -----
 # 
-# In this script we use getf0withCycles()
+# In this script we use getf0withCycles() applied to an audio file input.
+# (change audio file with path variable below ...)
+# Briefly, this constructs an estimate of f0 by first doing STFT and argMax
+# then refining this estimate using zero crossings to form cycles with getCycles()
 #
 # ----- ----- ----- ----- -----
 
 # ------- More Details --------
 # 
+# Cycles are computed with getCycles based on zero crossings with positive slope
 # 
 # 
 
@@ -22,7 +26,6 @@ from getCycles import getCycles, getf0withCycles
 
 
 # testing getf0withCycles()
-
 
 # path = "../audio/input.wav"
 path = "../audio/A445.wav"
@@ -51,7 +54,8 @@ energy = 0.0
 for i in range(num_segments) :
 
     current_segment = i
-    # print("testing with segment number ", current_segment)
+    print("")
+    print("segment number ", current_segment)
     segment_start = segment_size * current_segment
     segment_end = segment_start + segment_size
     waveform = segments[current_segment]
@@ -79,7 +83,7 @@ for i in range(num_segments) :
     cycles = getCycles(waveform, RATE, arg_max)
     num_cycles = len(cycles)
     f0 = getf0withCycles(waveform, RATE, arg_max)
-    print(i, " : ", f0)
+    print("f0 with Cycles for segment: ", i, " : ", f0)
 
 
 

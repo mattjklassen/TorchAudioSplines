@@ -22,12 +22,14 @@ $intro = join "", @introlines;
 
 $firstline = "Suggested tests to run:\n\n";
 @guidelines = ($firstline);
+
 $newline = "> python torchSpline.py\n\n";
 push @guidelines, $newline;
 $newline = "... plots cubic spline on interval [0,1] interpolating 20 points with values in [-1,1]\n";
 push @guidelines, $newline;
 $newline = "equal to zero at the ends and random values in between. Edit code to change n.\n\n";
 push @guidelines, $newline;
+
 $newline = "> python wavspline.py ../audio/input.wav 200 500 20\n\n";
 push @guidelines, $newline;
 $newline = "... computes and plots spline for audio segment from input.wav for samples 200 to 500\n";
@@ -36,6 +38,26 @@ $newline = "with n = 20 interpolation points.\n";
 push @guidelines, $newline;
 $newline = "\n";
 push @guidelines, $newline;
+
+$newline = "> python getf0.py \n\n";
+push @guidelines, $newline;
+$newline = "... computes estimate of f0 for audio file ../audio/A445.wav using getCycles() first\n";
+push @guidelines, $newline;
+$newline = "then uses average of cycle lengths for refined f0, which may be a new method.\n";
+push @guidelines, $newline;
+$newline = "\n";
+push @guidelines, $newline;
+
+$newline = "> python findCycles.py \n\n";
+push @guidelines, $newline;
+$newline = "... finds cycles for audio file ../audio/A445.wav using getCycles() \n";
+push @guidelines, $newline;
+$newline = "then prints pdf report to ../doc/out.pdf.\n";
+push @guidelines, $newline;
+$newline = "\n";
+push @guidelines, $newline;
+
+
 $newline = "\n";
 push @guidelines, $newline;
 $guide = join "", @guidelines;

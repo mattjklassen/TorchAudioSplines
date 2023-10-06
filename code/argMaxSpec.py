@@ -63,7 +63,7 @@ def getArgMax(waveform, rate, N, hop_size, max_f0) :
         temp = float(torch.argmax(magFFT).numpy())
         temp /= halfN
         temp *= Nyquist
-        print("f0 for hop j = ", j, ": ", temp) 
+        print("f0 from FFT for hop j = ", j, ": ", temp) 
         arg_max += temp
         hops += 1
     arg_max /= hops
@@ -102,7 +102,7 @@ def plotSpecArgMax(waveform, rate, N, hop_size, max_f0) :
         temp = float(torch.argmax(magFFT).numpy())
         temp /= halfN
         temp *= Nyquist
-        print("f0 for hop j = ", j, ": ", temp) 
+        print("f0 from FFT for hop j = ", j, ": ", temp) 
         arg_max += temp
         hops += 1
     arg_max /= hops

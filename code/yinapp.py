@@ -1,4 +1,14 @@
+# ----- Brief Description -----
+# 
 # import audio file and apply yin to chunks of samples
+#
+# ----- ----- ----- ----- -----
+
+# ------- More Details --------
+# 
+#
+# ----- ----- ----- ----- -----
+
 
 import torch
 import torchyin
@@ -20,7 +30,7 @@ waveform, sample_rate = torchaudio.load(filename)
 metadata = torchaudio.info(filename)
 print(metadata)
 
-print(sample_rate)
+print("sample_rate:  ", sample_rate)
 
 yinput = torch.Tensor(waveform)
 print("shape of yinput:  ", yinput.shape)
@@ -35,6 +45,8 @@ pitch = torchyin.estimate(
 print("shape of pitch tensor:  ", pitch.shape)
 print(pitch)
 
+print("some examples of resolution for yin pitch:")
+print("i   44100/i")
 for i in range(95,106) :
     print(i, " : ", 44100/i)
 

@@ -1,16 +1,17 @@
 # ----- Brief Description -----
 # 
 # function:  getCycles()
-#
-# ----- ----- ----- ----- -----
-
-# ------- More Details --------
-# 
 # In the function getCycles we find "cycles" in an audio segment given weak f_0 (fundamental frequency).
 # The weak f_0 is found by the function getArgMax() and the cycles are then found with getCycles()
 # By "cycle" we mean a time interval [a,b] (with a and b time values in float samples)
 # where time is measured from 0 in the audio segment, and where b-a has length in samples
 # predicted by f_0, so b-a is approximately sample_rate * 1/f_0 (samples/cycle). 
+# function:  getf0withCycles()
+# This function uses the above and then simply averages cycle lengths to get refined f0.
+#
+# ----- ----- ----- ----- -----
+
+# ------- More Details --------
 #
 # Cycles are computed based on zero crossings between samples, where the audio graph is computed
 # using linear interpolation between samples.  Zero crossings are assumed to have the pattern of

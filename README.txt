@@ -14,6 +14,16 @@ equal to zero at the ends and random values in between. Edit code to change n.
 ... computes and plots spline for audio segment from input.wav for samples 200 to 500
 with n = 20 interpolation points.
 
+> python getf0.py 
+
+... computes estimate of f0 for audio file ../audio/A445.wav using getCycles() first
+then uses average of cycle lengths for refined f0, which may be a new method.
+
+> python findCycles.py 
+
+... finds cycles for audio file ../audio/A445.wav using getCycles() 
+then prints pdf report to ../doc/out.pdf.
+
 
 Summary of python files (in alphabetical order) with brief description of each:
 
@@ -118,6 +128,13 @@ Summary of python files (in alphabetical order) with brief description of each:
 # ----- Brief Description -----
 # 
 # function:  getCycles()
+# In the function getCycles we find "cycles" in an audio segment given weak f_0 (fundamental frequency).
+# The weak f_0 is found by the function getArgMax() and the cycles are then found with getCycles()
+# By "cycle" we mean a time interval [a,b] (with a and b time values in float samples)
+# where time is measured from 0 in the audio segment, and where b-a has length in samples
+# predicted by f_0, so b-a is approximately sample_rate * 1/f_0 (samples/cycle). 
+# function:  getf0withCycles()
+# This function uses the above and then simply averages cycle lengths to get refined f0.
 #
 
 
@@ -125,7 +142,10 @@ Summary of python files (in alphabetical order) with brief description of each:
 
 # ----- Brief Description -----
 # 
-# In this script we use getf0withCycles()
+# In this script we use getf0withCycles() applied to an audio file input.
+# (change audio file with path variable below ...)
+# Briefly, this constructs an estimate of f0 by first doing STFT and argMax
+# then refining this estimate using zero crossings to form cycles with getCycles()
 #
 
 
@@ -247,6 +267,10 @@ Summary of python files (in alphabetical order) with brief description of each:
 
 21  yinapp.py
 
+# ----- Brief Description -----
+# 
+# import audio file and apply yin to chunks of samples
+#
 
 
 22  yinPyTorch.py

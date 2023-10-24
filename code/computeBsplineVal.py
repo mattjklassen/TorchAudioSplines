@@ -1,6 +1,6 @@
 # ----- Brief Description -----
 # 
-# inputs: t is float assumed from 0 to 1, and c is an array of n=k+d B-spline coefficients
+# inputs: t is float assumed from 0 to 1, and c is an array (tensor) of n=k+d B-spline coefficients
 # compute value of spline f(t) for input t, with bcoeffs c, and the usual knot sequence t_i:
 # 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1  (so t_i goes from i=0 to N, with N=n+d+1=N+4 if d=3)
 # where f(t) = sum of c_i B^3_i(t) for i = 0,...,N-d-1=N-4
@@ -12,6 +12,7 @@
 
 # ------- More Details --------
 # 
+# Note: most arrays are tensors, or numpy arrays, but not python lists.
 #
 # ----- ----- ----- ----- -----
 
@@ -58,10 +59,10 @@ def computeSplineVal(d, k, c, t) :
     
         fval = controlCoeffs[J, d]
 
-    if (t > 0.9999999999) :
+    if (t > 0.9999999) :
         fval = c[n-1]
 
-    return fval
+    return float(fval)
 
 # d = degree (default 3)
 # k = number of subintervals

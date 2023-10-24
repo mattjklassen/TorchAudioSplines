@@ -24,7 +24,7 @@ from computeBsplineVal import newBsplineVal
 # Compute bcoeffs for one cycle = [a, b] using waveform data and dim=n
 # where a,b are float samples, ie. time values measured in samples (typically sub-sample)
 # and time zero is start of waveform, max time is last sample t_max, 0 \leq a < b \leq t_max.
-# Return a list of bcoeffs of size n.
+# Return a list of bcoeffs of size n as PyTorch tensor.
 
 def getBcoeffs(waveform, sample_rate, cycle, n) :
 
@@ -244,14 +244,17 @@ def getBcoeffs(waveform, sample_rate, cycle, n) :
     return bcoeffs
 
 
+# this function imports bcoeffs from text file of strings (printed floats)
+# and returns a pytorch tensor of those floats.
 def import_bcoeffs(file) :
     bcoeffs_str = []
-    bcoeffs = []
     with open(file, 'r') as f:
         bcoeffs_str = f.readlines()
         f.close()
-    for i in range(len(bcoeffs_str)) :
-        bcoeffs.append(float(bcoeffs_str[i]))
+    n = len(bcoeffs_str)
+    bcoeffs = torch.zeros(n)
+    for i in range(n) :
+        bcoeffs[i] = float(bcoeffs_str[i])
     return bcoeffs
 
 def export_bcoeffs(file, bcoeffs) :

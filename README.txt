@@ -16,7 +16,7 @@ with n = 20 interpolation points.
 
 > python getf0.py 
 
-... computes estimate of f0 for audio file ../audio/A445.wav using getCycles() first
+... computes estimate of f0 for audio file ../audio/A445.wav using getArgMax() first
 then uses average of cycle lengths for refined f0, which may be a new method.
 
 > python findCycles.py 
@@ -45,7 +45,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 
 # ----- Brief Description -----
 # 
-# inputs: t is float assumed from 0 to 1, and c is an array of n=k+d B-spline coefficients
+# inputs: t is float assumed from 0 to 1, and c is an array (tensor) of n=k+d B-spline coefficients
 # compute value of spline f(t) for input t, with bcoeffs c, and the usual knot sequence t_i:
 # 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1  (so t_i goes from i=0 to N, with N=n+d+1=N+4 if d=3)
 # where f(t) = sum of c_i B^3_i(t) for i = 0,...,N-d-1=N-4
@@ -86,7 +86,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 # ----- Brief Description -----
 # 
 # Generate one cycle as waveform, and return waveform.
-# inputs: cycle = [a,b], B-spline coefficients vector = bcoeffs.
+# inputs: cycle = [a,b], B-spline coefficients vector (tensor) = bcoeffs.
 # assume a and b are time values in samples between integer points, so that the
 # spline is computed on interval [a,b] and evaluated at M = floor(b)-floor(a) integer 
 # points or samples to produce waveform sample values. The waveform will have
@@ -99,17 +99,12 @@ Summary of python files (in alphabetical order) with brief description of each:
 # ----- Brief Description -----
 # 
 # Generate waveform given fundamental frequency f0 and key cycles
-# using cycle interpolation, and return waveform.
-# inputs: 
-# f0 = fundamental frequency
-# sample_rate = sample rate
-# key_bcoeffs = B-spline coefficients vectors of each key cycle 
-# keys = indices of key cycle
+# using cycle interpolation, and return waveform as tensor.
+# inputs:  f0 = fundamental frequency, sample_rate = sample rate
+# time = waveform duration in seconds,
+# key_bcoeffs = B-spline coefficients vectors of each key cycle,
+# keys = indices of key cycles
 # gains = scalar multipliers for each key cycle, for envelope
-# assume a and b are time values in samples between integer points, so that the
-# spline is computed on interval [a,b] and evaluated at M = floor(b)-floor(a) integer 
-# points or samples to produce waveform sample values. The waveform will have
-# values indexed 0 to M-1 at given sample_rate. 
 #
 
 
@@ -149,7 +144,23 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-10  plotSegmentSpline.py
+10  melody.py
+
+# ----- Brief Description -----
+# 
+# create melody based on spline curve
+#
+
+
+11  melody2.py
+
+# ----- Brief Description -----
+# 
+# create melody based on spline curve
+#
+
+
+12  plotSegmentSpline.py
 
 # ----- Brief Description -----
 # 
@@ -161,7 +172,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-11  plotSpec.py
+13  plotSpec.py
 
 # ----- Brief Description -----
 # 
@@ -170,7 +181,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-12  rec2Spec.py
+14  rec2Spec.py
 
 # ----- Brief Description -----
 # 
@@ -180,7 +191,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-13  record.py
+15  record.py
 
 # ----- Brief Description -----
 # 
@@ -189,7 +200,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-14  recSpec.py
+16  recSpec.py
 
 # ----- Brief Description -----
 # 
@@ -200,7 +211,23 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-15  testBcoeffs.py
+17  scale.py
+
+# ----- Brief Description -----
+# 
+# write chromatic scale to wav file
+#
+
+
+18  scale2.py
+
+# ----- Brief Description -----
+# 
+# write two octave chromatic scale to wav file
+#
+
+
+19  testBcoeffs.py
 
 # ----- Brief Description -----
 # 
@@ -210,7 +237,19 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-16  testSegmentSpline.py
+20  testGenWav.py
+
+# ----- Brief Description -----
+# 
+# construct one tone of 1 sec long with genWavTone()
+#
+
+
+21  testing.py
+
+
+
+22  testSegmentSpline.py
 
 # ----- Brief Description -----
 # 
@@ -222,7 +261,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-17  torchSpline.py
+23  torchSpline.py
 
 # ----- Brief Description -----
 #
@@ -231,7 +270,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-18  wavplot.py
+24  wavplot.py
 
 # ----- Brief Description -----
 # 
@@ -241,7 +280,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-19  wavspline.py
+25  wavspline.py
 
 # ----- Brief Description -----
 # 
@@ -255,7 +294,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-20  writewav.py
+26  writewav.py
 
 # ----- Brief Description -----
 # 
@@ -265,7 +304,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-21  yinapp.py
+27  yinapp.py
 
 # ----- Brief Description -----
 # 
@@ -273,7 +312,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-22  yinPyTorch.py
+28  yinPyTorch.py
 
 # ----- Brief Description -----
 # 

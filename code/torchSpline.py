@@ -19,6 +19,7 @@ import torch
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+from getBcoeffs import import_bcoeffs, export_bcoeffs
 
 # The next two functions are imported to compute using the deBoor algorithm.  The first one computes
 # the value of a single B-spline basis function for value t in [0,1].  This is necessary in order to
@@ -29,7 +30,7 @@ from computeBsplineVal import newBsplineVal
 from computeBsplineVal import computeSplineVal 
 
 # change n here to increase the number of random interpolation points.
-n = 10
+n = 20
 
 # leave d=3 for cubic splines
 d = 3
@@ -44,7 +45,7 @@ inputVals = torch.zeros(n)
 outputVals = torch.zeros(n)
 
 # targets should be from audio sample, but are set to random for now (first and last = 0)
-targets = np.random.uniform(low=-1.0, high=1.0, size=n-2)
+targets = np.random.uniform(low=-0.9, high=0.9, size=n-2)
 print("targets:  ", targets)
 
 # we will plot points (inputVals, outputVals) with spline plot
@@ -116,7 +117,10 @@ b = torch.from_numpy(targets).float()
 
 # Now need to solve A*x=b for x with b = targets
 v = torch.linalg.solve(A, b)
+
 print("nonzero bcoeffs solution v =  ", v)
+print("shape of v: ", v.shape)
+print("len of v: ", len(v))
 
 # put zeros at ends of bcoeffs vector c, which gives dimension n
 c = np.zeros(n)
@@ -124,6 +128,14 @@ for i in range(n) :
     if (i>0) and (i<n-1) :
     	c[i] = v[i-1]
 print("bcoeffs vector c:  ", c)
+print("exporting to bcoeffs1.txt")
+
+bcoeffs = []
+for i in range(len(c)) :
+    bcoeffs.append(float(c[i]))
+
+file = "bcoeffs1.txt"
+export_bcoeffs(file, bcoeffs)
 
 # Next graph spline function with the computed coefficients using 1000 points.
 

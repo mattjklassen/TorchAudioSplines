@@ -41,7 +41,7 @@ push @guidelines, $newline;
 
 $newline = "> python getf0.py \n\n";
 push @guidelines, $newline;
-$newline = "... computes estimate of f0 for audio file ../audio/A445.wav using getCycles() first\n";
+$newline = "... computes estimate of f0 for audio file ../audio/A445.wav using getArgMax() first\n";
 push @guidelines, $newline;
 $newline = "then uses average of cycle lengths for refined f0, which may be a new method.\n";
 push @guidelines, $newline;

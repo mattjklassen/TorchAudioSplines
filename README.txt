@@ -6,7 +6,7 @@ Suggested tests to run:
 
 > python torchSpline.py
 
-... plots cubic spline on interval [0,1] interpolating 20 points with values in [-1,1]
+... plots cubic spline on interval [0,1] interpolating n=20 points with values in [-1,1]
 equal to zero at the ends and random values in between. Edit code to change n.
 
 > python wavspline.py ../audio/input.wav 200 500 20
@@ -16,7 +16,8 @@ with n = 20 interpolation points.
 
 > python getf0.py 
 
-... computes estimate of f0 for audio file ../audio/A445.wav using getArgMax() first
+... computes estimate of f0 for audio file ../audio/A445.wav getArgMax() as the first
+approximation which uses torch.stft and takes the ArgMax bin below a set threshold, 
 then uses average of cycle lengths for refined f0, which may be a new method.
 
 > python findCycles.py 
@@ -45,12 +46,14 @@ Summary of python files (in alphabetical order) with brief description of each:
 
 # ----- Brief Description -----
 # 
-# inputs: t is float assumed from 0 to 1, and c is an array (tensor) of n=k+d B-spline coefficients
-# compute value of spline f(t) for input t, with bcoeffs c, and the usual knot sequence t_i:
+# inputs: t is float assumed from 0 to 1, c (or bcoeffs) is an array (or tensor) of n B-spline coefficients,
+# k is number of subintervals, d is degree (default 3), knotVals is the knot sequence, with usual default:
 # 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1  (so t_i goes from i=0 to N, with N=n+d+1=N+4 if d=3)
+# compute value of spline f(t) for input t in interval [0,1]
 # where f(t) = sum of c_i B^3_i(t) for i = 0,...,N-d-1=N-4
 #
 # computeSplineVal(d, k, c, t) computes f(t)
+# computeSplineVal2(d, bcoeffs, knotVals, t) computes f(t)
 # newBsplineVal(d, k, j, t) computes one B-spline B^d_j(t)
 #
 
@@ -94,12 +97,20 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-6  genWavTone.py
+6  genGuitarTone.py
 
 # ----- Brief Description -----
 # 
-# Generate waveform given fundamental frequency f0 and key cycles
-# using cycle interpolation, and return waveform as tensor.
+# construct one tone of 1 sec long with genWavTone() using guitar bcoeffs
+#
+
+
+7  genWavTone.py
+
+# ----- Brief Description -----
+# 
+# Generate waveform given fundamental frequency f0 and key cycles using cycle interpolation. 
+# genWavTone() returns waveform as tensor, insertWavTone writes into larger waveform tensor.
 # inputs:  f0 = fundamental frequency, sample_rate = sample rate
 # time = waveform duration in seconds,
 # key_bcoeffs = B-spline coefficients vectors of each key cycle,
@@ -108,7 +119,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-7  getBcoeffs.py
+8  getBcoeffs.py
 
 # ----- Brief Description -----
 # 
@@ -118,7 +129,15 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-8  getCycles.py
+9  getCycleInfo.py
+
+# ----- Brief Description -----
+# 
+# breaking up findCycles.py into separate functions which we can call in material.py
+#
+
+
+10  getCycles.py
 
 # ----- Brief Description -----
 # 
@@ -133,7 +152,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-9  getf0.py
+11  getf0.py
 
 # ----- Brief Description -----
 # 
@@ -144,7 +163,16 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-10  melody.py
+12  material.py
+
+# ----- Brief Description -----
+# 
+# create directory material<number> and put melodic segments with transformed versions
+# and report into directory.  Report should include plot of splines used also.
+#
+
+
+13  melody.py
 
 # ----- Brief Description -----
 # 
@@ -152,15 +180,24 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-11  melody2.py
+14  melody2.py
 
 # ----- Brief Description -----
 # 
-# create melody based on spline curve
+# create melody based on spline curve, also with varying note durations
 #
 
 
-12  plotSegmentSpline.py
+15  plotBcoeffs.py
+
+# ----- Brief Description -----
+#
+# Plot cubic spline f(t) with bcoeffs coming from file as arg1 on command line, and
+# optionally knot sequence from file as arg2.
+#
+
+
+16  plotSegmentSpline.py
 
 # ----- Brief Description -----
 # 
@@ -172,7 +209,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-13  plotSpec.py
+17  plotSpec.py
 
 # ----- Brief Description -----
 # 
@@ -181,7 +218,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-14  rec2Spec.py
+18  rec2Spec.py
 
 # ----- Brief Description -----
 # 
@@ -191,7 +228,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-15  record.py
+19  record.py
 
 # ----- Brief Description -----
 # 
@@ -200,7 +237,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-16  recSpec.py
+20  recSpec.py
 
 # ----- Brief Description -----
 # 
@@ -211,7 +248,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-17  scale.py
+21  scale.py
 
 # ----- Brief Description -----
 # 
@@ -219,7 +256,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-18  scale2.py
+22  scale2.py
 
 # ----- Brief Description -----
 # 
@@ -227,7 +264,43 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-19  testBcoeffs.py
+23  t2Spline.py
+
+# ----- Brief Description -----
+#
+# Plot cubic spline f(t) through n points (x,y) with x in [0,1], y in [-1,1]
+# with f(0)=0=f(1), and f'(0)=0=f'(1) and other y-values randomly generated.
+#
+
+
+24  t3Spline.py
+
+# ----- Brief Description -----
+#
+# Plot cubic spline f(t) through n points (x,y) with x in [0,1], y in [-1,1]
+# with f(0)=0=f(1), and f'(0)=Pi, f'(1)=-Pi, f(1/2)=1, f(1/4)=2^(-1/2)=f(3/4).
+# These seven conditions match the function y = sin(pi*x) on [-1,1].
+# So n=7, k=4, d=3.
+#
+
+
+25  t4Spline.py
+
+# ----- Brief Description -----
+#
+# Plot cubic spline f(t) through n points (x,y) with x in [0,2], y in [-1,1]
+# matching y = sin(pi*x) at 0, 1/4, 1/2, 3/4, 1, 5/4, 3/2, 7/2, 2, with
+# derivatives matching at 0, 1, and 2.  These are 12 conditions, so we should
+# have n = 12.  This can also be put on [0,1] with subintervals of length 1/8.
+
+# with f(0)=0=f(1), f(1/2)=1, f(1/4)=2^(-1/2)=f(3/4) and f'(0)=Pi, f'(1)=-Pi
+# , f(1/2)=1, f(1/4)=2^(-1/2)=f(3/4).
+# These seven conditions match the function y = sin(pi*x) on [-1,1].
+# So n=7, k=4, d=3.
+#
+
+
+26  testBcoeffs.py
 
 # ----- Brief Description -----
 # 
@@ -237,7 +310,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-20  testGenWav.py
+27  testGenWav.py
 
 # ----- Brief Description -----
 # 
@@ -245,11 +318,11 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-21  testing.py
+28  testing.py
 
 
 
-22  testSegmentSpline.py
+29  testSegmentSpline.py
 
 # ----- Brief Description -----
 # 
@@ -261,7 +334,16 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-23  torchSpline.py
+30  testSplinusoid.py
+
+# ----- Brief Description -----
+# 
+# construct one tone of 1 sec long with genWavTone2()
+# uses bcoeffs and knotVals to allow for new knot sequence like splinusoid
+#
+
+
+31  torchSpline.py
 
 # ----- Brief Description -----
 #
@@ -270,7 +352,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-24  wavplot.py
+32  wavplot.py
 
 # ----- Brief Description -----
 # 
@@ -280,7 +362,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-25  wavspline.py
+33  wavspline.py
 
 # ----- Brief Description -----
 # 
@@ -294,7 +376,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-26  writewav.py
+34  writewav.py
 
 # ----- Brief Description -----
 # 
@@ -304,7 +386,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-27  yinapp.py
+35  yinapp.py
 
 # ----- Brief Description -----
 # 
@@ -312,7 +394,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-28  yinPyTorch.py
+36  yinPyTorch.py
 
 # ----- Brief Description -----
 # 

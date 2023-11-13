@@ -1,7 +1,7 @@
 
 # ----- Brief Description -----
 # 
-# construct one tone of 1 sec long with genWavTone()
+# construct one tone of 1 sec long with genWavTone() using guitar bcoeffs
 #
 # ----- ----- ----- ----- -----
 
@@ -27,13 +27,13 @@ from genWavTone import genWavTone
 
 # main part of script
 
-f0 = 220.0
+f0 = 440.0
 # f0 *= 1.059463
 # f0 *= 1.059463
-time = 3.0
+time = 1.0
 # time = 0.25
 sample_rate = 44100.0
-file = "bcoeffs1.txt"
+file = "guitar_bcoeffs1.txt"
 bcoeffs = import_bcoeffs(file)
 n = bcoeffs.size(dim=0)
 keys = torch.tensor([0,10,20,30,50,70,90])

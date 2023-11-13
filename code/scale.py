@@ -57,8 +57,16 @@ gains = [1,1,1,1,1,1,1]
 gains = [0.7,0.8,0.9,1.0,1.0,1.0,1.0]
 interp_method = 1
 key_bcoeffs = torch.zeros(num_keys, n)
+
+# fill key_bcoeffs with bcoeffs*.txt 
 for i in range(num_keys) :
+    file = "bcoeffs" + str(i) + ".txt"
+    bcoeffs = import_bcoeffs(file)
+    print(file)
+    print(bcoeffs)
     key_bcoeffs[i] = bcoeffs
+
+key_bcoeffs[4] = key_bcoeffs[3] 
 
 start_time = 0.0
 
@@ -69,8 +77,8 @@ for i in range(13) :
     temp *= 1.059463 
     for i in range(num_keys) :
         keys[i] = int(temp[i])
-    print("keys: ", keys)
-    print("temp: ", temp)
+#    print("keys: ", keys)
+#    print("temp: ", temp)
 
 waveform_out = torch.unsqueeze(waveform, dim=0)
 

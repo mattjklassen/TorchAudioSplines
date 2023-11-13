@@ -1,7 +1,8 @@
 
 # ----- Brief Description -----
 # 
-# construct one tone of 1 sec long with genWavTone()
+# construct one tone of 1 sec long with genWavTone2()
+# uses bcoeffs and knotVals to allow for new knot sequence like splinusoid
 #
 # ----- ----- ----- ----- -----
 
@@ -20,22 +21,26 @@ from argMaxSpec import plotSpecArgMax, getArgMax
 from cycleSpline import plotCycleSpline
 from getCycles import getCycles
 from getBcoeffs import import_bcoeffs, export_bcoeffs
-from genWavTone import genWavTone
+from genWavTone import genWavTone2
 
-# test the function genWavTone.py with waveform data and write outputs to wav and pdf
-# genWavTone(f0, time, sample_rate, key_bcoeffs, keys, gains, interp_method) 
+# test the function genWavTone2.py with waveform data and write outputs to wav and pdf
+# genWavTone2(f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, interp_method) 
 
 # main part of script
 
-f0 = 220.0
+f0 = 110.0
+# f0 /= 1.632526919
 # f0 *= 1.059463
 # f0 *= 1.059463
-time = 3.0
+time = 1.0
 # time = 0.25
 sample_rate = 44100.0
-file = "bcoeffs1.txt"
+file = "bcoeffs-sin2.txt"
 bcoeffs = import_bcoeffs(file)
 n = bcoeffs.size(dim=0)
+d = 3
+k = 8
+N = n + d   # N = 17
 keys = torch.tensor([0,10,20,30,50,70,90])
 print("keys: ", keys)
 num_keys = keys.size(dim=0)
@@ -55,7 +60,26 @@ print("assigning key_bcoeffs")
 for i in range(num_keys) :
     key_bcoeffs[i] = gains[i] * bcoeffs
 
-wav_data = genWavTone(f0, time, sample_rate, key_bcoeffs, keys, gains, interp_method)
+knotVals = torch.zeros(N+1)
+
+incr = 1/k
+
+for i in range(4) :
+    j = i + 7
+    knotVals[j] = 1/2
+    j = i + 14
+    knotVals[j] = 1
+
+for i in range(3) :
+    j = i + 4
+    knotVals[j] = knotVals[j-1] + incr
+    j = i + 11
+    knotVals[j] = knotVals[j-1] + incr
+
+print("knotVals: ")
+print(knotVals)
+
+wav_data = genWavTone2(f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, interp_method)
 
 size_out = int(sample_rate * time)
 waveform = torch.empty(1, size_out)

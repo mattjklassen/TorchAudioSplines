@@ -21,7 +21,7 @@ import numpy as np
 import math
 
 from computeBsplineVal import newBsplineVal 
-from computeBsplineVal import computeSplineVal 
+from computeBsplineVal import computeSplineVal, computeSplineVal2 
 
 
 def genCycle(cycle, bcoeffs) :
@@ -70,6 +70,31 @@ def insertCycle(waveform, cycle, bcoeffs) :
         # first transform to new t01 = (t-a)/(b-a)
         t01 = float((t - a) / (b - a))
         y = computeSplineVal(d, k, bcoeffs, t01)
+    #    data[i] = y
+        waveform[first_sample + i] = y
+        t += 1
+    # return data
+
+
+def insertCycle2(waveform, cycle, bcoeffs, knotVals) :
+
+    # This version inserts sample values for cycle into tensor array called waveform
+    # at the appropriate sample values between a=cycle[0] and b=cycle[1]. 
+    d = 3
+    n = bcoeffs.size(dim=0)
+    a = cycle[0]
+    b = cycle[1]
+    t = 0.0
+    first_sample = math.ceil(a)
+    last_sample = math.floor(b)
+    num_samples = last_sample - first_sample + 1
+    # data = torch.zeros(num_samples)
+    t = first_sample
+    for i in range(num_samples) :
+        # evaluate splines on interval [0,1], so for any t in [a,b]
+        # first transform to new t01 = (t-a)/(b-a)
+        t01 = float((t - a) / (b - a))
+        y = computeSplineVal2(d, bcoeffs, knotVals, t01)
     #    data[i] = y
         waveform[first_sample + i] = y
         t += 1

@@ -55,7 +55,7 @@ def getCycles(waveform, sample_rate, weakf0) :
     # b is a time value between some samples t_j and t_{j+1} with y_j < 0 < y_{j+1}
     # and further we require that the distance b - a is chosen as close as possible to
     # the predicted cycle length which should be approximately (sample_rate / weakf0) samples. 
-    # The function returns a list of the intervals as pairs a,b.  The interval [a,b] may overlap. 
+    # The function returns a list of the intervals as pairs a,b.  The intervals [a,b] may overlap. 
 
     # One more thing: It turns out to simplify things if we assume that zero crossings never
     # occur exactly at sample values.  Since we don't have any exact information about the waveform 
@@ -94,8 +94,8 @@ def getCycles(waveform, sample_rate, weakf0) :
     # print(zeros)
 
     previous_closest = 0
-    previous_diff = 1000
-    previous_error = 1000 
+    previous_diff = 100000
+    previous_error = 100000 
     num_zeros = len(zeros)
     last_zero = zeros[num_zeros-1]
     for i in range(num_zeros-1) :

@@ -1,0 +1,15 @@
+### finish material.py - to generate lots of musical material from one wav file
+
+
+### finish breaking up findCycles.py into separate functions which we can call in material.py
+
+
+### continue with splinusoid examples, which can form one thread of material generation
+which is a base case of melody from cyle, giving the interval of a neutral sixth, about 848 cents
+coming from 2^(2^(1/2)/2) = 2^(2^(-1/2)) = 2^(sin(Pi/4)).  Sound comes from repetition (of cycles)
+and music comes from repetition of motives (motif's) and phrases.  Repetition builds familiarity.
+
+
+### refactor plotBcoeffs.py to take command line args, incuding knot sequence in file
+
+

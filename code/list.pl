@@ -25,7 +25,7 @@ $firstline = "Suggested tests to run:\n\n";
 
 $newline = "> python torchSpline.py\n\n";
 push @guidelines, $newline;
-$newline = "... plots cubic spline on interval [0,1] interpolating 20 points with values in [-1,1]\n";
+$newline = "... plots cubic spline on interval [0,1] interpolating n=20 points with values in [-1,1]\n";
 push @guidelines, $newline;
 $newline = "equal to zero at the ends and random values in between. Edit code to change n.\n\n";
 push @guidelines, $newline;
@@ -41,7 +41,9 @@ push @guidelines, $newline;
 
 $newline = "> python getf0.py \n\n";
 push @guidelines, $newline;
-$newline = "... computes estimate of f0 for audio file ../audio/A445.wav using getArgMax() first\n";
+$newline = "... computes estimate of f0 for audio file ../audio/A445.wav getArgMax() as the first\n";
+push @guidelines, $newline;
+$newline = "approximation which uses torch.stft and takes the ArgMax bin below a set threshold, \n";
 push @guidelines, $newline;
 $newline = "then uses average of cycle lengths for refined f0, which may be a new method.\n";
 push @guidelines, $newline;

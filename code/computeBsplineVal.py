@@ -1,11 +1,13 @@
 # ----- Brief Description -----
 # 
-# inputs: t is float assumed from 0 to 1, and c is an array (tensor) of n=k+d B-spline coefficients
-# compute value of spline f(t) for input t, with bcoeffs c, and the usual knot sequence t_i:
+# inputs: t is float assumed from 0 to 1, c (or bcoeffs) is an array (or tensor) of n B-spline coefficients,
+# k is number of subintervals, d is degree (default 3), knotVals is the knot sequence, with usual default:
 # 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1  (so t_i goes from i=0 to N, with N=n+d+1=N+4 if d=3)
+# compute value of spline f(t) for input t in interval [0,1]
 # where f(t) = sum of c_i B^3_i(t) for i = 0,...,N-d-1=N-4
 #
 # computeSplineVal(d, k, c, t) computes f(t)
+# computeSplineVal2(d, bcoeffs, knotVals, t) computes f(t)
 # newBsplineVal(d, k, j, t) computes one B-spline B^d_j(t)
 #
 # ----- ----- ----- ----- -----
@@ -19,6 +21,38 @@
 
 import numpy as np
 import torch
+
+
+# computes f(t)
+def computeSplineVal2(d, bcoeffs, knotVals, t) :
+    N = len(knotVals) - 1
+    n = len(bcoeffs)
+
+    # deBoor points, which are set for j=0 to control points bcoeffs[i]
+    controlCoeffs = torch.zeros(n, d+1)
+    for i in range(n) :
+        controlCoeffs[i, 0] = bcoeffs[i]
+
+    fval = bcoeffs[0]
+
+    J = 0
+    denom = 1.0
+    fac1 = 1.0
+    fac2 = 1.0
+    for i in range(1, N) :
+        if (t < knotVals[i]) :
+            J = i - 1
+            break
+    for p in range(1, d+1) :
+        for i in range(J-d+p, J+1) :
+            denom = (knotVals[i+d-(p-1)]-knotVals[i])
+            fac1 = (t-knotVals[i]) / denom
+            fac2 = (knotVals[i+d-(p-1)]-t) / denom
+            controlCoeffs[i, p] = fac1 * controlCoeffs[i, p-1] + fac2 * controlCoeffs[i-1, p-1]
+
+    fval = controlCoeffs[J, d]
+
+    return float(fval)
 
 
 # computes f(t)

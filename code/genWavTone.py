@@ -296,7 +296,7 @@ def getKeys(f0, time) :
 
 # This function inserts a tone in the tensor waveform:
 
-def insertWavTone(waveform, start_time, f0, time, sample_rate, key_bcoeffs, keys, gains, interp_method) :
+def insertWavTone2(waveform, start_time, f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, interp_method) :
 
     # this is same function as genWavTone but instead of returning the waveform of the tone
     # it inserts those samples into a bigger waveform at a particular start sample.
@@ -394,7 +394,8 @@ def insertWavTone(waveform, start_time, f0, time, sample_rate, key_bcoeffs, keys
             tail = float(numer / num_trailing_cycles)
             bcoeffs = tail * all_bcoeffs[last_key]
         # now insert cycle into waveform from start_time to end of cycle
-        insertCycle(waveform, cycle, bcoeffs)
+        # insertCycle(waveform, cycle, bcoeffs)
+        insertCycle2(waveform, cycle, bcoeffs, knotVals)
 
 
 def reset(b) :  # forces a and b to avoid exact integer sample values

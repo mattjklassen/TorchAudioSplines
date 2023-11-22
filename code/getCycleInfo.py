@@ -1,6 +1,9 @@
 # ----- Brief Description -----
 # 
 # breaking up findCycles.py into separate functions which we can call in material.py
+# get_segments(waveform, sample_rate, segment_size)
+# process_segment(segment, index, segment_size, sample_rate, n, N, hop_size, txt1, txt2)
+# 
 #
 # ----- ----- ----- ----- -----
 
@@ -20,7 +23,8 @@ from matplotlib.backends.backend_pdf import PdfPages
 from getCycles import getCycles
 
 # path = "../audio/input.wav"
-path = "../audio/A445.wav"
+name = "A445"
+path = "../audio/" + name + ".wav"
 waveform, sample_rate = torchaudio.load(path)
 np_waveform = waveform.numpy()
 num_channels, num_frames = np_waveform.shape
@@ -35,7 +39,7 @@ num_segments = int(num_frames / segment_size)
 
 # split waveform into segments, each of length segment_size (with a remainder of smaller size)
     
-def get_segments(waveform, sample_rate, segment_size) # here waveform is whole audio file
+def get_segments(waveform, sample_rate, segment_size, name) # here waveform is whole audio file
     np_waveform = waveform.numpy()
     num_channels, num_frames = np_waveform.shape
     num_segments = int(num_frames / seg_size)
@@ -44,11 +48,12 @@ def get_segments(waveform, sample_rate, segment_size) # here waveform is whole a
     return segments  # may include one extra segment of size < segment_size
     # we can manage this by running loops on segments 0 to num_segments - 1 (rather than len(segments) - 1) 
 
-segments = get_segments(waveform, sample_rate, segment_size)
+segments = get_segments(waveform, sample_rate, segment_size, name)
 
 print("waveform is split into ", len(segments), " segments")
-print("size of segment 0: ", len(segments[0]))
-print("size of segment ", len(segments)-1, ": ", len(segments[len(segments)-1]))
+print("size of first segment 0: ", len(segments[0]))
+print("size of last segment ", len(segments)-1, ": ", len(segments[len(segments)-1]))
+print("name attached to segment from audio file: ", name)
 
 N = 1024
 hop_size = 128
@@ -63,13 +68,17 @@ txt2 += "      FFT Size:  " + str(N)
 txt2 += "      Hop Size:  " + str(hop_size)
 
 # use this function to process segments of size = segment_size only
-def process_segment(segment, current_segment, segment_size, sample_rate, n, N, hop_size, txt1, txt2) :
+def process_segment(segment, index, segment_size, sample_rate, n, N, hop_size, txt1, txt2, name) :
+
+    print("processing segment with: ")
+    print("index: ", index)
+    print("size:  ", segment_size)
+    print("name:  ", name)
 
     RATE = sample_rate
-    
     waveform = segment
     np_waveform = waveform.numpy()
-    segment_start = segment_size * current_segment
+    segment_start = segment_size * index
     segment_end = segment_start + segment_size
     # i^th sample value is now data[i]
     num_channels, num_frames = np_waveform.shape
@@ -95,13 +104,15 @@ def process_segment(segment, current_segment, segment_size, sample_rate, n, N, h
     num_cycles = len(cycles)
 
     # next: need to do cycleReport for segment, and write bcoeffs for each cycle in segment 
-    cycleReport(waveform, sample_rate, txt1, txt2, n, cycles, current_segment, arg_max)
+    cycleReport(waveform, sample_rate, txt1, txt2, n, cycles, index, arg_max, name)
 
 
-def cycleReport(waveform, sample_rate, txt1, txt2, n, cycles, current_segment, arg_max) :
+def cycleReport(waveform, sample_rate, txt1, txt2, n, cycles, index, arg_max, name) :
 
     # waveform input is one segment, coming from audio file
     # print pdf with title page first, then plot of waveform, and plots of all cycles found:
+    
+    # here need to build new path based on name of audio file and index of segment 
     pp = PdfPages('../doc/out.pdf')
     
     arg_max_str = f'{arg_max:.2f}'
@@ -114,7 +125,7 @@ def cycleReport(waveform, sample_rate, txt1, txt2, n, cycles, current_segment, a
     firstPage = plt.figure(figsize=(15,8))
     firstPage.clf()
 
-    txt3 = "Data for Segment " + str(current_segment) + ":"
+    txt3 = "Data for Segment " + str(index) + ":"
     txt3 += "     Weak f_0:  " + arg_max_str + " Hz"
     txt3 += "     Target Samples per Cycle:  " + str(round(samples_per_cycle_guess,1)).ljust(8, ' ')
     txt3 += "    Number of Cycles:  " + str(num_cycles)
@@ -179,7 +190,7 @@ def cycleReport(waveform, sample_rate, txt1, txt2, n, cycles, current_segment, a
         samples[i] = data[i]
     
     plt.plot(times, samples)
-    segment_title = "segment " + str(current_segment) + "  : "
+    segment_title = "segment " + str(index) + "  : "
     segment_title += str(segment_size) + " samples: (" + str(int(segment_start)) + " to " + str(int(segment_end)) + ")"
     plt.title(segment_title)
     plt.ylabel("sample float values")
@@ -195,8 +206,8 @@ def cycleReport(waveform, sample_rate, txt1, txt2, n, cycles, current_segment, a
         # a_str = f'{a:.2f}'
         # b_str = f'{b:.2f}'
         # print("cycle ", i, " a: ", a_str, " b: ", b_str)
-        n = 30
-        fig = plotCycleSpline(waveform, sample_rate, i, a, b, n)
+        # n = 30
+        fig, bcoeffs = plotCycleSpline(waveform, sample_rate, i, a, b, n)
         plt.savefig(pp, format='pdf')
         plt.close()
     

@@ -4,6 +4,7 @@
 # 1. find weak f_0 with getArgMax() (for waveform about 2048 samples)
 # 2. find cycles (in waveform) with getCycles()
 # 3. produce output summary and graphs of cycles to pdf
+# This script is broken up into separate functions in getCycleInfo.py
 #
 # ----- ----- ----- ----- -----
 
@@ -53,6 +54,7 @@ from argMaxSpec import plotSpecArgMax, getArgMax
 from cycleSpline import plotCycleSpline
 from matplotlib.backends.backend_pdf import PdfPages
 from getCycles import getCycles
+from getBcoeffs import export_bcoeffs
 
 
 # test the function getCycles with waveform data and write output to pdf
@@ -88,7 +90,7 @@ energy = 0.0
 # waveform = segments[seg_num]
 
 # assigning a particular segment for testing
-current_segment = 3
+current_segment = 1
 print("testing with segment number ", current_segment)
 segment_start = segment_size * current_segment
 segment_end = segment_start + segment_size
@@ -211,8 +213,14 @@ for i in range(num_cycles) :
     # a_str = f'{a:.2f}'
     # b_str = f'{b:.2f}'
     # print("cycle ", i, " a: ", a_str, " b: ", b_str)
-    n = 30
-    fig = plotCycleSpline(waveform, sample_rate, i, a, b, n)
+    n = 20
+    fig, bcoeffs = plotCycleSpline(waveform, sample_rate, i, a, b, n)
+    print("index i = ", i)
+    print("bcoeffs =")
+    print(bcoeffs.numpy())
+    file = "bcoeffs0.txt"
+    if i == 0 :
+        export_bcoeffs(file, bcoeffs.numpy())
     plt.savefig(pp, format='pdf')
     plt.close()
 

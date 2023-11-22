@@ -1,7 +1,7 @@
 
 # ----- Brief Description -----
 # 
-# create melody based on spline curve
+# create melody based on spline curve approx of sin(2Pi*x) with splinusoid.
 #
 # ----- ----- ----- ----- -----
 
@@ -23,8 +23,9 @@ from argMaxSpec import plotSpecArgMax, getArgMax
 from cycleSpline import plotCycleSpline
 from getCycles import getCycles
 from getBcoeffs import import_bcoeffs, export_bcoeffs
-from genWavTone import genWavTone, insertWavTone
-from computeBsplineVal import computeSplineVal
+from getKnots import import_knots, export_knots
+from genWavTone import genWavTone, insertWavTone2
+from computeBsplineVal import computeSplineVal2
 
 # main part of script
 
@@ -32,10 +33,12 @@ from computeBsplineVal import computeSplineVal
 # next, need to use different time values for notes based on spline
 
 f0 = 220.0  
-notes = 8
+f0 *= 1.5
+notes = 24
 # time1 = duration of one note = 1/8 second
-time1 = 0.125       
-time1 = 0.25       
+# time1 = 0.125       
+time1 = 1.0       
+time1 /= 12.0
 # time2 = duration of entire waveform or melody
 time2 = time1 * notes # 50 notes, 1/8 second each, 0.125 * 50 = 6.25 sec
 sample_rate = 44100.0
@@ -45,9 +48,13 @@ tone_length = time1 * sample_rate   # length of one tone in samples
 # start_time in samples for insertion of current note into waveform
 start_time = 0.0
 
-file = "bcoeffs1.txt"
+file = "bcoeffs-sin2.txt"
 bcoeffs = import_bcoeffs(file)
 n = bcoeffs.size(dim=0)
+
+file = "knots-sin2.txt"
+knotVals = import_knots(file)
+
 # keys = torch.tensor([0,10,20,30,50,70,90])
 # the following keys work for f0 = 110, and time1 = 0.125
 keys = torch.tensor([0,30,90])
@@ -80,13 +87,14 @@ f = f0
 
 for i in range(notes) :
     print("inserting for i = ", i)
-    insertWavTone(waveform, start_time, f, time1, sample_rate, key_bcoeffs, keys, gains, interp_method)
+    insertWavTone2(waveform, start_time, f, time1, sample_rate, key_bcoeffs, knotVals, keys, gains, interp_method)
     # first tone is at f0 = 110, next will be determined from spline as cent value 1200*y
     # so desired frequency f = f0 * 2^y = f0 * exp2(y) 
     start_time += tone_length
     t = start_time / waveform_length
     print("t value: ", t)
-    x = computeSplineVal(3, n-3, bcoeffs, t)
+    # x = computeSplineVal(3, n-3, bcoeffs, t)
+    x = computeSplineVal2(3, bcoeffs, knotVals, t)
     print("x (spline) value: ", x)
     y = np.exp2(x)
     print("y (exp2) value: ", y)

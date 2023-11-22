@@ -72,6 +72,17 @@ def export_string(file, string) :
         f.writelines(out_str)
         f.close()
 
+# To generate musical material from one short audio sample, say a few seconds, we need to
+# produce cycles in each segment, say of length 2048 samples, so around 20 segments at
+# sample rate 44100.  Each segment around 46ms, or approximately 1/22 of a second.  
+# If we make one directory for the material coming from an audio sample named blah.wav
+# then we can create subdirectories seg1, seg2, ...  etc.  Material specific to a segment
+# would go into those, such as pdf plots of cycles and bcoeffs data.  Also, scales and
+# melodic fragments based on those cycles as wav files.  Material based on multiple
+# segments could go into the top directory material-blah/.  For instance, one could use
+# one cycle from each segment to create a sequence of melodic fragments.  These could
+# be used to generate musical material for one composition.  One way to fix this here
+# is to simply return the bcoeffs from this function along with the plot.
 
 def plotCycleSpline(waveform, sample_rate, cycle_num, a, b, n) :
 
@@ -302,7 +313,10 @@ def plotCycleSpline(waveform, sample_rate, cycle_num, a, b, n) :
     # Now need to solve A*c=B for c (bcoeffs vector c) with B = targets
     c = torch.linalg.solve(A, B)
     # print("bcoeffs vector c =  ", c)
+    bcoeffs = c
     
+    # NEED TO: write bcoeffs to file
+
     # Next graph spline function (xvals, yvals) with the computed coefficients using 1000 points.
     
     xvals = np.linspace(start=0.0, stop=1.0, num=1000)
@@ -340,7 +354,7 @@ def plotCycleSpline(waveform, sample_rate, cycle_num, a, b, n) :
     plt.xlim(start_sample, end_sample)
     plt.plot(interp_times, interp_data, 'ro')
     # plt.show()
-    return fig
+    return [fig, bcoeffs]
     
     # print("sample values:")
     # for i in range(start_sample, end_sample) :

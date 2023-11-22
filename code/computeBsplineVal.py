@@ -46,6 +46,8 @@ def computeSplineVal2(d, bcoeffs, knotVals, t) :
     for p in range(1, d+1) :
         for i in range(J-d+p, J+1) :
             denom = (knotVals[i+d-(p-1)]-knotVals[i])
+            if denom == 0 :
+                break
             fac1 = (t-knotVals[i]) / denom
             fac2 = (knotVals[i+d-(p-1)]-t) / denom
             controlCoeffs[i, p] = fac1 * controlCoeffs[i, p-1] + fac2 * controlCoeffs[i-1, p-1]

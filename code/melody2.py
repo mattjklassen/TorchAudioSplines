@@ -9,7 +9,7 @@
 # 
 # use notes on the one eighth second, with pitches obtained from spline.
 # Initially use spline generated randomly with torchSpline.py
-# pitches can be determined by starting at y=0 being A 220, and y=1 A 440, y=-1 A110.
+# pitches can be determined by starting at y=0 being A220, and y=1 A440, y=-1 A110.
 #
 # ----- ----- ----- ----- -----
 

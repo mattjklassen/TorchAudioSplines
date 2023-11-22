@@ -115,7 +115,15 @@ for i in range(2001) :
         keys[k] = int(temp_keys[k])
     f = f0 * y
     num_cycles = int(f * 0.125)
-    print(j, " : ", temp_keys, keys, num_cycles)
+#   print(j, " : ", temp_keys, keys, num_cycles)
+
+print("new tensor with dims 3,1,2,4:")
+new = torch.zeros(3,1,2,4)
+print(new)
+new2 = torch.squeeze(new)
+print("new squeezed:")
+print(new2)
+
 
 
 

@@ -40,7 +40,8 @@ from computeBsplineVal import computeSplineVal2
 
 print("Argument List:", str(sys.argv))
 
-special_knots = 0
+special_knots = 0  # if 0 will default to standard knot sequence 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1.
+stat = 1   # if stat = 1 will plot stationary points where numerical derivative = 0
 
 bcoeffs_file = sys.argv[1]
 if len(sys.argv) > 2 :
@@ -59,7 +60,7 @@ n = len(bcoeffs)  # n = 14
 d = 3
 # k is number of subintervals, which for splinusoid example is: [0,1/8,2/8,...,7/8,1] so k = 8
 # for this example k is not simply n-d, which is the case for simple knots between interval endpoints
-# such the default type knot sequence 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1.
+# such as the default type knot sequence 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1.
 # k = 8 can be computed from the breakpoint sequence in the splinusoid example by checking for
 # number of unique knots between 0 and 1, below ...
 
@@ -140,13 +141,34 @@ for i in range(1001) :
     t = xvals[i]
     yvals[i] = computeSplineVal2(d, bcoeffs, knotVals, t)
 
+# compute stationary points with (numerical) derivative approx = 0
+stat_pts = []
+current_slope = 1
+previous_slope = 1
+for i in range(1,1001) :
+    # compute numerical derivative:
+    current_slope = yvals[i] - yvals[i-1]
+    if previous_slope * current_slope < 0 :
+        print("critical value: ", xvals[i-1])
+        stat_pts.append([xvals[i-1],yvals[i-1]])
+    previous_slope = current_slope
+
+stat_num = len(stat_pts)
+stat_xvals = torch.zeros(stat_num)
+stat_yvals = torch.zeros(stat_num)
+for i in range(stat_num) :
+    stat_xvals[i] = stat_pts[i][0]
+    stat_yvals[i] = stat_pts[i][1]
+
 print(yvals)
 print("size of yvals:  ", yvals.size)
 plt.figure(figsize=(15,8))
 plt.plot(xvals, yvals)
-plt.plot(inputVals, outputVals, 'ro')
-# title = "cubic spline matching sin(2Pi*x) on [0,1]" - this is assigned earlier
-# plt.title('cubic interpolating spline n=12, start and end at zero, 10 random values in [-1,1]')
+if stat == 1 :
+    plt.plot(stat_xvals, stat_yvals, 'ro')
+if stat == 0 :
+    plt.plot(inputVals, outputVals, 'ro')
+# title is assigned earlier
 plt.title(title)
 plt.xlabel('time axis')
 # plt.ylabel('audio sample axis')

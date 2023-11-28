@@ -31,9 +31,9 @@ from computeBsplineVal import computeSplineVal
 # use insertWavTone to put each tone of melody and write to wav file
 # also, use different time values for notes based on spline
 
-notes = 40     # number of notes in melody (sequence of notes)
-f0 = 110.0    # f0 = fundamental frequency of first note
-time0 = 0.25  # time0 = duration of first note = 1/2 second
+notes = 18     # number of notes in melody (sequence of notes)
+f0 = 220.0    # f0 = fundamental frequency of first note
+time0 = 0.1  # time0 = duration of first note in seconds
 
 keys_float = [0.0,30.0,90.0]  # placeholder keys for f0 = 110, time = 1 sec
 num_keys = len(keys_float)
@@ -55,7 +55,7 @@ frequencies = torch.zeros(notes)
 interp_method = 1
 gains = torch.tensor([0.7,1.0,1.0])
 
-file = "bcoeffs1.txt"
+file = "bcoeffs0.txt"
 bcoeffs = import_bcoeffs(file)
 n = bcoeffs.size(dim=0)
 
@@ -74,12 +74,13 @@ for i in range(notes) :
     t = float(i) / float(notes)
     print("t value: ", t)
     x = computeSplineVal(3, n-3, bcoeffs, t)
+    x *= 2.0
     print("x (spline) value: ", x)
     y = np.exp2(x)
     print("y (exp2) value: ", y)
-    note_times[i] = time0 * y
+    # note_times[i] = time0 * y
     # can change * to / for inverse of note duration time 
-    # note_times[i] = time0 / y
+    note_times[i] = time0 / y
     print("note_times[i]: ", note_times[i])
     time2 += note_times[i]
     print("time2: ", time2)
@@ -98,7 +99,7 @@ print("note_keys: ", note_keys)
 # time2 = duration of entire waveform or melody in seconds
 # these are now different times computed on the spline, but were previously:
 # time2 = time1 * notes # 50 notes, 1/8 second each, 0.125 * 50 = 6.25 sec
-waveform_length = int(time2 * sample_rate)  # in samples
+waveform_length = int(time2 * sample_rate) + 10  # in samples
 waveform = torch.zeros(waveform_length)
 
 x = 0.0

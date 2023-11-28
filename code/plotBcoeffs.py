@@ -120,7 +120,7 @@ incr = 1 / k
 for i in range(k+1) :
     inputVals[i] = i * incr
 print("inputVals:  ", inputVals)
-print("k, d, n, N:  ", k, d, n, N)
+print("d, k, n, N:  ", d, k, n, N)
 
 outputVals = torch.zeros(k+1)
 outputVals[k] = 0

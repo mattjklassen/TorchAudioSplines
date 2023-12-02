@@ -28,6 +28,7 @@ import sys
 import matplotlib.pyplot as plt
 from getBcoeffs import import_bcoeffs, export_bcoeffs
 from getKnots import import_knots, export_knots
+from getStatVals import getSplineVals, getStatPts
 
 # The next two functions are imported to compute using the deBoor algorithm.  The first one computes
 # the value of a single B-spline basis function for value t in [0,1].  This is necessary in order to
@@ -154,11 +155,18 @@ for i in range(1,1001) :
     previous_slope = current_slope
 
 stat_num = len(stat_pts)
-stat_xvals = torch.zeros(stat_num)
-stat_yvals = torch.zeros(stat_num)
-for i in range(stat_num) :
-    stat_xvals[i] = stat_pts[i][0]
-    stat_yvals[i] = stat_pts[i][1]
+stat_xvals = torch.zeros(stat_num + 2)
+stat_yvals = torch.zeros(stat_num + 2)
+stat_xvals[-1] = 1
+for i in range(1, stat_num + 1) :
+    stat_xvals[i] = stat_pts[i-1][0]
+    stat_yvals[i] = stat_pts[i-1][1]
+
+# testing getSplineVals() and getStatPts() here:
+new_splineVals = getSplineVals(bcoeffs, knotVals, 1000)
+new_statPts = getStatPts(new_splineVals)
+print("new statPts:")
+print(new_statPts)
 
 print(yvals)
 print("size of yvals:  ", yvals.size)

@@ -7,7 +7,7 @@
 
 # ------- More Details --------
 # 
-# use notes on the one eighth second, with pitches obtained from spline.
+# use notes on the one quarter or eighth second, with pitches obtained from spline.
 # Initially use spline generated randomly with torchSpline.py
 # pitches can be determined by starting at y=0 being A 220, and y=1 A 440, y=-1 A110.
 #
@@ -31,11 +31,11 @@ from computeBsplineVal import computeSplineVal
 # use insertWavTone to put each tone of melody and write to wav file
 # next, need to use different time values for notes based on spline
 
-f0 = 220.0  
-notes = 8
+f0 = 82.5  
+notes = 16
 # time1 = duration of one note = 1/8 second
-time1 = 0.125       
 time1 = 0.25       
+time1 = 0.125       
 # time2 = duration of entire waveform or melody
 time2 = time1 * notes # 50 notes, 1/8 second each, 0.125 * 50 = 6.25 sec
 sample_rate = 44100.0
@@ -45,7 +45,7 @@ tone_length = time1 * sample_rate   # length of one tone in samples
 # start_time in samples for insertion of current note into waveform
 start_time = 0.0
 
-file = "bcoeffs1.txt"
+file = "bcoeffs0.txt"
 bcoeffs = import_bcoeffs(file)
 n = bcoeffs.size(dim=0)
 # keys = torch.tensor([0,10,20,30,50,70,90])
@@ -87,6 +87,7 @@ for i in range(notes) :
     t = start_time / waveform_length
     print("t value: ", t)
     x = computeSplineVal(3, n-3, bcoeffs, t)
+    x *= 2
     print("x (spline) value: ", x)
     y = np.exp2(x)
     print("y (exp2) value: ", y)

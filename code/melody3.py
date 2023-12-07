@@ -18,6 +18,7 @@
 import torch
 import torchaudio
 import numpy as np
+import sys
 import matplotlib.pyplot as plt
 
 from argMaxSpec import plotSpecArgMax, getArgMax
@@ -36,12 +37,24 @@ from getKnots import getKnots
 # for this version we will import the stationary points and use those to
 # generate both pitches and time values.  
 
+print("Argument List:", str(sys.argv))
+
+bcoeffs_file = "bcoeffs0.txt"
+if len(sys.argv) > 1 :
+    bcoeffs_file = sys.argv[1]
+
+# if len(sys.argv) > 2 :
+#    knots_file = sys.argv[2]
+#    special_knots = 1
+# if len(sys.argv) > 3 :
+#    inputs_file = sys.argv[3]
+
 notes = 0     # number of notes in melody (we don't know yet)
 f0 = 220.0    # f0 = fundamental frequency of first note
 time0 = 0.5  # time0 = duration of first note in seconds (use to scale other durations)
 
-file = "bcoeffs0.txt"
-bcoeffs = import_bcoeffs(file)
+bcoeffs = import_bcoeffs(bcoeffs_file)
+print("imported bcoeffs from: ", bcoeffs_file)
 n = bcoeffs.size(dim=0)
 print("n = ", n)
 
@@ -100,8 +113,8 @@ for i in range(notes) :
     x0 = new_statPts[i][0]
     x1 = new_statPts[i+1][0]
     x = new_statPts[i][1]
-    x *= 4.0
-    print("x (spline) value scaled by 4: ", x)
+    x *= 2.0
+    print("x (spline) value scaled by 2: ", x)
     y = np.exp2(x)
     print("y (exp2) value: ", y)
     note_times[i] = x1 - x0
@@ -117,16 +130,20 @@ for i in range(notes) :
     print("keys for i = ", i, keys)
     print("")
 
+# scale first subinterval to have length time0:
 time2 = time0 / note_times[0]
 temp = torch.tensor(note_times)
+# scale all subintervals (note-times) by time2:
 temp *= time2
 for j in range(notes) :
     note_times[j] = temp[j]
+# original interval had length 1, so total time is now time2
 print("total time: ", time2)
 
 # time2 = duration of entire waveform or melody in seconds
 # these are different times computed from the stationary points of spline
-waveform_length = int(time2 * sample_rate) + 10  # in samples
+
+waveform_length = int(time2 * sample_rate) + 10  # in samples, allowing for error
 waveform = torch.zeros(waveform_length)
 
 x = 0.0

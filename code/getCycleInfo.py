@@ -23,7 +23,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 from getCycles import getCycles
 
 # path = "../audio/input.wav"
-name = "A445"
+name = "A445"  # this is the wav file name or prefix
 path = "../audio/" + name + ".wav"
 waveform, sample_rate = torchaudio.load(path)
 np_waveform = waveform.numpy()
@@ -39,16 +39,16 @@ num_segments = int(num_frames / segment_size)
 
 # split waveform into segments, each of length segment_size (with a remainder of smaller size)
     
-def get_segments(waveform, sample_rate, segment_size, name) # here waveform is whole audio file
+def getSegments(waveform, sample_rate, segment_size) # here waveform is whole audio file
     np_waveform = waveform.numpy()
     num_channels, num_frames = np_waveform.shape
-    num_segments = int(num_frames / seg_size)
+    num_segments = int(num_frames / segment_size)
     segments = torch.split(waveform, segment_size, dim=1)
     # we changed from using torch.tensor_split which splits based on number of segments 
     return segments  # may include one extra segment of size < segment_size
     # we can manage this by running loops on segments 0 to num_segments - 1 (rather than len(segments) - 1) 
 
-segments = get_segments(waveform, sample_rate, segment_size, name)
+segments = getSegments(waveform, sample_rate, segment_size)
 
 print("waveform is split into ", len(segments), " segments")
 print("size of first segment 0: ", len(segments[0]))
@@ -68,7 +68,7 @@ txt2 += "      FFT Size:  " + str(N)
 txt2 += "      Hop Size:  " + str(hop_size)
 
 # use this function to process segments of size = segment_size only
-def process_segment(segment, index, segment_size, sample_rate, n, N, hop_size, txt1, txt2, name) :
+def processSegment(segment, index, segment_size, sample_rate, n, N, hop_size, txt1, txt2, name) :
 
     print("processing segment with: ")
     print("index: ", index)

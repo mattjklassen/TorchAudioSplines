@@ -81,6 +81,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 # 1. find weak f_0 with getArgMax() (for waveform about 2048 samples)
 # 2. find cycles (in waveform) with getCycles()
 # 3. produce output summary and graphs of cycles to pdf
+# This script is broken up into separate functions in getCycleInfo.py
 #
 
 
@@ -97,15 +98,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-6  genGuitarTone.py
-
-# ----- Brief Description -----
-# 
-# construct one tone of 1 sec long with genWavTone() using guitar bcoeffs
-#
-
-
-7  genWavTone.py
+6  genWavTone.py
 
 # ----- Brief Description -----
 # 
@@ -119,7 +112,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-8  getBcoeffs.py
+7  getBcoeffs.py
 
 # ----- Brief Description -----
 # 
@@ -129,30 +122,32 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-9  getCycleInfo.py
+8  getCycleInfo.py
 
 # ----- Brief Description -----
 # 
 # breaking up findCycles.py into separate functions which we can call in material.py
+# get_segments(waveform, sample_rate, segment_size)
+# process_segment(segment, index, segment_size, sample_rate, n, N, hop_size, txt1, txt2)
+# 
 #
 
 
-10  getCycles.py
+9  getCycles.py
 
 # ----- Brief Description -----
 # 
-# function:  getCycles()
+# functions:  getCycles() and getf0withCycles()
 # In the function getCycles we find "cycles" in an audio segment given weak f_0 (fundamental frequency).
 # The weak f_0 is found by the function getArgMax() and the cycles are then found with getCycles()
 # By "cycle" we mean a time interval [a,b] (with a and b time values in float samples)
 # where time is measured from 0 in the audio segment, and where b-a has length in samples
 # predicted by f_0, so b-a is approximately sample_rate * 1/f_0 (samples/cycle). 
-# function:  getf0withCycles()
-# This function uses the above and then simply averages cycle lengths to get refined f0.
+# The function getf0withCycles() uses the above and then simply averages cycle lengths to get refined f0.
 #
 
 
-11  getf0.py
+10  getf0.py
 
 # ----- Brief Description -----
 # 
@@ -163,16 +158,37 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-12  material.py
+11  getKnots.py
 
 # ----- Brief Description -----
 # 
-# create directory material<number> and put melodic segments with transformed versions
-# and report into directory.  Report should include plot of splines used also.
+# import and export knot sequences to text files knots-[description].txt
+# also generate knotVals as standard sequence given n = dim of cubic splines
 #
 
 
-13  melody.py
+12  getStatVals.py
+
+# ----- Brief Description -----
+# 
+# get stationary points from bcoeffs on interval [0,1]
+#
+
+
+13  material.py
+
+# ----- Brief Description -----
+# 
+# create directory material-<name>-dim<n> where name = audio file name without .wav,
+# and n = dimension of splines.  Then put melodic segments with transformed versions
+# and report into directory.  Report should include plot of splines used also.
+# command line args: 
+# 1: audio file prefix (name)
+# 2: dimension of splines (n)
+#
+
+
+14  melody.py
 
 # ----- Brief Description -----
 # 
@@ -180,7 +196,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-14  melody2.py
+15  melody2.py
 
 # ----- Brief Description -----
 # 
@@ -188,16 +204,50 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-15  plotBcoeffs.py
+16  melody3.py
+
+# ----- Brief Description -----
+# 
+# create melody based on spline curve, also with varying note durations
+# but now use the stationary points to determine pitch and note duration.
+#
+
+
+17  melody4.py
+
+# ----- Brief Description -----
+# 
+# Create melody based on spline curve using spline values y to determine pitch
+# and x values to determine time durations.  If notes=0 then we use stationary points
+# and if notes>0 we use that many equal divisions of the interval [0,1].
+# Durations are scaled so that first note lasts for time0 seconds.
+# possible command line: (see below for details)
+# python melody4.py bcoeffs0.txt f0=234 scale=3 notes=4 shift=5 time0=0.123 r i
+# or to use stationary points and do retrograde inversion (and other defaults):
+# python melody4.py bcoeffs0.txt r i
+#
+
+
+18  melodySplinusoid.py
+
+# ----- Brief Description -----
+# 
+# create melody based on spline curve approx of sin(2Pi*x) with splinusoid.
+#
+
+
+19  plotBcoeffs.py
 
 # ----- Brief Description -----
 #
 # Plot cubic spline f(t) with bcoeffs coming from file as arg1 on command line, and
-# optionally knot sequence from file as arg2.
+# optional knot sequence from file as arg2, and optional inputs from file as arg3.
+# Default knot sequence is 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1 and if inputs are
+# given then they are also plotted as points in red. (Inputs are not needed for plot)
 #
 
 
-16  plotSegmentSpline.py
+20  plotSegmentSpline.py
 
 # ----- Brief Description -----
 # 
@@ -209,7 +259,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-17  plotSpec.py
+21  plotSpec.py
 
 # ----- Brief Description -----
 # 
@@ -218,7 +268,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-18  rec2Spec.py
+22  rec2Spec.py
 
 # ----- Brief Description -----
 # 
@@ -228,7 +278,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-19  record.py
+23  record.py
 
 # ----- Brief Description -----
 # 
@@ -237,7 +287,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-20  recSpec.py
+24  recSpec.py
 
 # ----- Brief Description -----
 # 
@@ -248,7 +298,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-21  scale.py
+25  scale.py
 
 # ----- Brief Description -----
 # 
@@ -256,7 +306,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-22  scale2.py
+26  scale2.py
 
 # ----- Brief Description -----
 # 
@@ -264,7 +314,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-23  t2Spline.py
+27  t2Spline.py
 
 # ----- Brief Description -----
 #
@@ -273,7 +323,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-24  t3Spline.py
+28  t3Spline.py
 
 # ----- Brief Description -----
 #
@@ -284,23 +334,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-25  t4Spline.py
-
-# ----- Brief Description -----
-#
-# Plot cubic spline f(t) through n points (x,y) with x in [0,2], y in [-1,1]
-# matching y = sin(pi*x) at 0, 1/4, 1/2, 3/4, 1, 5/4, 3/2, 7/2, 2, with
-# derivatives matching at 0, 1, and 2.  These are 12 conditions, so we should
-# have n = 12.  This can also be put on [0,1] with subintervals of length 1/8.
-
-# with f(0)=0=f(1), f(1/2)=1, f(1/4)=2^(-1/2)=f(3/4) and f'(0)=Pi, f'(1)=-Pi
-# , f(1/2)=1, f(1/4)=2^(-1/2)=f(3/4).
-# These seven conditions match the function y = sin(pi*x) on [-1,1].
-# So n=7, k=4, d=3.
-#
-
-
-26  testBcoeffs.py
+29  testBcoeffs.py
 
 # ----- Brief Description -----
 # 
@@ -310,7 +344,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-27  testGenWav.py
+30  testGenWav.py
 
 # ----- Brief Description -----
 # 
@@ -318,11 +352,11 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-28  testing.py
+31  testing.py
 
 
 
-29  testSegmentSpline.py
+32  testSegmentSpline.py
 
 # ----- Brief Description -----
 # 
@@ -334,7 +368,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-30  testSplinusoid.py
+33  testSplinusoid.py
 
 # ----- Brief Description -----
 # 
@@ -343,7 +377,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-31  torchSpline.py
+34  torchSpline.py
 
 # ----- Brief Description -----
 #
@@ -352,7 +386,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-32  wavplot.py
+35  wavplot.py
 
 # ----- Brief Description -----
 # 
@@ -362,7 +396,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-33  wavspline.py
+36  wavspline.py
 
 # ----- Brief Description -----
 # 
@@ -376,7 +410,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-34  writewav.py
+37  writewav.py
 
 # ----- Brief Description -----
 # 
@@ -386,7 +420,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-35  yinapp.py
+38  yinapp.py
 
 # ----- Brief Description -----
 # 
@@ -394,7 +428,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-36  yinPyTorch.py
+39  yinPyTorch.py
 
 # ----- Brief Description -----
 # 

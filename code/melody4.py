@@ -182,6 +182,8 @@ key_bcoeffs = torch.zeros(num_keys, n)
 for i in range(num_keys) :
     key_bcoeffs[i] = bcoeffs
 
+# NEED TO ADD MORE BCOEFFS HERE
+
 x = 0.0
 y = 0.0
 t = 0.0
@@ -196,6 +198,25 @@ time2 = 0
 
 print("new_statPts:")
 print(new_statPts)
+
+too_close = 1
+
+while too_close == 1 :
+    too_close = 0
+    notes = len(new_statPts) - 1
+    print("notes = ", notes)
+    for i in range(notes) :
+        x0 = new_statPts[i][0]
+        x1 = new_statPts[i+1][0]
+        if x1 - x0 < 0.02 :
+            print("too close:  ", i, ": ", x0, i+1, ": ", x1, "diff:  ", x1-x0)
+            too_close = 1
+            to_remove = i+1
+    if too_close == 1 :    
+        print("removing stat point: ", to_remove)
+        del new_statPts[to_remove]
+        print("new_statPts after removal:")
+        print(new_statPts)
 
 for i in range(notes) :
     print("computing values for i = ", i)

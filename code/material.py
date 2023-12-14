@@ -1,4 +1,5 @@
-
+# UNFINISHED
+#
 # ----- Brief Description -----
 # 
 # create directory material-<name>-dim<n> where name = audio file name without .wav,

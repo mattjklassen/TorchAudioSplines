@@ -45,6 +45,7 @@
 #
 # ----- ----- ----- ----- -----
 
+import sys
 import torch
 import torchaudio
 import numpy as np
@@ -62,20 +63,57 @@ from getBcoeffs import export_bcoeffs
 
 # main part of script
 
-# path = "../audio/input.wav"
-path = "../audio/A445.wav"
+print("Argument List:", str(sys.argv))
+args = len(sys.argv)
+
+audio_file = sys.argv[1]
+path = "../audio/" + audio_file
+print("path: ", path)
+
 waveform, sample_rate = torchaudio.load(path)
 np_waveform = waveform.numpy()
 num_channels, num_frames = np_waveform.shape
 length = num_frames / sample_rate
 print("input audio file has ", num_frames, " samples, at rate ", sample_rate)
+print("with length ", float(num_frames / sample_rate), " seconds")
+
+# first two args are: [0] findCycles.py [1] audio_file
+
+bcoeffs_num = 0
+current_segment = 0
+n = 20
+
+if args > 2 :
+    print("args > 2")
+    n = int(sys.argv[2])
+    print("spline dimension: ", n)
+
+if args > 3 :
+    print("args > 3")
+    current_segment = int(sys.argv[3])
+    print("segment selected: ", current_segment)
+
+if args > 4 :
+    print("args > 4")
+    bcoeffs_num = int(sys.argv[4])
+    print("bcoeffs cycle number: ", bcoeffs_num)
 
 # split waveform into segments, 
-# example: sample rate = 16000, segments of length 2048 samples, num_segments = 16
-
 num_segments = int(num_frames / 2048)
-segments = torch.tensor_split(waveform, num_segments, dim=1)
-segment_size = num_frames / num_segments
+
+if args < 3 :
+    print("number of segments:  ", num_segments)
+    print("rerun with spline dimension n as next command line argument, then")
+    print("chosen segment number to write report with graphs of cycles to doc/out.pdf")
+    print("cycle number k to write bcoeffs to file bcoeffs[k].txt")
+    sys.exit(0)
+
+segment_size = 2048
+segments = torch.split(waveform, segment_size, dim=1)
+num_segments = int(num_frames / segment_size)
+# we changed from using torch.tensor_split which splits based on number of segments 
+# we can manage this by running loops on segments 0 to num_segments - 1 (rather than len(segments) - 1) 
+
 print("splitting into ", num_segments, " segments")
 # for i in range(num_segments) :
 #    print("size of segment ", i, " : ", segments[i].size())
@@ -90,8 +128,9 @@ energy = 0.0
 # waveform = segments[seg_num]
 
 # assigning a particular segment for testing
-current_segment = 1
+# current_segment = 10
 print("testing with segment number ", current_segment)
+
 segment_start = segment_size * current_segment
 segment_end = segment_start + segment_size
 waveform = segments[current_segment]
@@ -213,14 +252,15 @@ for i in range(num_cycles) :
     # a_str = f'{a:.2f}'
     # b_str = f'{b:.2f}'
     # print("cycle ", i, " a: ", a_str, " b: ", b_str)
-    n = 20
+    # n = 20  # n is now command line parameter
     fig, bcoeffs = plotCycleSpline(waveform, sample_rate, i, a, b, n)
     print("index i = ", i)
     print("bcoeffs =")
     print(bcoeffs.numpy())
-    file = "bcoeffs0.txt"
-    if i == 0 :
+    file = "bcoeffs" + str(bcoeffs_num) + ".txt"
+    if i == bcoeffs_num :
         export_bcoeffs(file, bcoeffs.numpy())
+        print("bcoeffs exporting to: ", file)
     plt.savefig(pp, format='pdf')
     plt.close()
 

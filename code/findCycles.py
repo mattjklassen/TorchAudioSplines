@@ -69,6 +69,10 @@ args = len(sys.argv)
 audio_file = sys.argv[1]
 path = "../audio/" + audio_file
 print("path: ", path)
+index = audio_file.find(".")
+param = audio_file[:index]
+audio_prefix = audio_file[:index]
+print("audio_prefix:", audio_prefix)
 
 waveform, sample_rate = torchaudio.load(path)
 np_waveform = waveform.numpy()
@@ -80,7 +84,7 @@ print("with length ", float(num_frames / sample_rate), " seconds")
 # first two args are: [0] findCycles.py [1] audio_file
 
 bcoeffs_num = 0
-current_segment = 0
+seg_num = 0
 n = 20
 
 if args > 2 :
@@ -90,22 +94,23 @@ if args > 2 :
 
 if args > 3 :
     print("args > 3")
-    current_segment = int(sys.argv[3])
-    print("segment selected: ", current_segment)
+    seg_num = int(sys.argv[3])
+    print("segment selected: ", seg_num)
 
 if args > 4 :
     print("args > 4")
-    bcoeffs_num = int(sys.argv[4])
-    print("bcoeffs cycle number: ", bcoeffs_num)
+    cycle_num = int(sys.argv[4])
+    print("bcoeffs cycle number: ", cycle_num)
 
 # split waveform into segments, 
 num_segments = int(num_frames / 2048)
 
 if args < 3 :
     print("number of segments:  ", num_segments)
-    print("rerun with spline dimension n as next command line argument, then")
-    print("chosen segment number to write report with graphs of cycles to doc/out.pdf")
-    print("cycle number k to write bcoeffs to file bcoeffs[k].txt")
+    print("rerun with spline dimension <n> and segment number <seg_num>")
+    print("<findCycles.py> <audiofilename.wav> <n> <seg_num>")
+    print("to write report with graphs of cycles to pdf, and bcoeffs files")
+    print("for each cycle to directory:  ", audio_prefix)
     sys.exit(0)
 
 segment_size = 2048
@@ -125,15 +130,13 @@ hop_size = 128
 energy = 0.0
 
 # for seg_num in range(16) :
-# waveform = segments[seg_num]
+# waveform = segments[seg_num] ...
 
-# assigning a particular segment for testing
-# current_segment = 10
-print("testing with segment number ", current_segment)
+print("testing with segment number ", seg_num)
 
-segment_start = segment_size * current_segment
+segment_start = segment_size * seg_num
 segment_end = segment_start + segment_size
-waveform = segments[current_segment]
+waveform = segments[seg_num]
 np_waveform = waveform.numpy() 
 data = torch.squeeze(waveform).numpy()
 # i^th sample value is now data[i]
@@ -160,8 +163,11 @@ num_cycles = len(cycles)
 
 # TO DO: make this function ...
 # def cycleReport(waveform, sample_rate, cycles) :
+
 # print pdf with title page first, then plot of waveform, and plots of all cycles found:
-pp = PdfPages('../doc/out.pdf')
+report_name = audio_prefix + "-seg" + str(seg_num) + "-report.pdf"
+report_path = audio_prefix + "/" + report_name
+pp = PdfPages(report_path)
 
 firstPage = plt.figure(figsize=(15,8))
 firstPage.clf()
@@ -172,7 +178,7 @@ txt2 = "Number of Segments:  " + str(num_segments)
 txt2 += "      Segment Size:  " + str(segment_size)
 txt2 += "      FFT Size:  " + str(N)
 txt2 += "      Hop Size:  " + str(hop_size)
-txt3 = "Data for Segment " + str(current_segment) + ":"
+txt3 = "Data for Segment " + str(seg_num) + ":"
 txt3 += "     Weak f_0:  " + str(arg_max) + " Hz"
 txt3 += "     Target Samples per Cycle:  " + str(round(samples_per_cycle_guess,1)).ljust(8, ' ')
 txt3 += "    Number of Cycles:  " + str(num_cycles)
@@ -236,7 +242,7 @@ for i in range(num_frames) :
     samples[i] = data[i]
 
 plt.plot(times, samples)
-segment_title = "segment " + str(current_segment) + "  : "
+segment_title = "segment " + str(seg_num) + "  : "
 segment_title += str(segment_size) + " samples: (" + str(int(segment_start)) + " to " + str(int(segment_end)) + ")"
 plt.title(segment_title)
 plt.ylabel("sample float values")
@@ -257,10 +263,12 @@ for i in range(num_cycles) :
     print("index i = ", i)
     print("bcoeffs =")
     print(bcoeffs.numpy())
-    file = "bcoeffs" + str(bcoeffs_num) + ".txt"
-    if i == bcoeffs_num :
-        export_bcoeffs(file, bcoeffs.numpy())
-        print("bcoeffs exporting to: ", file)
+    # file = "bcoeffs" + str(bcoeffs_num) + ".txt"
+    file = audio_prefix + "/" + "bcoeffs-n" + str(n) + "-seg" + str(seg_num) + "-cyc" + str(i) + ".txt"
+    # if i == cycle_num :
+    # if i in range(6) :
+    export_bcoeffs(file, bcoeffs.numpy())
+    #    print("bcoeffs exporting to: ", file)
     plt.savefig(pp, format='pdf')
     plt.close()
 

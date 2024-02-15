@@ -98,5 +98,7 @@ hop_size = 128
 #    current_segment = i
 #    process_segment(segment, current_segment, segment_size, sample_rate, N, hop_size)
 
+#   in progress ....
+
 
 

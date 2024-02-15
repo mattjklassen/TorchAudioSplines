@@ -46,8 +46,8 @@
 # knots-file.txt  (default is computed as 0,0,0,0,1/k,...,(k-1)/k,1,1,1,1)
 # note: knots-file must contain the string "knots" but not the string "="
 # for example [2] knots-0.txt
-# invert=0    (default is 0)
-# retro=0     (default is 0)
+# invert=0    (default is 0) (this is set to 1 if "i" is on command line)
+# retro=0     (default is 0) (this is set to 1 if "r" is on command line)
 # f0=220      (default is 220)
 # scale=1     (default is 1)
 # shift=0     (default is 0)
@@ -67,7 +67,7 @@ from argMaxSpec import plotSpecArgMax, getArgMax
 from cycleSpline import plotCycleSpline
 from getCycles import getCycles
 from getBcoeffs import import_bcoeffs, export_bcoeffs
-from genWavTone import genWavTone, insertWavTone
+from genWavTone import genWavTone, insertWavTone2, insertWavTone
 from computeBsplineVal import computeSplineVal
 from getStatVals import getSplineVals, getStatPts
 from getKnots import getKnots, import_knots
@@ -77,10 +77,11 @@ bcoeffs_file = "bcoeffs0.txt"
 invert = 0
 retro = 0
 f0 = 220
+init_f0 = 220
 scale = 1
 shift = 0
 notes = 0
-time0 = 0.5
+time0 = 0.25
 special_knots = 0
 
 print("Argument List:", str(sys.argv))
@@ -131,7 +132,7 @@ print("time0:  ", time0)
 print("invert:  ", invert)
 print("retro:  ", retro)
 
-# in case notes == 0:
+# if notes == 0 then we use stationary points
 # in order to compute lengths for arrays of note times and frequencies, we need the
 # array of stationary points to use for those pitches and durations.
 
@@ -142,6 +143,7 @@ if special_knots == 1 :
 # get the spline values over [0,1] at 1000 points
 # (this was lifted from previous code use to graph the spline with matplot)
 new_splineVals = getSplineVals(bcoeffs, knotVals, 1000)
+
 # search through those 1000 points for stationary points, and also include endpoints
 new_statPts = getStatPts(new_splineVals)
 num_statPts = len(new_statPts)
@@ -182,7 +184,7 @@ key_bcoeffs = torch.zeros(num_keys, n)
 for i in range(num_keys) :
     key_bcoeffs[i] = bcoeffs
 
-# NEED TO ADD MORE BCOEFFS HERE
+# NEED TO ADD MORE BCOEFFS HERE for different key cycles and interpolation
 
 x = 0.0
 y = 0.0
@@ -279,8 +281,16 @@ for i in range(notes) :
     time1 = note_times[i]
     f0 = frequencies[i]
     print("start_time, time1, f0:  ", start_time, time1, f0)
+    if i > 0 :
+        ratio = frequencies[i] / frequencies[i-1]
+        centval = (1200 / np.log(2)) * np.log(ratio)
+        print("interval:  ratio = ", ratio, " cent value =  ", centval)
+        ratio = frequencies[i] / init_f0 
+        centval = (1200 / np.log(2)) * np.log(ratio)
+        print("cent value relative to initial f0:  ", centval)
     print("note_keys[i]: ", note_keys[i])
-    insertWavTone(waveform, start_time, f0, time1, sample_rate, key_bcoeffs, note_keys[i], gains, interp_method)
+    # insertWavTone(waveform, start_time, f0, time1, sample_rate, key_bcoeffs, note_keys[i], gains, interp_method)
+    insertWavTone2(waveform, start_time, f0, time1, sample_rate, key_bcoeffs, knotVals, note_keys[i], gains, interp_method)
     start_time += time1 * sample_rate
 
 waveform_out = torch.unsqueeze(waveform, dim=0)

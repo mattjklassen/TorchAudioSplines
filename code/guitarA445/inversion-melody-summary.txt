@@ -1,0 +1,10 @@
+melody summary:
+
+number of notes =  8
+
+inversion sequence of intervals as cent values: 
+-795  505  -354  391  -56  1346  -40  
+
+inversion sequence of intervals relative to initial f0 as 0: 
+0  -795  -289  -644  -253  -309  1037  996  
+

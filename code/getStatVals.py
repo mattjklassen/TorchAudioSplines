@@ -43,6 +43,29 @@ def getStatPts(splineVals) :
     yvals = splineVals[1]
     current_slope = 1
     previous_slope = 1
+    # append left endpoint: 
+    stat_pts.append([xvals[0],yvals[0]])
+    for i in range(1,len(xvals)) :
+        # compute numerical derivative:
+        current_slope = yvals[i] - yvals[i-1]
+        if previous_slope * current_slope < 0 :
+            # print("critical value: ", xvals[i-1])
+            stat_pts.append([xvals[i-1],yvals[i-1]])
+        previous_slope = current_slope
+    # append right endpoint: 
+    stat_pts.append([xvals[-1],yvals[-1]])
+    
+    return stat_pts
+
+def getRegPts(splineVals) :
+
+# not yet implemented
+    
+    stat_pts = []
+    xvals = splineVals[0]
+    yvals = splineVals[1]
+    current_slope = 1
+    previous_slope = 1
     stat_pts.append([xvals[0],yvals[0]])
     for i in range(1,len(xvals)) :
         # compute numerical derivative:
@@ -53,14 +76,6 @@ def getStatPts(splineVals) :
         previous_slope = current_slope
     stat_pts.append([xvals[-1],yvals[-1]])
     
-#    stat_num = len(stat_pts)
-#    stat_xvals = torch.zeros(stat_num + 2)
-#    stat_yvals = torch.zeros(stat_num + 2)
-#    stat_xvals[-1] = 1
-#    for i in range(1, stat_num + 1) :
-#        stat_xvals[i] = stat_pts[i-1][0]
-#        stat_yvals[i] = stat_pts[i-1][1]
-
     return stat_pts
 
 

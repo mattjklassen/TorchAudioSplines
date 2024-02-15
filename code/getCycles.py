@@ -141,6 +141,112 @@ def getCycles(waveform, sample_rate, weakf0) :
     return cycles
 
 
+def getConsecutiveCycles(waveform, sample_rate, weakf0) :
+
+    # Same as above but now force cycles to be consecutive, ie. [z_1,z_2] must be followed
+    # by [z_2,z_3] where the z_i are zeros with positive slope.  There may be other zeros
+    # with positive slope which are skipped and do not form the endpoints of cycles.
+    # 
+    # previous comments:
+    # 
+    # This function searches through waveform to find intervals [a, b] called cycles.
+    # Each cycle has the property that a and b are zero crossings of the piecewise linear
+    # graph of waveform samples, each with positive slope, which means a and b satisfy:
+    # a is a time value between some samples t_i and t_{i+1} with y_i < 0 < y_{i+1}
+    # b is a time value between some samples t_j and t_{j+1} with y_j < 0 < y_{j+1}
+    # and further we require that the distance b - a is chosen as close as possible to
+    # the predicted cycle length which should be approximately (sample_rate / weakf0) samples. 
+    # The function returns a list of the intervals as pairs a,b.  The intervals [a,b] may overlap. 
+
+    # One more thing: It turns out to simplify things if we assume that zero crossings never
+    # occur exactly at sample values.  Since we don't have any exact information about the waveform 
+    # between samples it is not a stretch to move a zero crossing that occurs (almost) exactly at a
+    # sample value to the right or left by say 0.01 samples.  This could also be re-adjusted if we
+    # do a sample rate change.  Not sure if this will cause other problems yet. 
+
+    a = 0.0  # left endpoint of cycle
+    b = 0.0  # right endpoint of cycle
+    np_waveform = waveform.numpy() 
+    num_channels, num_frames = np_waveform.shape
+    # weakf0 is cycles/sec, sample_rate is samples/sec 
+    # sample_rate/weakf0 is samples/cycle = cycle length in samples
+    weakT0 = float(sample_rate) / weakf0 # predicted cycle length in samples
+
+    # print("shape of np_waveform  ", np_waveform.shape)
+    y0 = 0.0
+    y1 = 0.0
+    zero = 0.0
+    end_pts = []
+    zeros = []
+    cycles = []
+
+    # loop over samples in waveform to find zeros with positive slope:
+    for i in range(int(num_frames - 2)) :
+        y0 = np_waveform[0,i]
+        y1 = np_waveform[0,i+1]
+        if (y0 < 0) and (y1 > 0) :  # positive slope and zero crossing conditions met
+        #    print("sample ", i, " : ", y0)
+        #    print("sample ", i+1, " : ", y1)
+            m = y1 - y0  # line is y(t) = y0 + mt = 0 when t = -y0/m
+            zero = float(i) - y0 / m
+            end_pts.append([y0,y1])
+            zeros.append(zero)
+
+    num_zeros = len(zeros)
+    last_zero = zeros[num_zeros-1]
+
+    print("number of zeros:  ", num_zeros)
+    print("last zero:  ", last_zero)
+
+    a = zeros[0]
+    b = a
+
+    exceeded = False
+    counter = 0
+
+    while (not exceeded) :
+        a = b
+        if (last_zero - a) < weakT0 :
+            print("a is within weakT0 of last zero")
+            exceeded = True
+            break
+        temp = b + weakT0  # search for next zero at period guess weakT0
+        if temp > last_zero :
+            print("temp exceeds last_zero")
+            exceeded = True
+            break
+        j = 0
+        while zeros[j] < temp :
+            j += 1
+            if j > num_zeros - 1 :
+                j = num_zeros - 1
+                break
+        closest = j
+        # if abs(zeros[j] - temp) > abs(zeros[j-1] - temp) :
+        #     closest = j-1
+        if abs(zeros[j] - a) < 0.001 :
+            closest += 1
+        # if exceeded :
+        #    closest = num_zeros - 1
+        # if closest == i :
+        #     closest = i + 1
+        # if closest > num_zeros - 1 :
+        #     closest = num_zeros - 1
+        b = zeros[closest]
+        diff = b - a
+        # each cycle is a list [a, b]
+        error = abs(diff - weakT0)
+        num_cycles = len(cycles)
+        cycles.append([a, b])
+        counter += 1
+        print("counter: ", counter, "  a = ", a, "  b = ", b, "  diff = ", diff)
+        print("last_zero - a :  ", last_zero - a)
+        if counter > 700 :
+            exit(0)
+
+    return cycles
+
+
 def getf0withCycles(waveform, sample_rate, weakf0) :
 
     cycles = getCycles(waveform, sample_rate, weakf0)

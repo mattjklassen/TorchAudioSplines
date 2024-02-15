@@ -43,6 +43,7 @@ print("Argument List:", str(sys.argv))
 
 special_knots = 0  # if 0 will default to standard knot sequence 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1.
 stat = 1   # if stat = 1 will plot stationary points where numerical derivative = 0
+hold = 0   # if hold = 1 will plot sample and hold line segments at stationart points
 
 bcoeffs_file = sys.argv[1]
 if len(sys.argv) > 2 :
@@ -168,12 +169,54 @@ new_statPts = getStatPts(new_splineVals)
 print("new statPts:")
 print(new_statPts)
 
+if stat == 1 :
+    too_close = 1
+    while too_close == 1 :
+        too_close = 0
+        notes = len(new_statPts) - 1
+        print("notes = ", notes)
+        for i in range(notes) :
+            x0 = new_statPts[i][0]
+            x1 = new_statPts[i+1][0]
+            if x1 - x0 < 0.02 :
+                print("too close:  ", i, ": ", x0, i+1, ": ", x1, "diff:  ", x1-x0)
+                too_close = 1
+                to_remove = i+1
+        if too_close == 1 :    
+            print("removing stat point: ", to_remove)
+            del new_statPts[to_remove]
+            print("new_statPts after removal:")
+            print(new_statPts)
+    x1 = new_statPts[-1][0]
+    if x1 - 1 < 0.02 :
+        del new_statPts[-1]
+
+stat_pts = new_statPts
+stat_num = len(stat_pts) # = 13
+stat_xvals = torch.zeros(stat_num + 1) # = 14 to include left endpoint = 1
+stat_yvals = torch.zeros(stat_num + 1)
+for i in range(0, stat_num) :
+    stat_xvals[i] = stat_pts[i][0] # = 13 xvals
+    stat_yvals[i] = stat_pts[i][1]
+stat_xvals[-1] = 1
+stat_yvals[-1] = 0
+
 print(yvals)
 print("size of yvals:  ", yvals.size)
 plt.figure(figsize=(15,8))
-plt.plot(xvals, yvals)
+plt.plot(xvals, yvals, 'grey')
 if stat == 1 :
-    plt.plot(stat_xvals, stat_yvals, 'ro')
+    if hold == 1:
+        for i in range(0, stat_num) :
+            holdxvals = [stat_xvals[i], stat_xvals[i+1]]
+            holdyvals = [stat_yvals[i], stat_yvals[i]]
+            plt.plot(holdxvals, holdyvals, 'blue')
+    stat_xplot = torch.zeros(stat_num)
+    stat_yplot = torch.zeros(stat_num)
+    for i in range(stat_num) :
+        stat_xplot[i] = stat_xvals[i]
+        stat_yplot[i] = stat_yvals[i]
+    plt.plot(stat_xplot, stat_yplot, 'ro')
 if stat == 0 :
     plt.plot(inputVals, outputVals, 'ro')
 # title is assigned earlier
@@ -181,4 +224,7 @@ plt.title(title)
 plt.xlabel('time axis')
 # plt.ylabel('audio sample axis')
 plt.show()
+
+print("number of stat_pts: ", stat_num)
+print(stat_pts)
 

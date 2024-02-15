@@ -41,13 +41,13 @@ def genWavTone2(f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, inter
     # (keys need to be less than the total number of cycles for the predicted time) 
     # gains - a sequence of scalars to multiply each key cycle by 
     # (the previous three arrays all have the same size)
-    # interp_method - for cycle interpolation, 0 = none, 1 = linear, 2 = quadratic, 3 = cubic
+    # interp_method - for cycle interpolation, 0 = none (constant), 1 = linear, 2 = quadratic, 3 = cubic
     
     # output:
     # tensor of floats as output sample values
 
     # the default method for cycle interpolation should be linear interpolation (of bcoeffs)
-    # 0 = none should mean we are just repeating the same cycle until next key cycle.
+    # 0 = none (constant) should mean we are just repeating the same cycle until next key cycle.
 
     n = key_bcoeffs.size(dim=1) # dimension of splines for each cycle
     num_keys = len(keys)
@@ -56,13 +56,10 @@ def genWavTone2(f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, inter
     # frac_cycle = f0 * time - num_cycles # length of last partial cycle
     if (len(key_bcoeffs) != num_keys) :
         print("inconsistent number of keys and key_bcoeffs")
-        return data
     if (len(gains) != num_keys) :
         print("inconsistent number of keys and gains")
-        return data
     if (last_key > int(f0 * time)) :
         print("last key cycle exceeds number of cycles predicted by f0")
-        return data
 
     # Next multiply key cycles' bcoeffs by gains
 #    for i in range(num_keys) :
@@ -76,7 +73,7 @@ def genWavTone2(f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, inter
     for i in range(num_keys) :
         key = keys[i]
         all_bcoeffs[key] = key_bcoeffs[i]  # assign entire row 
-    print(all_bcoeffs)
+    # print(all_bcoeffs)
     # now the key bcoeffs are filled into the array all_bcoeffs 
 
     # keys are an increasing sequence of indices of key cycles which satisfy: 
@@ -182,13 +179,10 @@ def genWavTone(f0, time, sample_rate, key_bcoeffs, keys, gains, interp_method) :
     # frac_cycle = f0 * time - num_cycles # length of last partial cycle
     if (len(key_bcoeffs) != num_keys) :
         print("inconsistent number of keys and key_bcoeffs")
-        return data
     if (len(gains) != num_keys) :
         print("inconsistent number of keys and gains")
-        return data
     if (last_key > int(f0 * time)) :
         print("last key cycle exceeds number of cycles predicted by f0")
-        return data
 
     # Next multiply key cycles' bcoeffs by gains
 #    for i in range(num_keys) :
@@ -307,7 +301,7 @@ def insertWavTone(waveform, start_time, f0, time, sample_rate, key_bcoeffs, keys
     # time - length of tone in decimal seconds 
     # start_time - starting time in waveform to insert tone, in decimal samples 
     # sample_rate - integer typically 16000 or 48000 or 44100
-    # key_bcoeffs - tensor (m by n matrix) of (row) vectors of bcoeffs for each cycle
+    # key_bcoeffs - tensor (m by n matrix) of m (rows) of n bcoeffs for each cycle
     # keys - integers which give the placement of key cycles within the sequence of all cycles
     # (keys need to be less than the total number of cycles for the predicted time) 
     # gains - a sequence of scalars to multiply each key cycle by 
@@ -327,13 +321,10 @@ def insertWavTone(waveform, start_time, f0, time, sample_rate, key_bcoeffs, keys
     # frac_cycle = f0 * time - num_cycles # length of last partial cycle
     if (len(key_bcoeffs) != num_keys) :
         print("inconsistent number of keys and key_bcoeffs")
-        return data
     if (len(gains) != num_keys) :
         print("inconsistent number of keys and gains")
-        return data
     if (last_key > int(f0 * time)) :
         print("last key cycle exceeds number of cycles predicted by f0")
-        return data
 
     # Next multiply key cycles' bcoeffs by gains
     for i in range(num_keys) :
@@ -410,6 +401,7 @@ def insertWavTone2(waveform, start_time, f0, time, sample_rate, key_bcoeffs, kno
     # start_time - starting time in waveform to insert tone, in decimal samples 
     # sample_rate - integer typically 16000 or 48000 or 44100
     # key_bcoeffs - tensor (m by n matrix) of (row) vectors of bcoeffs for each cycle
+    # knotVals - tensor of knots for spline evaluation
     # keys - integers which give the placement of key cycles within the sequence of all cycles
     # (keys need to be less than the total number of cycles for the predicted time) 
     # gains - a sequence of scalars to multiply each key cycle by 
@@ -429,26 +421,30 @@ def insertWavTone2(waveform, start_time, f0, time, sample_rate, key_bcoeffs, kno
     # frac_cycle = f0 * time - num_cycles # length of last partial cycle
     if (len(key_bcoeffs) != num_keys) :
         print("inconsistent number of keys and key_bcoeffs")
-        return data
     if (len(gains) != num_keys) :
         print("inconsistent number of keys and gains")
-        return data
     if (last_key > int(f0 * time)) :
         print("last key cycle exceeds number of cycles predicted by f0")
-        return data
+
+    new_bcoeffs = torch.zeros(num_keys, n)
+    for m in range(num_keys) :
+        temp = torch.tensor(key_bcoeffs[m])
+        new_bcoeffs[m] = temp
 
     # Next multiply key cycles' bcoeffs by gains
+    # print("GAINS:  ", gains)
+    #  print("KEY_BCOEFFS:  ", key_bcoeffs)
     for i in range(num_keys) :
-        key_bcoeffs[i] *= gains[i]
+        new_bcoeffs[i] *= gains[i]
     # key_bcoeffs *= gains
 
     # Need to interpolate to fill in bcoeffs for intermediate cycles
     # Start with bcoeffs = first vector of key_bcoeffs
     all_bcoeffs = torch.zeros(num_cycles,n)  # rows are bcoeffs of each cycle
-    all_bcoeffs[0] = key_bcoeffs[0]  # first row
+    all_bcoeffs[0] = new_bcoeffs[0]  # first row
     for i in range(num_keys) :
         key = int(keys[i])
-        all_bcoeffs[key] = key_bcoeffs[i]  # assign entire row 
+        all_bcoeffs[key] = new_bcoeffs[i]  # assign entire row 
     # print(all_bcoeffs)
     # now the key bcoeffs are filled into the array all_bcoeffs 
 
@@ -470,7 +466,8 @@ def insertWavTone2(waveform, start_time, f0, time, sample_rate, key_bcoeffs, kno
             start_interm = int(keys[i])+1  # each intermediate index is now start_interm + j
             # p goes from 1/num_interm to 1=num_interm/num_interm, so p = (j+1)/num_interm 
             p = float(j+1) / num_interm
-            all_bcoeffs[start_interm + j] = (1-p) * key_bcoeffs[i] + p * key_bcoeffs[i+1]
+            # linear interpolation between key_bcoeffs rows with ratio p: 
+            all_bcoeffs[start_interm + j] = (1-p) * new_bcoeffs[i] + p * new_bcoeffs[i+1]
 
     # Now all_bcoeffs should have all intermediate cycles filled 
     # print("all_bcoeffs: ", all_bcoeffs)
@@ -493,7 +490,8 @@ def insertWavTone2(waveform, start_time, f0, time, sample_rate, key_bcoeffs, kno
             bcoeffs = all_bcoeffs[i]
         else :
             numer = float(num_cycles - i)
-            tail = float(numer / num_trailing_cycles)
+            # removing next tail calculation to see how it affects envelope
+            # tail = float(numer / num_trailing_cycles)
             bcoeffs = tail * all_bcoeffs[last_key]
         # now insert cycle into waveform from start_time to end of cycle
         # insertCycle(waveform, cycle, bcoeffs)

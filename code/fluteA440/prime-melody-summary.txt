@@ -1,0 +1,15 @@
+melody summary:
+
+number of notes =  12,  initial f0 = 440.0
+
+first note duration =  0.125,  total time in seconds = 1.5
+
+prime sequence of intervals between notes as cent values: 
+422  312  256  -79  -470  -518  -448  -209  -95  -97  401  
+
+prime sequence of intervals relative to initial f0 as 0: 
+0  422  735  991  911  441  -76  -525  -734  -829  -926  -525  
+
+prime sequence of fundamental frequency f0 values: 
+440 561  672  780  745  567  420  324  287  272  257  324  
+

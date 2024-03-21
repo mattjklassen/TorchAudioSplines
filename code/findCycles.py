@@ -86,6 +86,7 @@ print("with length ", float(num_frames / sample_rate), " seconds")
 bcoeffs_num = 0
 seg_num = 0
 n = 20
+f0_guess = 0.0
 
 if args > 2 :
     print("args > 2")
@@ -99,8 +100,8 @@ if args > 3 :
 
 if args > 4 :
     print("args > 4")
-    cycle_num = int(sys.argv[4])
-    print("bcoeffs cycle number: ", cycle_num)
+    f0_guess = float(sys.argv[4])
+    print("f0 guess: ", f0_guess)
 
 # split waveform into segments, 
 num_segments = int(num_frames / 2048)
@@ -111,6 +112,7 @@ if args < 3 :
     print("<findCycles.py> <audiofilename.wav> <n> <seg_num>")
     print("to write report with graphs of cycles to pdf, and bcoeffs files")
     print("for each cycle to directory:  ", audio_prefix)
+    print("also add arg <f0_guess> to end of list to force f_0")
     sys.exit(0)
 
 segment_size = 2048
@@ -145,6 +147,9 @@ num_channels, num_frames = np_waveform.shape
 # get the weak f_0 (approx fundamental frequency) with getArgMax
 max_f0 = 800
 arg_max = getArgMax(waveform, RATE, N, hop_size, max_f0)
+# use f0_guess if > 0 from command line arg
+if f0_guess > 0 :
+    arg_max = f0_guess
 arg_max_str = f'{arg_max:.2f}'
 samples_per_cycle_guess = RATE / arg_max
 spc_str = f'{samples_per_cycle_guess:.2f}'
@@ -264,7 +269,7 @@ for i in range(num_cycles) :
     print("bcoeffs =")
     print(bcoeffs.numpy())
     # file = "bcoeffs" + str(bcoeffs_num) + ".txt"
-    file = audio_prefix + "/" + "bcoeffs-n" + str(n) + "-seg" + str(seg_num) + "-cyc" + str(i) + ".txt"
+    file = audio_prefix + "/" + "bcoeffs/" + "bcoeffs-n" + str(n) + "-seg" + str(seg_num) + "-cyc" + str(i) + ".txt"
     # if i == cycle_num :
     # if i in range(6) :
     export_bcoeffs(file, bcoeffs.numpy())

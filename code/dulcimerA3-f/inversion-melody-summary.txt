@@ -1,0 +1,15 @@
+melody summary:
+
+number of notes =  21,  initial f0 = 220.0
+
+first note duration =  0.25,  total time in seconds = 5.1020408163265305
+
+inversion sequence of intervals between notes as cent values: 
+-877  331  -325  586  -940  246  251  -281  887  1458  -310  100  -485  274  -364  347  -867  254  -441  714  
+
+inversion sequence of intervals relative to initial f0 as 0: 
+0  -877  -545  -870  -283  -1223  -977  -725  -1007  -119  1339  1029  1129  643  917  552  900  32  286  -155  558  
+
+inversion sequence of fundamental frequency f0 values: 
+220 132  160  133  186  108  125  144  122  205  476  398  422  319  373  302  369  224  259  201  303  
+

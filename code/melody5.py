@@ -12,6 +12,18 @@
 #
 # ----- ----- ----- ----- -----
 
+# To Do:
+#
+# Put in the option to specify first interval in cents.
+# This can be done by calculating scale to achieve specified first interval.
+# For example, say initial f0 = 220 and second note occurs at y_1 = 0.3 
+# and we want first interval to be a just perfect fifth.
+# Then we can accomplish this by scaling the y axis so that 2^(y_1) = 3/2.
+# So y_1 = log2(1.5) and we scale the signal y-values by log2(1.5) / 0.3.
+#
+# Make the calculation of initial f0 reflect the use of transposition or shift.
+#
+
 # ------- More Details --------
 # 
 
@@ -285,6 +297,11 @@ for i in range(N_config) :
             j += 1
             # print("j is now: ", j)
 
+if shift > 0 or shift < 0 :
+    f0 = f0 * np.exp2(shift)
+    shift = 0
+    print("shifted f0:  ", f0)
+
 transform = "prime"
 if invert == 1 and retro == 0 :
     transform = "inversion"
@@ -292,6 +309,10 @@ if invert == 0 and retro == 1 :
     transform = "retrograde"
 if invert == 1 and retro == 1 :
     transform = "retrograde-inversion"
+
+print("transform:  ")
+print(transform)
+print("")
 
 print("keys: ")
 print("")
@@ -473,6 +494,7 @@ if stat == 1 :
 print("")
 print("mel_Pts after removals of close values:")
 print(mel_Pts)
+print("")
 
 # mel_Pts are now set with xvals in [0,1] and yvals in [-1,1] so we can compute the first subinterval
 # length: length1 = x1 - x0, and the duration scalar = time0 / length1 which will then scale the size
@@ -539,6 +561,7 @@ print("audio_prefix:", audio_prefix)
 # next loop writes each note in sequence to waveform and also
 # prints ratios and cent values to compare notes in melody
 cent_values = ""
+f0_values = str(int(f0)) + " "
 scale_values = "0  "
 if retro == 1 :
     ratio = frequencies[0] / f0 
@@ -557,6 +580,7 @@ for i in range(notes) :
         ratio = frequencies[i] / f0 
         centval = (1200 / np.log(2)) * np.log(ratio)
         scale_values += str(int(centval)) + "  "
+        f0_values += str(int(frequencies[i])) + "  "
         print("cent value relative to initial f0:  ", centval)
     print("note_keys[i]: ", note_keys[i])
 #   print("key_gains: ", key_gains)
@@ -599,14 +623,36 @@ path = audio_prefix + "/" + file
 summary = "melody summary:"
 summary += "\n\n"
 summary += "number of notes =  " + str(notes)
-summary += "\n\n"
-summary += transform + " sequence of intervals as cent values: \n"
+summary += ",  initial f0 = " + str(f0) + "\n\n"
+summary += "first note duration =  " + str(time0)
+summary += ",  total time in seconds = " + str(time2) + "\n\n"
+summary += transform + " sequence of intervals between notes as cent values: \n"
 summary += cent_values + "\n\n"
 summary += transform + " sequence of intervals relative to initial f0 as 0: \n"
 summary += scale_values + "\n\n"
+summary += transform + " sequence of fundamental frequency f0 values: \n"
+summary += f0_values + "\n\n"
 
 
 with open(path, 'w') as f:
     f.writelines(summary)
     f.close()
 
+print("")
+print("")
+print("********************************************************************")
+print("")
+print("")
+
+print("copy of config file mel5config.txt :\n\n")
+
+for i in range(len(config_lines)) :
+    print(config_lines[i].rstrip())
+
+print("")
+print("")
+print("********************************************************************")
+print("")
+print("")
+
+print(summary)

@@ -1,0 +1,26 @@
+
+# key cycles chosen from 16 segments: 0 through 10, and 20,30,40,50,60. 
+# seg num     cycles
+# 0           0,8,14,32
+# 1           2,8,15,
+# 2           0,7,17,
+# 3           4,8,13
+# 4           1,7,17
+# 5           4,8,
+# 6           3,9,
+# 7           1,4,
+# 8           2,5
+# 9           0,4
+# 10          3
+# 20          2,
+# 30          3,
+# 40          10
+# 50          9
+# 60          0
+
+# each label refers to segment and cycle numbers for bcoeffs file names for key cycles
+labels = [[0,0],[0,8],[0,14],[0,32],[1,2],[1,8],[1,15],[2,0],[2,7],[2,17],[3,4],[3,8],[3,13],[4,1],[4,7],[4,17],[5,4],[5,8],[6,3],[6,9],[7,1],[7,4],[8,2],[8,5],[9,0],[9,4],[10,3],[20,2],[30,3],[40,10],[50,9],[60,0]]
+# print("labels:  ", labels)
+num_labels = len(labels)
+# print("num_labels: ", num_labels)
+

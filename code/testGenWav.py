@@ -27,10 +27,10 @@ from genWavTone import genWavTone
 
 # main part of script
 
-f0 = 220.0
+f0 = 110.0
 # f0 *= 1.059463
 # f0 *= 1.059463
-time = 3.0
+time = 0.25
 # time = 0.25
 sample_rate = 44100.0
 file = "bcoeffs1.txt"
@@ -47,7 +47,7 @@ for i in range(num_keys) :
     keys[i] = int(temp[i])
 print("keys: ", keys)
 
-gains = [0.2,0.6,0.9,1.0,1.0,0.8,0.6]
+gains = [0.8,0.9,1.0,0.8,0.5,0.3,0.1]
 interp_method = 1
 key_bcoeffs = torch.zeros(num_keys, n)
 

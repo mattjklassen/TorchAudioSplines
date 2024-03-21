@@ -5,27 +5,43 @@
 
 KEYS:
 0.0
-3.0
+2.0
+4.0
 6.0
+8.0
 10.0
+12.0
+15.0
 20.0
+25.0
 30.0
+40.0
+50.0
 60.0
-90.0
+80.0
+100.0
 
 # key bcoeffs are used to build each tone with cycle interpolation
 # key bcoeffs file names must contain "bcoeffs", and contents must be one float per line (as text)
 # number of floats in each file determines n = dimension of splines (must all be equal for consistency)
 
 KEY BCOEFFS:
-guitarA445/bcoeffs-n20-seg0-cyc2.txt
-guitarA445/bcoeffs-n20-seg0-cyc5.txt
-guitarA445/bcoeffs-n20-seg0-cyc9.txt
-guitarA445/bcoeffs-n20-seg0-cyc15.txt
-guitarA445/bcoeffs-n20-seg1-cyc2.txt
-guitarA445/bcoeffs-n20-seg1-cyc8.txt
-guitarA445/bcoeffs-n20-seg1-cyc14.txt
-guitarA445/bcoeffs-n20-seg1-cyc20.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg2-cyc7.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg2-cyc17.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg3-cyc4.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg3-cyc8.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg3-cyc13.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg4-cyc1.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg4-cyc7.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg4-cyc17.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg5-cyc4.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg5-cyc8.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg6-cyc3.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg6-cyc9.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg7-cyc1.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg7-cyc4.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg8-cyc2.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg8-cyc5.txt
 
 # gains can be used to give an envelope by specifying one float per key cycle.
 # this can be useful if bcoeffs are the same for all key cycles
@@ -36,10 +52,18 @@ KEY GAINS:
 1.0
 1.0
 1.0
-1.0
+0.95
 0.9
+0.85
+0.8
+0.75
 0.7
+0.65
+0.6
+0.55
 0.5
+0.4
+0.3
 0.2
 
 # uncomment key-knots.txt to use a special knot sequence for the key bcoeffs files, otherwise default
@@ -50,15 +74,15 @@ KEY KNOTS:
 # key-knots.txt
 
 MELODIC CONTOUR:
-guitarA445/bcoeffs-n20-seg0-cyc2.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg2-cyc7.txt
 
 # same comments as above for key-knots.txt also apply to mel-knots.txt.
 
 MEL KNOTS:
 mel-knots.txt
 
-AUDIO SOURCE
-guitarA445.wav
+AUDIO SOURCE:
+dulcimerA3-f.wav
 
 PARAMS:
 # sample rate:
@@ -79,14 +103,14 @@ stat=1
 # duration of first note in melody in seconds:
 time0=0.25
 
-# if invert = 1 then pitches of melody are inverted:
-invert=0
+# if invert is 1 then pitches of melody are inverted:
+invert=1
 
-# if retro = 1 then retrograde melody is generated:
+# if retro is 0 then retrograde melody is generated:
 retro=1
 
 # scale y axis of spline, where original values -1 < y < 1 is a span of two octaves, so scale=2 gives 4 octaves:
-scale=2
+scale=12
 
 # shift y values by a constant, so shift=1 moves pitches up an octave:
 shift=0

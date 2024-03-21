@@ -1,0 +1,10 @@
+melody summary:
+
+number of notes =  15
+
+prime sequence of intervals between notes as cent values: 
+1075  -228  -1418  365  -109  1027  121  -169  160  -2029  299  -74  575  -146  
+
+prime sequence of intervals relative to initial f0 as 0: 
+0  1075  846  -572  -206  -316  710  832  663  823  -1206  -906  -981  -406  -552  
+

@@ -21,11 +21,11 @@ KEY BCOEFFS:
 guitarA445/bcoeffs-n20-seg0-cyc2.txt
 guitarA445/bcoeffs-n20-seg0-cyc5.txt
 guitarA445/bcoeffs-n20-seg0-cyc9.txt
-guitarA445/bcoeffs-n20-seg0-cyc16.txt
+guitarA445/bcoeffs-n20-seg0-cyc15.txt
 guitarA445/bcoeffs-n20-seg1-cyc2.txt
 guitarA445/bcoeffs-n20-seg1-cyc8.txt
-guitarA445/bcoeffs-n20-seg1-cyc12.txt
-guitarA445/bcoeffs-n20-seg1-cyc16.txt
+guitarA445/bcoeffs-n20-seg1-cyc14.txt
+guitarA445/bcoeffs-n20-seg1-cyc20.txt
 
 # gains can be used to give an envelope by specifying one float per key cycle.
 # this can be useful if bcoeffs are the same for all key cycles
@@ -50,12 +50,15 @@ KEY KNOTS:
 # key-knots.txt
 
 MELODIC CONTOUR:
-bcoeffs-A445-0-2.txt
+guitarA445/bcoeffs-n20-seg0-cyc2.txt
 
 # same comments as above for key-knots.txt also apply to mel-knots.txt.
 
 MEL KNOTS:
 mel-knots.txt
+
+AUDIO SOURCE
+guitarA445.wav
 
 PARAMS:
 # sample rate:
@@ -80,7 +83,7 @@ time0=0.25
 invert=0
 
 # if retro = 1 then retrograde melody is generated:
-retro=0
+retro=1
 
 # scale y axis of spline, where original values -1 < y < 1 is a span of two octaves, so scale=2 gives 4 octaves:
 scale=2

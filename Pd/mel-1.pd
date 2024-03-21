@@ -1,0 +1,9 @@
+#N canvas 132 109 756 706 12;
+#X obj 199 249 readsf~;
+#X obj 202 292 dac~;
+#X msg 228 153 open ../audio/cello189.wav;
+#X msg 158 151 1;
+#X connect 0 0 1 0;
+#X connect 0 0 1 1;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;

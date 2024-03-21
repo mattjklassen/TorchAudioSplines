@@ -53,6 +53,7 @@ from plotSegmentSpline import plotSegmentSpline
     
 path = "../audio/"
 file = "left.wav"
+file = "dulcimerA3-f.wav"
 path += file
 waveform, sample_rate = torchaudio.load(path)
 np_waveform = waveform.numpy()
@@ -65,13 +66,13 @@ print("splitting file into ", num_segments, " segments")
 segments = torch.tensor_split(waveform, num_segments, dim=1)
 for j in range(num_segments) :
     print("segment: ", j, " length in samples: ", segments[j].shape)
-current_segment = 3
+current_segment = 0
 print("processing segment: ", current_segment)
 waveform = segments[current_segment]
 
-a = 200.5
-b = 350.2
-n = 30
+a = 35.5
+b = 229.2
+n = 80
 plotSegmentSpline(waveform, sample_rate, a, b, n)
 
 

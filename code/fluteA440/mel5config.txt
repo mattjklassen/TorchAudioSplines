@@ -21,7 +21,6 @@ KEY BCOEFFS:
 fluteA440/bcoeffs-n20-seg0-cyc2.txt
 fluteA440/bcoeffs-n20-seg0-cyc4.txt
 fluteA440/bcoeffs-n20-seg0-cyc6.txt
-fluteA440/bcoeffs-n20-seg0-cyc8.txt
 fluteA440/bcoeffs-n20-seg0-cyc10.txt
 fluteA440/bcoeffs-n20-seg1-cyc2.txt
 fluteA440/bcoeffs-n20-seg1-cyc10.txt
@@ -56,7 +55,7 @@ fluteA440/bcoeffs-n20-seg1-cyc2.txt
 # same comments as above for key-knots.txt also apply to mel-knots.txt.
 
 MEL KNOTS:
-mel-knots.txt
+# mel-knots.txt
 
 PARAMS:
 # sample rate:

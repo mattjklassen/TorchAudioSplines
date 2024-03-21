@@ -1,0 +1,10 @@
+melody summary:
+
+number of notes =  12
+
+retrograde-inversion sequence of intervals between notes as cent values: 
+401  -97  -95  -209  -448  -518  -470  -79  256  312  422  
+
+retrograde-inversion sequence of intervals relative to initial f0 as 0: 
+525  926  829  734  525  76  -441  -911  -991  -735  -422  0  
+

@@ -1,0 +1,12 @@
+melody summary:
+
+number of notes =  12,  initial f0 = 110.0
+
+first note duration =  0.125,  total time in seconds = 1.5
+
+retrograde sequence of intervals between notes as cent values: 
+-527  -110  1272  498  -15  -658  -267  -277  864  693  -1065  
+
+retrograde sequence of intervals relative to initial f0 as 0: 
+-406  -933  -1044  228  726  710  51  -215  -493  371  1065  0  
+

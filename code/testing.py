@@ -23,8 +23,17 @@ bcoeffs[2,1] = 9
 bcoeffs[2,2] = 10
 bcoeffs[2,3] = 12
 
+def changerow(matrix, row, col, val) :
+    matrix[row, col] = val
 
+print("bcoeffs:  ")
 print(bcoeffs)
+
+changerow(bcoeffs, 2, 3, 13)
+
+print("modified bcoeffs:  ")
+print(bcoeffs)
+
 
 r0 = bcoeffs[0]
 print(r0)

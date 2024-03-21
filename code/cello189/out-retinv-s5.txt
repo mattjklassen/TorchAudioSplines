@@ -1,0 +1,423 @@
+set reading_audio_source = True
+found audio_source :  cello189.wav
+transform:  
+retrograde-inversion
+
+keys: 
+
+[0.0, 3.0, 6.0, 10.0, 15.0, 20.0, 25.0, 30.0, 40.0, 60.0, 80.0, 100.0]
+
+key_gains: 
+
+tensor([1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 0.9000,
+        0.8000, 0.7000, 0.2000])
+
+params: 
+f0:   110.0      fundamental frequency of first note
+notes:   12       number of notes in melody
+stat:   0        1 means use stationary points
+time0:   0.125    time value of first note in seconds
+invert:   1      1 means do inversion
+retro:   1       1 means do retrograde
+scale:   5.0     1 means no scaling of y axis
+shift:   0.0     0 means no shifting of y axis
+interp_method:   1      1 = linear interpolation of bcoeffs
+sample_rate:   44100      for output wav file
+
+mel_knots: 
+[0.         0.         0.         0.         0.02702703 0.05405405
+ 0.08108108 0.10810811 0.13513514 0.16216216 0.18918919 0.21621622
+ 0.24324324 0.27027027 0.2972973  0.32432432 0.35135135 0.37837838
+ 0.40540541 0.43243243 0.45945946 0.48648649 0.51351351 0.54054054
+ 0.56756757 0.59459459 0.62162162 0.64864865 0.67567568 0.7027027
+ 0.72972973 0.75675676 0.78378378 0.81081081 0.83783784 0.86486486
+ 0.89189189 0.91891892 0.94594595 0.97297297 1.         1.
+ 1.         1.        ]
+
+mel_Pts: 
+[[0.0, 1.0913936421275139e-10], [0.08333333333333333, 0.2958974242210388], [0.16666666666666666, 0.10316719114780426], [0.25, -0.13700221478939056], [0.3333333333333333, -0.059927068650722504], [0.41666666666666663, 0.014342999085783958], [0.5, 0.19734887778759003], [0.5833333333333333, 0.2017003893852234], [0.6666666666666666, 0.06335325539112091], [0.75, -0.2900627851486206], [0.8333333333333333, -0.2593897581100464], [0.9166666666666666, -0.11295758932828903], [1.0, 0.0]]
+
+notes =  12
+
+mel_Pts after removals of close values:
+[[0.0, 1.0913936421275139e-10], [0.08333333333333333, 0.2958974242210388], [0.16666666666666666, 0.10316719114780426], [0.25, -0.13700221478939056], [0.3333333333333333, -0.059927068650722504], [0.41666666666666663, 0.014342999085783958], [0.5, 0.19734887778759003], [0.5833333333333333, 0.2017003893852234], [0.6666666666666666, 0.06335325539112091], [0.75, -0.2900627851486206], [0.8333333333333333, -0.2593897581100464], [0.9166666666666666, -0.11295758932828903], [1.0, 0.0]]
+
+computing values for i =  0
+x0:  0.9166666666666666 x1:  1.0
+y value is inverted:  0.11295758932828903
+y value is scaled by  5.0 :   0.5647879466414452
+y value is shifted by  0.0 :   0.5647879466414452
+y2 (exp2(y)) value:  1.4791700786574502
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(162.7087)
+scaled keys for i =  0 [0, 0, 1, 1, 2, 3, 4, 5, 7, 11, 14, 18]
+
+computing values for i =  1
+x0:  0.8333333333333333 x1:  0.9166666666666666
+y value is inverted:  0.2593897581100464
+y value is scaled by  5.0 :   1.296948790550232
+y value is shifted by  0.0 :   1.296948790550232
+y2 (exp2(y)) value:  2.457086743364545
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(270.2795)
+scaled keys for i =  1 [0, 0, 1, 3, 4, 6, 7, 9, 12, 18, 24, 30]
+
+computing values for i =  2
+x0:  0.75 x1:  0.8333333333333333
+y value is inverted:  0.2900627851486206
+y value is scaled by  5.0 :   1.450313925743103
+y value is shifted by  0.0 :   1.450313925743103
+y2 (exp2(y)) value:  2.732675070016592
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(300.5943)
+scaled keys for i =  2 [0, 1, 2, 3, 5, 6, 8, 10, 13, 20, 27, 34]
+
+computing values for i =  3
+x0:  0.6666666666666666 x1:  0.75
+y value is inverted:  -0.06335325539112091
+y value is scaled by  5.0 :   -0.31676627695560455
+y value is shifted by  0.0 :   -0.31676627695560455
+y2 (exp2(y)) value:  0.8028674462952333
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(88.3154)
+scaled keys for i =  3 [0, 0, 0, 1, 1, 2, 2, 3, 4, 6, 8, 10]
+
+computing values for i =  4
+x0:  0.5833333333333333 x1:  0.6666666666666666
+y value is inverted:  -0.2017003893852234
+y value is scaled by  5.0 :   -1.008501946926117
+y value is shifted by  0.0 :   -1.008501946926117
+y2 (exp2(y)) value:  0.4970621148580955
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(54.6768)
+scaled keys for i =  4 [0, 0, 0, 0, 0, 1, 1, 1, 2, 3, 4, 6]
+
+computing values for i =  5
+x0:  0.5 x1:  0.5833333333333333
+y value is inverted:  -0.19734887778759003
+y value is scaled by  5.0 :   -0.9867443889379501
+y value is shifted by  0.0 :   -0.9867443889379501
+y2 (exp2(y)) value:  0.5046152147517082
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(55.5077)
+scaled keys for i =  5 [0, 0, 0, 0, 0, 1, 1, 1, 2, 3, 5, 6]
+
+computing values for i =  6
+x0:  0.41666666666666663 x1:  0.5
+y value is inverted:  -0.014342999085783958
+y value is scaled by  5.0 :   -0.07171499542891979
+y value is shifted by  0.0 :   -0.07171499542891979
+y2 (exp2(y)) value:  0.9515062279309051
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(104.6657)
+scaled keys for i =  6 [0, 0, 0, 1, 1, 2, 2, 3, 4, 7, 9, 11]
+
+computing values for i =  7
+x0:  0.3333333333333333 x1:  0.41666666666666663
+y value is inverted:  0.059927068650722504
+y value is scaled by  5.0 :   0.2996353432536125
+y value is shifted by  0.0 :   0.2996353432536125
+y2 (exp2(y)) value:  1.230833267627839
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(135.3917)
+scaled keys for i =  7 [0, 0, 0, 1, 2, 3, 3, 4, 6, 9, 12, 15]
+
+computing values for i =  8
+x0:  0.25 x1:  0.3333333333333333
+y value is inverted:  0.13700221478939056
+y value is scaled by  5.0 :   0.6850110739469528
+y value is shifted by  0.0 :   0.6850110739469528
+y2 (exp2(y)) value:  1.607714322053286
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(176.8486)
+scaled keys for i =  8 [0, 0, 1, 2, 3, 4, 5, 6, 8, 12, 16, 20]
+
+computing values for i =  9
+x0:  0.16666666666666666 x1:  0.25
+y value is inverted:  -0.10316719114780426
+y value is scaled by  5.0 :   -0.5158359557390213
+y value is shifted by  0.0 :   -0.5158359557390213
+y2 (exp2(y)) value:  0.6993875619816385
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(76.9326)
+scaled keys for i =  9 [0, 0, 0, 0, 1, 1, 2, 2, 3, 5, 6, 8]
+
+computing values for i =  10
+x0:  0.08333333333333333 x1:  0.16666666666666666
+y value is inverted:  -0.2958974242210388
+y value is scaled by  5.0 :   -1.479487121105194
+y value is shifted by  0.0 :   -1.479487121105194
+y2 (exp2(y)) value:  0.3586162776330522
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(39.4478)
+scaled keys for i =  10 [0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 3, 4]
+
+computing values for i =  11
+x0:  0.0 x1:  0.08333333333333333
+y value is inverted:  -1.0913936421275139e-10
+y value is scaled by  5.0 :   -5.456968210637569e-10
+y value is shifted by  0.0 :   -5.456968210637569e-10
+y2 (exp2(y)) value:  0.9999999996217518
+note duration (scaled):  tensor(0.1250)
+frequencies[i]:  tensor(110.)
+scaled keys for i =  11 [0, 0, 0, 1, 1, 2, 3, 3, 5, 7, 10, 12]
+
+total time:  1.5
+
+audio_prefix: cello189
+inserting for i =  0
+start_time, time1, f0:   0.0 tensor(0.1250) tensor(162.7087)
+note_keys[i]:  tensor([ 0.,  0.,  1.,  1.,  2.,  3.,  4.,  5.,  7., 11., 14., 18.])
+interp_method:  1
+num_cycles:  20
+cycle length in samples:   tensor(271.0365)
+waveform length:  5512
+
+inserting for i =  1
+start_time, time1, f0:   tensor(5512.5000) tensor(0.1250) tensor(270.2795)
+interval:  ratio =  tensor(1.6611)  cent value =   tensor(878.5929)
+cent value relative to initial f0:   tensor(1556.3386)
+note_keys[i]:  tensor([ 0.,  0.,  1.,  3.,  4.,  6.,  7.,  9., 12., 18., 24., 30.])
+interp_method:  1
+num_cycles:  33
+cycle length in samples:   tensor(163.1644)
+waveform length:  5512
+
+inserting for i =  2
+start_time, time1, f0:   tensor(11025.) tensor(0.1250) tensor(300.5943)
+interval:  ratio =  tensor(1.1122)  cent value =   tensor(184.0383)
+cent value relative to initial f0:   tensor(1740.3766)
+note_keys[i]:  tensor([ 0.,  1.,  2.,  3.,  5.,  6.,  8., 10., 13., 20., 27., 34.])
+interp_method:  1
+num_cycles:  37
+cycle length in samples:   tensor(146.7094)
+waveform length:  5512
+
+inserting for i =  3
+start_time, time1, f0:   tensor(16537.5000) tensor(0.1250) tensor(88.3154)
+interval:  ratio =  tensor(0.2938)  cent value =   tensor(-2120.4963)
+cent value relative to initial f0:   tensor(-380.1194)
+note_keys[i]:  tensor([ 0.,  0.,  0.,  1.,  1.,  2.,  2.,  3.,  4.,  6.,  8., 10.])
+interp_method:  1
+num_cycles:  11
+cycle length in samples:   tensor(499.3465)
+waveform length:  5512
+
+inserting for i =  4
+start_time, time1, f0:   tensor(22050.) tensor(0.1250) tensor(54.6768)
+interval:  ratio =  tensor(0.6191)  cent value =   tensor(-830.0828)
+cent value relative to initial f0:   tensor(-1210.2023)
+note_keys[i]:  tensor([0., 0., 0., 0., 0., 1., 1., 1., 2., 3., 4., 6.])
+interp_method:  1
+num_cycles:  6
+cycle length in samples:   tensor(806.5573)
+waveform length:  5512
+
+inserting for i =  5
+start_time, time1, f0:   tensor(27562.5000) tensor(0.1250) tensor(55.5077)
+interval:  ratio =  tensor(1.0152)  cent value =   tensor(26.1091)
+cent value relative to initial f0:   tensor(-1184.0931)
+note_keys[i]:  tensor([0., 0., 0., 0., 0., 1., 1., 1., 2., 3., 5., 6.])
+interp_method:  1
+num_cycles:  6
+cycle length in samples:   tensor(794.4847)
+waveform length:  5512
+
+inserting for i =  6
+start_time, time1, f0:   tensor(33075.) tensor(0.1250) tensor(104.6657)
+interval:  ratio =  tensor(1.8856)  cent value =   tensor(1098.0353)
+cent value relative to initial f0:   tensor(-86.0579)
+note_keys[i]:  tensor([ 0.,  0.,  0.,  1.,  1.,  2.,  2.,  3.,  4.,  7.,  9., 11.])
+interp_method:  1
+num_cycles:  13
+cycle length in samples:   tensor(421.3415)
+waveform length:  5512
+
+inserting for i =  7
+start_time, time1, f0:   tensor(38587.5000) tensor(0.1250) tensor(135.3917)
+interval:  ratio =  tensor(1.2936)  cent value =   tensor(445.6204)
+cent value relative to initial f0:   tensor(359.5624)
+note_keys[i]:  tensor([ 0.,  0.,  0.,  1.,  2.,  3.,  3.,  4.,  6.,  9., 12., 15.])
+interp_method:  1
+num_cycles:  16
+cycle length in samples:   tensor(325.7217)
+waveform length:  5512
+
+inserting for i =  8
+start_time, time1, f0:   tensor(44100.) tensor(0.1250) tensor(176.8486)
+interval:  ratio =  tensor(1.3062)  cent value =   tensor(462.4508)
+cent value relative to initial f0:   tensor(822.0132)
+note_keys[i]:  tensor([ 0.,  0.,  1.,  2.,  3.,  4.,  5.,  6.,  8., 12., 16., 20.])
+interp_method:  1
+num_cycles:  22
+cycle length in samples:   tensor(249.3659)
+waveform length:  5512
+
+inserting for i =  9
+start_time, time1, f0:   tensor(49612.5000) tensor(0.1250) tensor(76.9326)
+interval:  ratio =  tensor(0.4350)  cent value =   tensor(-1441.0162)
+cent value relative to initial f0:   tensor(-619.0032)
+note_keys[i]:  tensor([0., 0., 0., 0., 1., 1., 2., 2., 3., 5., 6., 8.])
+interp_method:  1
+num_cycles:  9
+cycle length in samples:   tensor(573.2288)
+waveform length:  5512
+
+inserting for i =  10
+start_time, time1, f0:   tensor(55125.) tensor(0.1250) tensor(39.4478)
+interval:  ratio =  tensor(0.5128)  cent value =   tensor(-1156.3813)
+cent value relative to initial f0:   tensor(-1775.3845)
+note_keys[i]:  tensor([0., 0., 0., 0., 0., 0., 1., 1., 1., 2., 3., 4.])
+interp_method:  1
+num_cycles:  4
+cycle length in samples:   tensor(1117.9333)
+waveform length:  5512
+
+inserting for i =  11
+start_time, time1, f0:   tensor(60637.5000) tensor(0.1250) tensor(110.)
+interval:  ratio =  tensor(2.7885)  cent value =   tensor(1775.3845)
+cent value relative to initial f0:   tensor(0.)
+note_keys[i]:  tensor([ 0.,  0.,  0.,  1.,  1.,  2.,  3.,  3.,  5.,  7., 10., 12.])
+interp_method:  1
+num_cycles:  13
+cycle length in samples:   tensor(400.9091)
+waveform length:  5512
+
+we have wav data
+now writing wav file
+path for audio output:  cello189/melody-retrograde-inversion.wav
+audio file has  66162  samples, at rate  44100
+
+
+********************************************************************
+
+
+copy of config file mel5config.txt :
+
+
+# comment lines are ignored but blank lines are important to mark the end of reading a list
+
+# keys are based on length of tone = 1 second, at f0 = 110Hz
+# number of keys will be set to num_keys then bcoeffs are read in from that number of files
+
+KEYS:
+0.0
+3.0
+6.0
+10.0
+15.0
+20.0
+25.0
+30.0
+40.0
+60.0
+80.0
+100.0
+
+# key bcoeffs are used to build each tone with cycle interpolation
+# key bcoeffs file names must contain "bcoeffs", and contents must be one float per line (as text)
+# number of floats in each file determines n = dimension of splines (must all be equal for consistency)
+
+KEY BCOEFFS:
+cello189/bcoeffs-n40-seg1-cyc1.txt
+cello189/bcoeffs-n40-seg1-cyc9.txt
+cello189/bcoeffs-n40-seg3-cyc11.txt
+cello189/bcoeffs-n40-seg5-cyc17.txt
+cello189/bcoeffs-n40-seg7-cyc11.txt
+cello189/bcoeffs-n40-seg10-cyc3.txt
+cello189/bcoeffs-n40-seg15-cyc2.txt
+cello189/bcoeffs-n40-seg20-cyc7.txt
+cello189/bcoeffs-n40-seg25-cyc2.txt
+cello189/bcoeffs-n40-seg30-cyc5.txt
+cello189/bcoeffs-n40-seg35-cyc2.txt
+cello189/bcoeffs-n40-seg40-cyc12.txt
+
+# gains can be used to give an envelope by specifying one float per key cycle.
+# this can be useful if bcoeffs are the same for all key cycles
+# if not specified then gains will be set to 1.0 for all bcoeffs
+# if number of gains is less than number of keys, last value will be repeated
+
+KEY GAINS:
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+0.9
+0.8
+0.7
+0.2
+
+# uncomment key-knots.txt to use a special knot sequence for the key bcoeffs files, otherwise default
+# knot sequence will be used, which is the usual 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1 with k = n-3
+# with length N+1 = n+4 (n = N - d).
+
+KEY KNOTS:
+# key-knots.txt
+
+MELODIC CONTOUR:
+cello189/bcoeffs-n40-seg15-cyc2.txt
+
+# same comments as above for key-knots.txt also apply to mel-knots.txt.
+
+MEL KNOTS:
+mel-knots.txt
+
+AUDIO SOURCE:
+cello189.wav
+
+PARAMS:
+# sample rate:
+sample_rate = 44100.0
+
+# cycle interpolation method (1 = linear):
+interp_method = 1
+
+# fundamental frequency of first note:
+f0=110
+
+# number of notes in melody if using regularly spaced notes (use notes = 0 if stat = 1):
+notes=12
+
+# if stat = 1 then stationary points of melodic contour spline are used for melody:
+stat=0
+
+# duration of first note in melody in seconds:
+time0=0.125
+
+# if invert is 1 then pitches of melody are inverted:
+invert=1
+
+# if retro is 0 then retrograde melody is generated:
+retro=1
+
+# scale y axis of spline, where original values -1 < y < 1 is a span of two octaves, so scale=2 gives 4 octaves:
+scale=5
+
+# shift y values by a constant, so shift=1 moves pitches up an octave:
+shift=0
+
+
+
+********************************************************************
+
+
+melody summary:
+
+number of notes =  12,  initial f0 = 110.0
+
+first note duration =  0.125,  total time in seconds = 1.5
+
+retrograde-inversion sequence of intervals between notes as cent values: 
+878  184  -2120  -830  26  1098  445  462  -1441  -1156  1775  
+
+retrograde-inversion sequence of intervals relative to initial f0 as 0: 
+677  1556  1740  -380  -1210  -1184  -86  359  822  -619  -1775  0  
+
+retrograde-inversion sequence of fundamental frequency f0 values: 
+110 270  300  88  54  55  104  135  176  76  39  110  
+
+

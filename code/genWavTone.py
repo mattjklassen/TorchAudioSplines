@@ -27,7 +27,7 @@ import math
 
 from computeBsplineVal import newBsplineVal 
 from computeBsplineVal import computeSplineVal 
-from genCycle import genCycle, insertCycle, insertCycle2
+from genCycle import genCycle, insertCycle, insertCycle2, insertCycle3
 
 
 def genWavTone2(f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, interp_method) :
@@ -433,18 +433,23 @@ def insertWavTone2(waveform, start_time, f0, time, sample_rate, key_bcoeffs, kno
 
     # Next multiply key cycles' bcoeffs by gains
     # print("GAINS:  ", gains)
-    #  print("KEY_BCOEFFS:  ", key_bcoeffs)
+    # print("KEY_BCOEFFS:  ", key_bcoeffs)
     for i in range(num_keys) :
         new_bcoeffs[i] *= gains[i]
     # key_bcoeffs *= gains
 
+      
     # Need to interpolate to fill in bcoeffs for intermediate cycles
     # Start with bcoeffs = first vector of key_bcoeffs
     all_bcoeffs = torch.zeros(num_cycles,n)  # rows are bcoeffs of each cycle
     all_bcoeffs[0] = new_bcoeffs[0]  # first row
+    old_key = -1
     for i in range(num_keys) :
         key = int(keys[i])
-        all_bcoeffs[key] = new_bcoeffs[i]  # assign entire row 
+        if key < num_cycles :
+            if key > old_key :
+                all_bcoeffs[key] = new_bcoeffs[i]  # assign entire row 
+                old_key = key
     # print(all_bcoeffs)
     # now the key bcoeffs are filled into the array all_bcoeffs 
 
@@ -462,6 +467,7 @@ def insertWavTone2(waveform, start_time, f0, time, sample_rate, key_bcoeffs, kno
         # interpolate between key_bcoeffs[i] and key_bcoeffs[i+1]
         # number of intermediate cycles (rows of bcoeffs) is keys[i+1]-keys[i]-1
         num_interm = int(keys[i+1]-keys[i]-1)
+        # if num_interm == 0 then do nothing
         for j in range(num_interm) :
             start_interm = int(keys[i])+1  # each intermediate index is now start_interm + j
             # p goes from 1/num_interm to 1=num_interm/num_interm, so p = (j+1)/num_interm 
@@ -496,6 +502,121 @@ def insertWavTone2(waveform, start_time, f0, time, sample_rate, key_bcoeffs, kno
         # now insert cycle into waveform from start_time to end of cycle
         # insertCycle(waveform, cycle, bcoeffs)
         insertCycle2(waveform, cycle, bcoeffs, knotVals)
+
+
+def insertWavTone3(waveform, voice, start_time, f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, interp_method) :
+
+    # this is same function as insertWavTone2 but now also uses voice.
+
+    # inputs:
+    # waveform is now array of waveforms, one for each voice
+    # voice is integer voice number or index 0,...,voices-1 
+    # f0 - fundamental frequency in Hz
+    # time - length of tone in decimal seconds 
+    # start_time - starting time in waveform to insert tone, in decimal samples 
+    # sample_rate - integer typically 16000 or 48000 or 44100
+    # key_bcoeffs - tensor (m by n matrix) of (row) vectors of bcoeffs for each cycle
+    # knotVals - tensor of knots for spline evaluation
+    # keys - integers which give the placement of key cycles within the sequence of all cycles
+    # (keys need to be less than the total number of cycles for the predicted time) 
+    # gains - a sequence of scalars to multiply each key cycle by 
+    # (the previous three arrays all have the same size)
+    # interp_method - for cycle interpolation, 0 = none, 1 = linear, 2 = quadratic, 3 = cubic
+    
+    # output: (none)
+    # sample values inserted into waveform in place
+
+    # the default method for cycle interpolation should be linear interpolation (of bcoeffs)
+    # 0 = none should mean we are just repeating the same cycle until next key cycle.
+
+    n = key_bcoeffs.size(dim=1) # dimension of splines for each cycle
+    num_keys = len(keys)
+    last_key = int(keys[-1])
+    num_cycles = int(f0 * time) # number of cycles in final waveform
+    # frac_cycle = f0 * time - num_cycles # length of last partial cycle
+    if (len(key_bcoeffs) != num_keys) :
+        print("inconsistent number of keys and key_bcoeffs")
+    if (len(gains) != num_keys) :
+        print("inconsistent number of keys and gains")
+    if (last_key > int(f0 * time)) :
+        print("last key cycle exceeds number of cycles predicted by f0")
+
+    new_bcoeffs = torch.zeros(num_keys, n)
+    for m in range(num_keys) :
+        temp = torch.tensor(key_bcoeffs[m])
+        new_bcoeffs[m] = temp
+
+    # Next multiply key cycles' bcoeffs by gains
+    # print("GAINS:  ", gains)
+    # print("KEY_BCOEFFS:  ", key_bcoeffs)
+    for i in range(num_keys) :
+        new_bcoeffs[i] *= gains[i]
+    # key_bcoeffs *= gains
+
+      
+    # Need to interpolate to fill in bcoeffs for intermediate cycles
+    # Start with bcoeffs = first vector of key_bcoeffs
+    all_bcoeffs = torch.zeros(num_cycles,n)  # rows are bcoeffs of each cycle
+    all_bcoeffs[0] = new_bcoeffs[0]  # first row
+    old_key = -1
+    for i in range(num_keys) :
+        key = int(keys[i])
+        if key < num_cycles :
+            if key > old_key :
+                all_bcoeffs[key] = new_bcoeffs[i]  # assign entire row 
+                old_key = key
+    # print(all_bcoeffs)
+    # now the key bcoeffs are filled into the array all_bcoeffs 
+
+    num_cycles = int(f0 * time) # number of whole cycles in final waveform
+    print("num_cycles: ", num_cycles)
+    cycle_length = sample_rate / f0 # cycle length in samples
+    print("cycle length in samples:  ", cycle_length)
+    waveform_length = int(sample_rate * time)
+    print("waveform length: ", waveform_length)
+
+    # Now fill in all_bcoeffs using interpolation between key cycles using tensor operations 
+    # on rows of all_bcoeffs, where each row is the set of n bcoeffs for one cycle, 
+    # so we are basically doing row ops on a matrix
+    for i in range(num_keys-1) :  # i=0...num_keys-2
+        # interpolate between key_bcoeffs[i] and key_bcoeffs[i+1]
+        # number of intermediate cycles (rows of bcoeffs) is keys[i+1]-keys[i]-1
+        num_interm = int(keys[i+1]-keys[i]-1)
+        # if num_interm == 0 then do nothing
+        for j in range(num_interm) :
+            start_interm = int(keys[i])+1  # each intermediate index is now start_interm + j
+            # p goes from 1/num_interm to 1=num_interm/num_interm, so p = (j+1)/num_interm 
+            p = float(j+1) / num_interm
+            # linear interpolation between key_bcoeffs rows with ratio p: 
+            all_bcoeffs[start_interm + j] = (1-p) * new_bcoeffs[i] + p * new_bcoeffs[i+1]
+
+    # Now all_bcoeffs should have all intermediate cycles filled 
+    # print("all_bcoeffs: ", all_bcoeffs)
+
+    # number of trailing cycles (after last key cycle) is num_cycles - last_key
+    num_trailing_cycles = num_cycles - last_key
+
+    a = start_time
+    b = start_time
+    # count = 0 # index for output sample data
+    tail = 1
+    # write cycles into waveform from start_time to end of cycles
+    for i in range(num_cycles) :
+        # write cycle i
+        a = b
+        b = a + cycle_length
+        b = reset(b)
+        cycle = [a, b]
+        if i < last_key :
+            bcoeffs = all_bcoeffs[i]
+        else :
+            numer = float(num_cycles - i)
+            # removing next tail calculation to see how it affects envelope
+            # tail = float(numer / num_trailing_cycles)
+            bcoeffs = tail * all_bcoeffs[last_key]
+        # now insert cycle into waveform from start_time to end of cycle
+        # insertCycle(waveform, cycle, bcoeffs)
+        insertCycle3(waveform, voice, cycle, bcoeffs, knotVals)
 
 
 def reset(b) :  # forces a and b to avoid exact integer sample values

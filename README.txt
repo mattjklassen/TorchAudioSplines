@@ -16,13 +16,13 @@ with n = 20 interpolation points.
 
 > python getf0.py 
 
-... computes estimate of f0 for audio file ../audio/A445.wav getArgMax() as the first
+... computes estimate of f0 for audio file ../audio/guitarA445.wav getArgMax() as the first
 approximation which uses torch.stft and takes the ArgMax bin below a set threshold, 
 then uses average of cycle lengths for refined f0, which may be a new method.
 
 > python findCycles.py 
 
-... finds cycles for audio file ../audio/A445.wav using getCycles() 
+... finds cycles for audio file ../audio/guitarA445.wav using getCycles() 
 then prints pdf report to ../doc/out.pdf.
 
 
@@ -158,7 +158,20 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-11  getKnots.py
+11  getKeyCycles.py
+
+# ----- Brief Description -----
+# 
+# In this script we have modified findCycles.py to do three main things:
+# 1. find weak f_0 with getArgMax() in segments of 2048 samples
+# 2. find average of weak f_0 values to use when finding cycles
+# 2. find cycles (as endpoints only) in entire audio file input with getCycles()
+# 3. write selected bcoeffs of key cycles to files
+# (do not produce output summary and graphs of cycles to pdf)
+#
+
+
+12  getKnots.py
 
 # ----- Brief Description -----
 # 
@@ -167,7 +180,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-12  getStatVals.py
+13  getStatVals.py
 
 # ----- Brief Description -----
 # 
@@ -175,7 +188,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-13  material.py
+14  material.py
 
 # ----- Brief Description -----
 # 
@@ -188,7 +201,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-14  melody.py
+15  melody.py
 
 # ----- Brief Description -----
 # 
@@ -196,7 +209,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-15  melody2.py
+16  melody2.py
 
 # ----- Brief Description -----
 # 
@@ -204,7 +217,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-16  melody3.py
+17  melody3.py
 
 # ----- Brief Description -----
 # 
@@ -213,7 +226,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-17  melody4.py
+18  melody4.py
 
 # ----- Brief Description -----
 # 
@@ -228,7 +241,41 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-18  melodySplinusoid.py
+19  melody5.py
+
+# ----- Brief Description -----
+# 
+# melody5.py is derived from melody4.py but now expanded in various ways:
+#
+# 1. we now use config file mel5config.txt which contains the parameters used
+#    to construct the melody or melodic fragment from bcoeffs files etc.
+# 2. now use a sequence of key bcoeffs for note timbre, contained in files listed in config
+# 3. use one designated cycle for the melodic contour
+# 4. allow for regularly spaced notes in melodic countour sampling with "notes=12" etc.
+# 5. allow for stationary point melodic contour sampling with "stat=1"
+#
+
+
+20  melody6.py
+
+# ----- Brief Description -----
+# 
+# melody6.py is derived from melody5.py but now adding polyphony or voicing.
+#
+# 1. use config file mel6config.txt which contains the parameters used
+#    to construct the melody or melodic fragment from bcoeffs files etc.
+#
+# 2. add polyphony, or voicing:
+#    in addition to those configs in mel5config.txt we now control the duration
+#    of notes in various ways.  For instance, note durations can all be set to
+#    last for twice as long as the designated duration in the melody, so they overlap.
+#    The waveform for each note will then be stored in a buffer chosen from a list of 
+#    buffers, each representing a voice, or channel, and then these buffers will all 
+#    be mixed before writing the final output.  
+#
+
+
+21  melodySplinusoid.py
 
 # ----- Brief Description -----
 # 
@@ -236,7 +283,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-19  plotBcoeffs.py
+22  plotBcoeffs.py
 
 # ----- Brief Description -----
 #
@@ -247,7 +294,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-20  plotSegmentSpline.py
+23  plotSegmentSpline.py
 
 # ----- Brief Description -----
 # 
@@ -259,7 +306,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-21  plotSpec.py
+24  plotSpec.py
 
 # ----- Brief Description -----
 # 
@@ -268,7 +315,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-22  rec2Spec.py
+25  rec2Spec.py
 
 # ----- Brief Description -----
 # 
@@ -278,7 +325,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-23  record.py
+26  record.py
 
 # ----- Brief Description -----
 # 
@@ -287,7 +334,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-24  recSpec.py
+27  recSpec.py
 
 # ----- Brief Description -----
 # 
@@ -298,7 +345,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-25  scale.py
+28  scale.py
 
 # ----- Brief Description -----
 # 
@@ -306,7 +353,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-26  scale2.py
+29  scale2.py
 
 # ----- Brief Description -----
 # 
@@ -314,7 +361,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-27  t2Spline.py
+30  t2Spline.py
 
 # ----- Brief Description -----
 #
@@ -323,7 +370,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-28  t3Spline.py
+31  t3Spline.py
 
 # ----- Brief Description -----
 #
@@ -334,7 +381,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-29  testBcoeffs.py
+32  testBcoeffs.py
 
 # ----- Brief Description -----
 # 
@@ -344,7 +391,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-30  testGenWav.py
+33  testGenWav.py
 
 # ----- Brief Description -----
 # 
@@ -352,11 +399,11 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-31  testing.py
+34  testing.py
 
 
 
-32  testSegmentSpline.py
+35  testSegmentSpline.py
 
 # ----- Brief Description -----
 # 
@@ -368,7 +415,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-33  testSplinusoid.py
+36  testSplinusoid.py
 
 # ----- Brief Description -----
 # 
@@ -377,7 +424,45 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-34  torchSpline.py
+37  tone5.py
+
+# ----- Brief Description -----
+# 
+# (based on testGenWav.py which was to construct one tone of 1 sec long with genWavTone() )
+# This one is for testing a dulcimer tone using 32 key cycles, with various cases.
+# The key cycles are chose from a 3 second long sample called dulcimerA3-f.wav with
+# fundamental frequency f_0 = 220 Hz, so approximately 3*220 = 660 cycles, from which we chose 32.
+# The bcoeffs files are given below.
+#
+
+
+38  tone6.py
+
+# ----- Brief Description -----
+# 
+# Continuing with testing a dulcimer tone using 32 key cycles, now we break those up into
+# 17 subsequences of 16 consecutive key cycles, and construct a waveform in each case.
+# 
+# The key cycles are chosen from a 3 second long sample called dulcimerA3-f.wav with
+# fundamental frequency f_0 = 220 Hz, so approximately 3*220 = 660 cycles, from which we chose 32.
+# The bcoeffs files are given below.
+#
+
+
+39  tone7.py
+
+# ----- Brief Description -----
+# 
+# Continuing with testing a dulcimer tone using 32 key cycles, now we break those up into
+# 17 subsequences of 16 consecutive key cycles, and construct a waveform in each case.
+# 
+# The key cycles are chosen from a 3 second long sample called dulcimerA3-f.wav with
+# fundamental frequency f_0 = 220 Hz, so approximately 3*220 = 660 cycles, from which we chose 32.
+# The bcoeffs files are given below.
+#
+
+
+40  torchSpline.py
 
 # ----- Brief Description -----
 #
@@ -386,7 +471,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-35  wavplot.py
+41  wavplot.py
 
 # ----- Brief Description -----
 # 
@@ -396,7 +481,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-36  wavspline.py
+42  wavspline.py
 
 # ----- Brief Description -----
 # 
@@ -410,7 +495,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-37  writewav.py
+43  writewav.py
 
 # ----- Brief Description -----
 # 
@@ -420,7 +505,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-38  yinapp.py
+44  yinapp.py
 
 # ----- Brief Description -----
 # 
@@ -428,7 +513,7 @@ Summary of python files (in alphabetical order) with brief description of each:
 #
 
 
-39  yinPyTorch.py
+45  yinPyTorch.py
 
 # ----- Brief Description -----
 # 

@@ -28,7 +28,7 @@ from getCycles import getCycles, getf0withCycles
 # testing getf0withCycles()
 
 # path = "../audio/input.wav"
-path = "../audio/A445.wav"
+path = "../audio/guitarA445.wav"
 waveform, sample_rate = torchaudio.load(path)
 np_waveform = waveform.numpy()
 num_channels, num_frames = np_waveform.shape

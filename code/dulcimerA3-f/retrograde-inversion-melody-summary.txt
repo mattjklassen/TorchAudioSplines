@@ -1,15 +1,15 @@
 melody summary:
 
-number of notes =  6,  initial f0 = 220.0
+number of notes =  21,  initial f0 = 220.0
 
-first note duration =  0.25,  total time in seconds = 1.5
+first note duration =  0.25,  total time in seconds = 5.1020408163265305
 
 retrograde-inversion sequence of intervals between notes as cent values: 
-155  -748  -973  508  310  
+-714  441  -254  867  -347  364  -274  485  -100  310  -1458  -887  281  -251  -246  940  -586  325  -331  877  
 
 retrograde-inversion sequence of intervals relative to initial f0 as 0: 
-746  902  153  -819  -310  0  
+558  -155  286  32  900  552  917  643  1129  1029  1339  -119  -1007  -725  -977  -1223  -283  -870  -545  -877  0  
 
 retrograde-inversion sequence of fundamental frequency f0 values: 
-220 370  240  137  183  220  
+220 201  259  224  369  302  373  319  422  398  476  205  122  144  125  108  186  133  160  132  220  
 

@@ -95,22 +95,22 @@ interp_method = 1
 f0=220
 
 # number of notes in melody if using regularly spaced notes (use notes = 0 if stat = 1):
-notes=6
+notes=0
 
 # if stat = 1 then stationary points of melodic contour spline are used for melody:
-stat=0
+stat=1
 
 # duration of first note in melody in seconds:
-time0=0.25
+time0=0.5
 
 # if invert is 1 then pitches of melody are inverted:
-invert=1
+invert=0
 
 # if retro is 0 then retrograde melody is generated:
-retro=1
+retro=0
 
 # scale y axis of spline, where original values -1 < y < 1 is a span of two octaves, so scale=2 gives 4 octaves:
-scale=10
+scale=5
 
 # shift y values by a constant, so shift=1 moves pitches up an octave:
 shift=0

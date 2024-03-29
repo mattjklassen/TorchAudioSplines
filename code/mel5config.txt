@@ -5,18 +5,14 @@
 
 KEYS:
 0.0
-2.0
-4.0
+3.0
 6.0
-8.0
 10.0
-12.0
 15.0
 20.0
 25.0
 30.0
 40.0
-50.0
 60.0
 80.0
 100.0
@@ -26,22 +22,18 @@ KEYS:
 # number of floats in each file determines n = dimension of splines (must all be equal for consistency)
 
 KEY BCOEFFS:
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg2-cyc7.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg2-cyc17.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg3-cyc4.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg3-cyc8.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg3-cyc13.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg4-cyc1.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg4-cyc7.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg4-cyc17.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg5-cyc4.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg5-cyc8.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg6-cyc3.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg6-cyc9.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg7-cyc1.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg7-cyc4.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg8-cyc2.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg8-cyc5.txt
+cello189/bcoeffs-n40-seg1-cyc1.txt
+cello189/bcoeffs-n40-seg1-cyc9.txt
+cello189/bcoeffs-n40-seg3-cyc11.txt
+cello189/bcoeffs-n40-seg5-cyc17.txt
+cello189/bcoeffs-n40-seg7-cyc11.txt
+cello189/bcoeffs-n40-seg10-cyc3.txt
+cello189/bcoeffs-n40-seg15-cyc2.txt
+cello189/bcoeffs-n40-seg20-cyc7.txt
+cello189/bcoeffs-n40-seg25-cyc2.txt
+cello189/bcoeffs-n40-seg30-cyc5.txt
+cello189/bcoeffs-n40-seg35-cyc2.txt
+cello189/bcoeffs-n40-seg40-cyc12.txt
 
 # gains can be used to give an envelope by specifying one float per key cycle.
 # this can be useful if bcoeffs are the same for all key cycles
@@ -52,18 +44,14 @@ KEY GAINS:
 1.0
 1.0
 1.0
-0.95
+1.0
+1.0
+1.0
+1.0
+1.0
 0.9
-0.85
 0.8
-0.75
 0.7
-0.65
-0.6
-0.55
-0.5
-0.4
-0.3
 0.2
 
 # uncomment key-knots.txt to use a special knot sequence for the key bcoeffs files, otherwise default
@@ -74,7 +62,7 @@ KEY KNOTS:
 # key-knots.txt
 
 MELODIC CONTOUR:
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg2-cyc7.txt
+cello189/bcoeffs-n40-seg15-cyc2.txt
 
 # same comments as above for key-knots.txt also apply to mel-knots.txt.
 
@@ -82,7 +70,7 @@ MEL KNOTS:
 mel-knots.txt
 
 AUDIO SOURCE:
-dulcimerA3-f.wav
+cello189.wav
 
 PARAMS:
 # sample rate:
@@ -92,25 +80,25 @@ sample_rate = 44100.0
 interp_method = 1
 
 # fundamental frequency of first note:
-f0=220
+f0=110
 
 # number of notes in melody if using regularly spaced notes (use notes = 0 if stat = 1):
-notes=0
+notes=12
 
 # if stat = 1 then stationary points of melodic contour spline are used for melody:
-stat=1
+stat=0
 
 # duration of first note in melody in seconds:
-time0=0.25
+time0=0.125
 
 # if invert is 1 then pitches of melody are inverted:
-invert=1
+invert=0
 
 # if retro is 0 then retrograde melody is generated:
-retro=1
+retro=0
 
 # scale y axis of spline, where original values -1 < y < 1 is a span of two octaves, so scale=2 gives 4 octaves:
-scale=12
+scale=0.5
 
 # shift y values by a constant, so shift=1 moves pitches up an octave:
 shift=0

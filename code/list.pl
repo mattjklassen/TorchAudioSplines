@@ -41,7 +41,7 @@ push @guidelines, $newline;
 
 $newline = "> python getf0.py \n\n";
 push @guidelines, $newline;
-$newline = "... computes estimate of f0 for audio file ../audio/A445.wav getArgMax() as the first\n";
+$newline = "... computes estimate of f0 for audio file ../audio/guitarA445.wav getArgMax() as the first\n";
 push @guidelines, $newline;
 $newline = "approximation which uses torch.stft and takes the ArgMax bin below a set threshold, \n";
 push @guidelines, $newline;
@@ -52,7 +52,7 @@ push @guidelines, $newline;
 
 $newline = "> python findCycles.py \n\n";
 push @guidelines, $newline;
-$newline = "... finds cycles for audio file ../audio/A445.wav using getCycles() \n";
+$newline = "... finds cycles for audio file ../audio/guitarA445.wav using getCycles() \n";
 push @guidelines, $newline;
 $newline = "then prints pdf report to ../doc/out.pdf.\n";
 push @guidelines, $newline;

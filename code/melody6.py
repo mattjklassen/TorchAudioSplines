@@ -5,6 +5,7 @@
 #
 # 1. use config file mel6config.txt which contains the parameters used
 #    to construct the melody or melodic fragment from bcoeffs files etc.
+#    Also allow overriding of these parameters on command line.
 #
 # 2. add polyphony, or voicing:
 #    in addition to those configs in mel5config.txt we now control the duration
@@ -98,6 +99,14 @@ from computeBsplineVal import computeSplineVal
 from getStatVals import getSplineVals, getStatPts
 from getKnots import getKnots, import_knots
 
+print("Argument List:", str(sys.argv))
+args = len(sys.argv)
+print("There are ", args, " args")
+override_params = 0
+if args > 1 :
+    override_params = 1
+# print("arglist[1]: ", sys.argv[1])
+# print("matching with strings: ", sys.argv[1] == "invert=1")
 # first need to parse mel6config.txt, main difference from mel5 is voices
 
 file = "mel6config.txt"
@@ -121,6 +130,8 @@ keys = []
 bcoeffs_array = []
 gains = []
 sample_rate = 44100
+audio_source = ""
+# these are the params that are changeable on command line:
 interp_method = 1
 f0 = 220
 notes = 0
@@ -130,9 +141,66 @@ invert = 0
 retro = 0
 scale = 1
 shift = 0
-audio_source = ""
 voices = 0
 voice_scalar = 1
+waveform_scalar = 1
+
+def resetParams(param, val) :
+    if param == "sample_rate" :
+        sample_rate = val
+    if param == "interp_method" :
+        interp_method = val
+    if param == "f0" :
+        f0 = val
+    if param == "notes" :
+        notes = int(val)
+    if param == "stat" :
+        stat = int(val)
+    if param == "time0" :
+        time0 = val
+    if param == "invert" :
+        print("setting invert to: ", int(val))
+        invert = int(val)
+    if param == "retro" :
+        retro = int(val)
+    if param == "scale" :
+        scale = val
+    if param == "shift" :
+        shift = val
+    if param == "voices" :
+        voices = int(val)
+    if param == "voice_scalar" :
+        voice_scalar = val
+    if param == "waveform_scalar" :
+        waveform_scalar = val
+
+def printParams() :
+    param = "sample_rate"
+    print(param, ":  ", sample_rate)
+    param = "interp_method"
+    print(param, ":  ", interp_method)
+    param = "f0"
+    print(param, ":  ", f0)
+    param = "notes"
+    print(param, ":  ", notes)
+    param = "stat"
+    print(param, ":  ", stat)
+    param = "time0"
+    print(param, ":  ", time0)
+    param = "invert"
+    print(param, ":  ", invert)
+    param = "retro"
+    print(param, ":  ", retro)
+    param = "scale"
+    print(param, ":  ", scale)
+    param = "shift"
+    print(param, ":  ", shift)
+    param = "voices"
+    print(param, ":  ", voices)
+    param = "voice_scalar"
+    print(param, ":  ", voice_scalar)
+    param = "waveform_scalar"
+    print(param, ":  ", waveform_scalar)
 
 with open(file, 'r') as f:
     config_lines = f.readlines()
@@ -279,7 +347,53 @@ for i in range(N_config) :
                 index = line.find("=")
                 param = line[:index]
                 val = float(line[index+1:])
-                # print("param:", param, " value: ", val)
+                print("param:", param, " value: ", val)
+                if param == "sample_rate" :
+                    sample_rate = val
+                if param == "interp_method" :
+                    interp_method = val
+                if param == "f0" :
+                    f0 = val
+                if param == "notes" :
+                    notes = int(val)
+                if param == "stat" :
+                    stat = int(val)
+                if param == "time0" :
+                    time0 = val
+                if param == "invert" :
+                    print("setting invert to: ", int(val))
+                    invert = int(val)
+                if param == "retro" :
+                    retro = int(val)
+                if param == "scale" :
+                    scale = val
+                if param == "shift" :
+                    shift = val
+                if param == "voices" :
+                    voices = int(val)
+                if param == "voice_scalar" :
+                    voice_scalar = val
+                if param == "waveform_scalar" :
+                    waveform_scalar = val
+
+
+            j += 1
+            # print("j is now: ", j)
+
+# this is end of loop on config_lines[]
+
+printParams()
+
+print("resetting params ... ")
+
+if override_params > 0 :
+    for i in range(args - 1) :
+        line = sys.argv[1 + i]
+        if "=" in line :
+            index = line.find("=")
+            param = line[:index]
+            val = float(line[index+1:])
+            print("param:", param, " value: ", val)
             if param == "sample_rate" :
                 sample_rate = val
             if param == "interp_method" :
@@ -293,6 +407,7 @@ for i in range(N_config) :
             if param == "time0" :
                 time0 = val
             if param == "invert" :
+                print("setting invert to: ", int(val))
                 invert = int(val)
             if param == "retro" :
                 retro = int(val)
@@ -304,8 +419,11 @@ for i in range(N_config) :
                 voices = int(val)
             if param == "voice_scalar" :
                 voice_scalar = val
-            j += 1
-            # print("j is now: ", j)
+            if param == "waveform_scalar" :
+                waveform_scalar = val
+    
+# print("invert is now: ", invert)
+# printParams()
 
 if shift > 0 or shift < 0 :
     f0 = f0 * np.exp2(shift)
@@ -661,7 +779,7 @@ if voices > 1 :
             if abs(waveform[voice, j]) > 0 :
                 count += 1
                 temp += waveform[voice, j] 
-        mixed_waveform[j] = temp / voices
+        mixed_waveform[j] = (temp / voices) * waveform_scalar
         # if count > 0 :
         #   mixed_waveform[j] = temp / count
     waveform_out = torch.unsqueeze(mixed_waveform, dim=0)
@@ -700,6 +818,8 @@ summary += "number of notes =  " + str(notes)
 summary += ",  initial f0 = " + str(f0) + "\n\n"
 summary += "first note duration =  " + str(time0)
 summary += ",  total time in seconds = " + str(time2) + "\n\n"
+summary += "notes overlap =  " + str(voice_scalar)
+summary += ",  number of voices = " + str(voices) + "\n\n"
 summary += transform + " sequence of intervals between notes as cent values: \n"
 summary += cent_values + "\n\n"
 summary += transform + " sequence of intervals relative to initial f0 as 0: \n"

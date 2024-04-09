@@ -112,7 +112,8 @@ if args < 3 :
     print("<findCycles.py> <audiofilename.wav> <n> <seg_num>")
     print("to write report with graphs of cycles to pdf, and bcoeffs files")
     print("for each cycle to directory:  ", audio_prefix)
-    print("also add arg <f0_guess> to end of list to force f_0")
+    print("can also add arg <f0_guess> to end of list to force f_0")
+    print("<findCycles.py> <audiofilename.wav> <n> <seg_num> <f0_guess>")
     sys.exit(0)
 
 segment_size = 2048

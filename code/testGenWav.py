@@ -51,6 +51,8 @@ gains = [0.8,0.9,1.0,0.8,0.5,0.3,0.1]
 interp_method = 1
 key_bcoeffs = torch.zeros(num_keys, n)
 
+# here we assign the same bcoeffs to each row of key_bcoeffs, so all keys are the same spline
+# which defeats the purpose of cycle interpolation.
 print("assigning key_bcoeffs")
 for i in range(num_keys) :
     key_bcoeffs[i] = gains[i] * bcoeffs

@@ -1,0 +1,8 @@
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg8-cyc7.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg9-cyc16.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg10-cyc3.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg11-cyc2.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg12-cyc0.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg13-cyc1.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg14-cyc8.txt
+dulcimerA3-f/bcoeffs/bcoeffs-n40-seg15-cyc1.txt

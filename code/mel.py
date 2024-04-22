@@ -1,7 +1,7 @@
 
 # ----- Brief Description -----
 # 
-# mel.py is derived from melody6.py and is now the current melody generator.
+# mel.py is derived from melody6.py and is the current melody generator as of 4/2024.
 #
 # 1. use config file config.txt which contains the parameters used
 #    to construct the melody or melodic fragment from bcoeffs files etc.
@@ -827,6 +827,8 @@ summary += "number of notes =  " + str(notes)
 summary += ",  initial f0 = " + str(f0) + "\n\n"
 summary += "first note duration =  " + str(time0)
 summary += ",  total time in seconds = " + str(time2) + "\n\n"
+summary += "waveform scalar =  " + str(waveform_scalar)
+summary += ",   melody scalar = " + str(scale) + "\n\n"
 summary += "notes overlap =  " + str(voice_scalar)
 summary += ",  number of voices = " + str(voices) + "\n\n"
 summary += transform + " sequence of intervals between notes as cent values: \n"

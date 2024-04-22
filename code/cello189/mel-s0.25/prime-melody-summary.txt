@@ -1,0 +1,17 @@
+melody summary:
+
+number of notes =  12,  initial f0 = 110.0
+
+first note duration =  0.125,  total time in seconds = 1.5
+
+notes overlap =  1.0,  number of voices = 1
+
+prime sequence of intervals between notes as cent values: 
+88  -57  -72  23  22  54  1  -41  -106  9  43  
+
+prime sequence of intervals relative to initial f0 as 0: 
+0  88  30  -41  -17  4  59  60  19  -87  -77  -33  
+
+prime sequence of fundamental frequency f0 values: 
+110 115  111  107  108  110  113  113  111  104  105  107  
+

@@ -16,18 +16,23 @@
 
 import subprocess
 
-source = "dulcimerA3-f/"
-target = "dulcimerA3-f/greg/mel8/"
+y = "0.1"
+# name = "fluteA440"
+# name = "frhorn315"
+name = "cello189"
+
+source = name + "/"
+target = name + "/mel-s" + y + "/"
 
 subprocess.run(["python", "mel.py"])
 subprocess.run(["python", "mel.py", "invert=1"])
 subprocess.run(["python", "mel.py", "retro=1"])
 subprocess.run(["python", "mel.py", "invert=1", "retro=1"])
 
-subprocess.run(["cp", source + "melody-prime-5voices.wav", target])
-subprocess.run(["cp", source + "melody-inversion-5voices.wav", target])
-subprocess.run(["cp", source + "melody-retrograde-5voices.wav", target])
-subprocess.run(["cp", source + "melody-retrograde-inversion-5voices.wav", target])
+subprocess.run(["cp", source + "melody-prime.wav", target + name + "-mel-p-" + y + ".wav"])
+subprocess.run(["cp", source + "melody-inversion.wav", target + name + "-mel-i-" + y + ".wav"])
+subprocess.run(["cp", source + "melody-retrograde.wav", target + name + "-mel-r-" + y + ".wav"])
+subprocess.run(["cp", source + "melody-retrograde-inversion.wav", target + name + "-mel-ri-" + y + ".wav"])
 
 subprocess.run(["cp", source + "prime-melody-summary.txt", target])
 subprocess.run(["cp", source + "inversion-melody-summary.txt", target])

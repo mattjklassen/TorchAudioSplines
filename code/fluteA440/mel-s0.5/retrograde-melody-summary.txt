@@ -1,0 +1,19 @@
+melody summary:
+
+number of notes =  12,  initial f0 = 440.0
+
+first note duration =  0.125,  total time in seconds = 1.5
+
+waveform scalar =  2.0,   melody scalar = 0.5
+
+notes overlap =  1.0,  number of voices = 1
+
+retrograde sequence of intervals between notes as cent values: 
+-66  16  15  34  74  86  78  13  -42  -52  -70  
+
+retrograde sequence of intervals relative to initial f0 as 0: 
+-87  -154  -138  -122  -87  -12  73  151  165  122  70  0  
+
+retrograde sequence of fundamental frequency f0 values: 
+440 402  406  409  418  436  459  480  484  472  458  440  
+

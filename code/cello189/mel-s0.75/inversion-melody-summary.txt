@@ -1,0 +1,17 @@
+melody summary:
+
+number of notes =  12,  initial f0 = 110.0
+
+first note duration =  0.125,  total time in seconds = 1.5
+
+notes overlap =  1.0,  number of voices = 1
+
+inversion sequence of intervals between notes as cent values: 
+-266  173  216  -69  -66  -164  -3  124  318  -27  -131  
+
+inversion sequence of intervals relative to initial f0 as 0: 
+0  -266  -92  123  53  -12  -177  -181  -57  261  233  101  
+
+inversion sequence of fundamental frequency f0 values: 
+110 94  104  118  113  109  99  99  106  127  125  116  
+

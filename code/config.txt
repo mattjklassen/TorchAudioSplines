@@ -5,12 +5,16 @@
 
 KEYS:
 0.0
-4.0
-8.0
-12.0
+3.0
+6.0
+10.0
+15.0
 20.0
+25.0
+30.0
 40.0
-70.0
+60.0
+80.0
 100.0
 
 # key bcoeffs are used to build each tone with cycle interpolation
@@ -18,14 +22,18 @@ KEYS:
 # number of floats in each file determines n = dimension of splines (must all be equal for consistency)
 
 KEY BCOEFFS:
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg56-cyc2.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg57-cyc2.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg58-cyc1.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg59-cyc1.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg60-cyc0.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg61-cyc3.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg62-cyc0.txt
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg63-cyc4.txt
+cello189/bcoeffs-n40-seg1-cyc1.txt
+cello189/bcoeffs-n40-seg1-cyc9.txt
+cello189/bcoeffs-n40-seg3-cyc11.txt
+cello189/bcoeffs-n40-seg5-cyc17.txt
+cello189/bcoeffs-n40-seg7-cyc11.txt
+cello189/bcoeffs-n40-seg10-cyc3.txt
+cello189/bcoeffs-n40-seg15-cyc2.txt
+cello189/bcoeffs-n40-seg20-cyc7.txt
+cello189/bcoeffs-n40-seg25-cyc2.txt
+cello189/bcoeffs-n40-seg30-cyc5.txt
+cello189/bcoeffs-n40-seg35-cyc2.txt
+cello189/bcoeffs-n40-seg40-cyc12.txt
 
 # gains can be used to give an envelope by specifying one float per key cycle.
 # this can be useful if bcoeffs are the same for all key cycles
@@ -33,8 +41,12 @@ dulcimerA3-f/bcoeffs/bcoeffs-n40-seg63-cyc4.txt
 # if number of gains is less than number of keys, last value will be repeated
 
 KEY GAINS:
-0.8
-0.9
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
 1.0
 1.0
 0.9
@@ -50,14 +62,15 @@ KEY KNOTS:
 # key-knots.txt
 
 MELODIC CONTOUR:
-dulcimerA3-f/bcoeffs/bcoeffs-n40-seg63-cyc4.txt
+cello189/bcoeffs-n40-seg15-cyc2.txt
 
 # same comments as above for key-knots.txt also apply to mel-knots.txt.
+
 MEL KNOTS:
-# mel-knots.txt
+mel-knots.txt
 
 AUDIO SOURCE:
-dulcimerA3-f.wav
+cello189.wav
 
 PARAMS:
 # sample rate:
@@ -67,19 +80,19 @@ sample_rate = 44100.0
 interp_method = 1
 
 # fundamental frequency of first note:
-f0=220
+f0=110
 
 # number of notes in melody if using regularly spaced notes (use notes = 0 if stat = 1):
-notes=0
+notes=12
 
 # if stat = 1 then stationary points of melodic contour spline are used for melody:
-stat=1
+stat=0
 
 # duration of first note in melody in seconds:
-time0=0.25
+time0=0.125
 
-# duration of entire melody in seconds:
-total_time=6.5
+# duration of entire melody in seconds: (if 0 then use time0 instead, if > 0 then overrides time0)
+total_time=0
 
 # if invert is 1 then pitches of melody are inverted:
 invert=0
@@ -87,18 +100,19 @@ invert=0
 # if retro is 0 then retrograde melody is generated:
 retro=0
 
-# scale y axis of melodic contour spline, -1 < y < 1 gives two octaves, scale=2 gives 4 octaves:
-scale=20
+# scale y axis of spline, where original values -1 < y < 1 is a span of two octaves, so scale=2 gives 4 octaves:
+scale=0.1
 
 # shift y values by a constant, so shift=1 moves pitches up an octave:
 shift=0
 
 # number of voices overlapping in output (default for monophonic, no overlap is voices=1):
-voices=5
+voices=1
 
 # scalar to extend length of notes in each voice (only used if voices > 1)
-voice_scalar=1.3
+voice_scalar=1.0
 
 # scalar to multiply waveform sample values by
-waveform_scalar=20
+waveform_scalar=2
+
 

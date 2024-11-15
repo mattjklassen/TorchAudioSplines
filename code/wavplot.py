@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
-print("This is the name of the program:", sys.argv[0])
+# print("program:", sys.argv[0])
 print("Argument List:", str(sys.argv))
 
 audiofile = sys.argv[1]
@@ -28,6 +28,7 @@ k = end_sample - start_sample + 1
 
 obj = wave.open(audiofile, "rb")
 sr = obj.getframerate()
+sw = obj.getsampwidth()
 start_time = start_sample / sr
 end_time = end_sample / sr
 length_in_sec = k / sr
@@ -41,11 +42,21 @@ signal_len = nsamp / sr
 print("num samples:  ", nsamp)
 print("sample rate:  ", sr)
 print("signal length in sec:  ", signal_len)
+print("sample width:  ", sw)
 
-data_int = np.frombuffer(signal, dtype=np.int16)
-data = data_int.astype('float32')
-data /= 32768.0
-times = np.linspace(0, signal_len, num=nsamp)
+# 16-bit data:
+if sw == 2 :
+    data_int = np.frombuffer(signal, dtype=np.int16)
+    data = data_int.astype('float32')
+    data /= 32768.0
+    times = np.linspace(0, signal_len, num=nsamp)
+
+# 24-bit data:
+# if sw == 3
+#    data_int = np.frombuffer(signal, dtype=np.int16)
+#    data = data_int.astype('float32')
+#    data /= 32768.0
+#    times = np.linspace(0, signal_len, num=nsamp)
 
 # k = 50
 steps = k + 1
@@ -64,7 +75,7 @@ plt.xlabel("time in seconds")
 plt.xlim(start_time, end_time)
 plt.show()
 
-print("some sample values:")
-for i in range(start_sample, end_sample) :
-    print("sample number ", i, data[i])
+# print("some sample values:")
+# for i in range(start_sample, end_sample) :
+#     print("sample number ", i, data[i])
 

@@ -25,7 +25,7 @@ $firstline = "Suggested tests to run:\n\n";
 
 $newline = "> python torchSpline.py\n\n";
 push @guidelines, $newline;
-$newline = "... plots cubic spline on interval [0,1] interpolating n=20 points with values in [-1,1]\n";
+$newline = "... plots cubic spline on interval [0,1] interpolating n=10 points with values in [-1,1]\n";
 push @guidelines, $newline;
 $newline = "equal to zero at the ends and random values in between. Edit code to change n.\n\n";
 push @guidelines, $newline;

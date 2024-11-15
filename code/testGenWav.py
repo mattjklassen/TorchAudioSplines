@@ -27,16 +27,16 @@ from genWavTone import genWavTone
 
 # main part of script
 
-f0 = 110.0
+f0 = 60.0
 # f0 *= 1.059463
 # f0 *= 1.059463
-time = 0.25
 # time = 0.25
+time = 1.0
 sample_rate = 44100.0
 file = "bcoeffs1.txt"
 bcoeffs = import_bcoeffs(file)
 n = bcoeffs.size(dim=0)
-keys = torch.tensor([0,10,20,30,50,70,90])
+keys = torch.tensor([0,10,20,30,50])
 print("keys: ", keys)
 num_keys = keys.size(dim=0)
 # this key sequence works for one second at frequency 100 Hz
@@ -53,6 +53,7 @@ key_bcoeffs = torch.zeros(num_keys, n)
 
 # here we assign the same bcoeffs to each row of key_bcoeffs, so all keys are the same spline
 # which defeats the purpose of cycle interpolation.
+
 print("assigning key_bcoeffs")
 for i in range(num_keys) :
     key_bcoeffs[i] = gains[i] * bcoeffs
@@ -72,6 +73,7 @@ torchaudio.save(
     path, waveform, int(sample_rate),
     encoding="PCM_S", bits_per_sample=16)
 
+# retrieve and check
 path = "../audio/tone.wav"
 waveform, sample_rate = torchaudio.load(path)
 np_waveform = waveform.numpy()

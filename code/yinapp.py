@@ -38,15 +38,15 @@ print("shape of yinput:  ", yinput.shape)
 pitch = torchyin.estimate(
     yinput,
     sample_rate=sample_rate,
-    pitch_min=60,
+    pitch_min=50,
     pitch_max=1000,
 )
 
 print("shape of pitch tensor:  ", pitch.shape)
 print(pitch)
 
-print("some examples of resolution for yin pitch:")
-print("i   44100/i")
-for i in range(95,106) :
-    print(i, " : ", 44100/i)
+# print("some examples of resolution for yin pitch:")
+# print("i   44100/i")
+# for i in range(95,106) :
+#     print(i, " : ", 44100/i)
 

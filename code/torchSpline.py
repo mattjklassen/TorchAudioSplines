@@ -30,7 +30,7 @@ from computeBsplineVal import newBsplineVal
 from computeBsplineVal import computeSplineVal 
 
 # change n here to increase the number of random interpolation points.
-n = 10
+n = 6
 
 # leave d=3 for cubic splines
 d = 3

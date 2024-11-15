@@ -1,0 +1,91 @@
+# comment lines are ignored but blank lines are important to mark the end of reading a list
+
+# keys are based on length of tone = 1 second, at f0 = 110Hz
+# number of keys will be set to num_keys then bcoeffs are read in from that number of files
+
+KEYS:
+0.0
+20.0
+60.0
+
+# key bcoeffs are used to build each tone with cycle interpolation
+# key bcoeffs file names must contain "bcoeffs", and contents must be one float per line (as text)
+# number of floats in each file determines n = dimension of splines (must all be equal for consistency)
+
+KEY BCOEFFS:
+clarinetB1/bcoeffs/bcoeffs-n60-seg101-cyc5.txt
+clarinetB1/bcoeffs/bcoeffs-n60-seg102-cyc2.txt
+clarinetB1/bcoeffs/bcoeffs-n60-seg103-cyc0.txt
+
+# gains can be used to give an envelope by specifying one float per key cycle.
+# this can be useful if bcoeffs are the same for all key cycles
+# if not specified then gains will be set to 1.0 for all bcoeffs
+# if number of gains is less than number of keys, last value will be repeated
+
+KEY GAINS:
+1.0
+1.0
+1.0
+
+# uncomment key-knots.txt to use a special knot sequence for the key bcoeffs files, otherwise default
+# knot sequence will be used, which is the usual 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1 with k = n-3
+# with length N+1 = n+4 (n = N - d). 
+
+KEY KNOTS:
+# key-knots.txt
+
+MELODIC CONTOUR:
+clarinetB1/bcoeffs/bcoeffs-n60-seg101-cyc5.txt
+
+# same comments as above for key-knots.txt also apply to mel-knots.txt.
+
+MEL KNOTS:
+mel-knots.txt
+
+AUDIO SOURCE:
+clarinetB1.wav
+
+PARAMS:
+# sample rate:
+sample_rate = 44100.0
+
+# cycle interpolation method (1 = linear):
+interp_method = 1
+
+# fundamental frequency of first note:
+f0=110
+
+# number of notes in melody if using regularly spaced notes (use notes = 0 if stat = 1):
+notes=0
+
+# if stat = 1 then stationary points of melodic contour spline are used for melody:
+stat=1
+
+# duration of first note in melody in seconds:
+time0=0.25
+
+# duration of entire melody in seconds: (if 0 then use time0 instead, if > 0 then overrides time0)
+total_time=0
+
+# if invert is 1 then pitches of melody are inverted:
+invert=0
+
+# if retro is 0 then retrograde melody is generated:
+retro=0
+
+# scale y axis of spline, where original values -1 < y < 1 is a span of two octaves, so scale=2 gives 4 octaves:
+scale=2
+
+# shift y values by a constant, so shift=1 moves pitches up an octave:
+shift=0
+
+# number of voices overlapping in output (default for monophonic, no overlap is voices=1):
+voices=1
+
+# scalar to extend length of notes in each voice (only used if voices > 1)
+voice_scalar=1.0
+
+# scalar to multiply waveform sample values by
+waveform_scalar=2
+
+

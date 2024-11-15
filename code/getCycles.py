@@ -62,8 +62,8 @@ def getCycles(waveform, sample_rate, weakf0) :
     # sample value to the right or left by say 0.01 samples.  This could also be re-adjusted if we
     # do a sample rate change.  Not sure if this will cause other problems yet. 
 
-    a = 0.0  # left endpoint of cycle
-    b = 0.0  # right endpoint of cycle
+    a = 0.0  # left endpoint (float) of cycle
+    b = 0.0  # right endpoint (float) of cycle
     np_waveform = waveform.numpy() 
     num_channels, num_frames = np_waveform.shape
     # weakf0 is cycles/sec, sample_rate is samples/sec 
@@ -83,14 +83,15 @@ def getCycles(waveform, sample_rate, weakf0) :
         y0 = np_waveform[0,i]
         y1 = np_waveform[0,i+1]
         if (y0 < 0) and (y1 > 0) :  # positive slope and zero crossing conditions met
-#            print("sample ", i, " : ", y0)
-#            print("sample ", i+1, " : ", y1)
+            print("found positive zero crossing:")
+            print("sample ", i, " : ", y0)
+            print("sample ", i+1, " : ", y1)
             m = y1 - y0  # line is y(t) = y0 + mt = 0 when t = -y0/m
             zero = float(i) - y0 / m
             end_pts.append([y0,y1])
             zeros.append(zero)
-    # print("zeros:")
-    # print(zeros)
+    print("zeros:")
+    print(zeros)
 
     previous_closest = 0
     previous_diff = 100000

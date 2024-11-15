@@ -8,10 +8,10 @@
 #    Some parameters have been added, such as total_time for melody length.
 #    Also allow overriding of these parameters on command line.
 #
-# 2. add polyphony, or voicing:
+# 2. polyphony, or voicing:
 #    in addition to those configs in mel5config.txt we now control the duration
-#    of notes in various ways.  For instance, note durations can all be set to
-#    last for twice as long as the designated duration in the melody, so they overlap.
+#    of notes in various ways.  For instance, note durations can all be set with scale=1.5 to
+#    last for half again as long as the designated duration in the melody, so they overlap.
 #    The waveform for each note will then be stored in a buffer chosen from a list of 
 #    buffers, each representing a voice, or channel, and then these buffers will all 
 #    be mixed before writing the final output.  
@@ -33,7 +33,7 @@
 # ------- More Details --------
 # 
 
-# (old)
+# (previous comments)
 # Create melody based on spline curve using spline values y to determine pitch
 # and x values to determine time durations.  If notes=0 then we use stationary points
 # and if notes>0 we use that many equal divisions of the interval [0,1].
@@ -688,7 +688,7 @@ for i in range(notes) :
 
 # loop through notes and compute onset time + extended note time = endtime
 
-# the amount to scale note durations by for overlapping voices is set in config to voice_scalar
+# the amount by which to scale note durations for overlapping voices is set in config as voice_scalar
 
 # set total time for melody to duration_scalar (this is determined by the duration for first note)
 time2 = duration_scalar

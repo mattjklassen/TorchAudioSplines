@@ -44,6 +44,7 @@ print("Argument List:", str(sys.argv))
 special_knots = 0  # if 0 will default to standard knot sequence 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1.
 stat = 1   # if stat = 1 will plot stationary points where numerical derivative = 0
 hold = 1   # if hold = 1 will plot sample and hold line segments at stationary points
+scale = 3  # if scale > 1.0 then plot y values * scale
 
 bcoeffs_file = sys.argv[1]
 if len(sys.argv) > 2 :
@@ -141,7 +142,7 @@ print("size of xvals:  ", xvals.size)
 yvals = np.zeros(1001)
 for i in range(1001) :
     t = xvals[i]
-    yvals[i] = computeSplineVal2(d, bcoeffs, knotVals, t)
+    yvals[i] = computeSplineVal2(d, bcoeffs, knotVals, t) * scale
 
 # compute stationary points with (numerical) derivative approx = 0
 stat_pts = []
@@ -161,7 +162,7 @@ stat_yvals = torch.zeros(stat_num + 2)
 stat_xvals[-1] = 1
 for i in range(1, stat_num + 1) :
     stat_xvals[i] = stat_pts[i-1][0]
-    stat_yvals[i] = stat_pts[i-1][1]
+    stat_yvals[i] = stat_pts[i-1][1] 
 
 # testing getSplineVals() and getStatPts() here:
 new_splineVals = getSplineVals(bcoeffs, knotVals, 1000)
@@ -209,14 +210,14 @@ if stat == 1 :
     if hold == 1:
         for i in range(0, stat_num) :
             holdxvals = [stat_xvals[i], stat_xvals[i+1]]
-            holdyvals = [stat_yvals[i], stat_yvals[i]]
+            holdyvals = [stat_yvals[i] * scale, stat_yvals[i] * scale]
             plt.plot(holdxvals, holdyvals, 'blue')
     stat_xplot = torch.zeros(stat_num)
     stat_yplot = torch.zeros(stat_num)
     for i in range(stat_num) :
         stat_xplot[i] = stat_xvals[i]
-        stat_yplot[i] = stat_yvals[i]
-    plt.plot(stat_xplot, stat_yplot, 'ro')
+        stat_yplot[i] = stat_yvals[i] 
+    plt.plot(stat_xplot, stat_yplot * scale, 'ro')
 if stat == 0 :
     plt.plot(inputVals, outputVals, 'ro')
 # title is assigned earlier

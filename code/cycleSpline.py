@@ -108,6 +108,7 @@ def plotCycleSpline(waveform, sample_rate, cycle_num, a, b, n) :
     # count is the number of samples used to compute all values in [a,b]
     # if we are graphing a cycle spline, then count is the number of samples per cycle 
     count = int(end_sample - start_sample) + 1
+    count = int(b) - int(a)
     a_str = f'{a:.2f}'
     b_str = f'{b:.2f}'
     ba = b - a
@@ -346,7 +347,7 @@ def plotCycleSpline(waveform, sample_rate, cycle_num, a, b, n) :
     plt.plot(short_times, short_data, '0.8') # this defaults to piecewise linear, 0.8 is light grey
     plt.plot(xvals, yvals, 'g')  # spline plot, g = green
     cycle_title = "cycle " + str(cycle_num) + "  : "
-    cycle_title += str(count) + " samples: (" + str(start_sample) + " to " + str(end_sample) + ")"
+    cycle_title += str(count) + " samples: (" + str(start_sample) + " to " + str(end_sample-1) + ")"
     cycle_title += " piecewise linear in grey, spline in green (n=" + str(n) + ")"
     plt.title(cycle_title)
     plt.ylabel("sample float values")

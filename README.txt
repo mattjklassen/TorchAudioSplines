@@ -6,7 +6,7 @@ Suggested tests to run:
 
 > python torchSpline.py
 
-... plots cubic spline on interval [0,1] interpolating n=20 points with values in [-1,1]
+... plots cubic spline on interval [0,1] interpolating n=10 points with values in [-1,1]
 equal to zero at the ends and random values in between. Edit code to change n.
 
 > python wavspline.py ../audio/input.wav 200 500 20
@@ -20,10 +20,9 @@ with n = 20 interpolation points.
 approximation which uses torch.stft and takes the ArgMax bin below a set threshold, 
 then uses average of cycle lengths for refined f0, which may be a new method.
 
-> python findCycles.py 
+> python findCycles.py ../audio/audio_file.wav
 
-... finds cycles for audio file ../audio/guitarA445.wav using getCycles() 
-then prints pdf report to ../doc/out.pdf.
+... finds cycles for audio_file.wav using getCycles() then prints pdf report to ../doc/out.pdf.
 
 
 Summary of python files (in alphabetical order) with brief description of each:

@@ -1,0 +1,53 @@
+# these are bcoeffs files with spline dimension n=60
+# derived from the input clarinetB1.wav at 48000 sample rate
+# with fundamental frequency about 57.3 Hz.
+# This means about 840 samples per cycle.
+# Each segment is 2048 samples, which contains typically at least two cycles.
+# The file is about 10 seconds, 227 segments.
+# In the first 10 segments 0-9 we select one cycle, based on similarity.
+# After that we select one cycle from every fifth segment 10-50.
+# 5 segments is about 10K samples, or around 200 milliseconds.
+# 1 second is about 23 segments.
+# The cycles are quite stable in the first few seconds after attack.
+# The first notable deviation is at around 3.4 seconds, segment 73.
+
+# It would be good to have a script that selects key cycles according to
+# similarity, using a correlation type function, perhaps as simple as vector
+# dot product of bcoeffs for example.  This could be applied in order to arrive
+# at the most similar cycle to the previous cycles.  It might also need to have
+# an override setting, to choose particular cycles and let the rest be generated
+# by the comparison function.
+
+KEY BCOEFFS:
+clarinetB1/bcoeffs-n60-seg0-cyc9.txt
+clarinetB1/bcoeffs-n60-seg1-cyc1.txt
+clarinetB1/bcoeffs-n60-seg2-cyc1.txt
+clarinetB1/bcoeffs-n60-seg3-cyc0.txt
+clarinetB1/bcoeffs-n60-seg4-cyc0.txt
+clarinetB1/bcoeffs-n60-seg5-cyc0.txt
+clarinetB1/bcoeffs-n60-seg6-cyc0.txt
+clarinetB1/bcoeffs-n60-seg7-cyc1.txt
+clarinetB1/bcoeffs-n60-seg8-cyc0.txt
+clarinetB1/bcoeffs-n60-seg9-cyc2.txt
+clarinetB1/bcoeffs-n60-seg10-cyc1.txt
+clarinetB1/bcoeffs-n60-seg15-cyc0.txt
+clarinetB1/bcoeffs-n60-seg20-cyc0.txt
+clarinetB1/bcoeffs-n60-seg25-cyc2.txt
+clarinetB1/bcoeffs-n60-seg30-cyc1.txt
+clarinetB1/bcoeffs-n60-seg35-cyc1.txt
+clarinetB1/bcoeffs-n60-seg40-cyc0.txt
+clarinetB1/bcoeffs-n60-seg45-cyc3.txt
+clarinetB1/bcoeffs-n60-seg50-cyc3.txt
+clarinetB1/bcoeffs-n60-seg55-cyc3.txt
+clarinetB1/bcoeffs-n60-seg60-cyc3.txt
+clarinetB1/bcoeffs-n60-seg65-cyc3.txt
+clarinetB1/bcoeffs-n60-seg70-cyc3.txt
+clarinetB1/bcoeffs-n60-seg75-cyc3.txt
+clarinetB1/bcoeffs-n60-seg80-cyc3.txt
+clarinetB1/bcoeffs-n60-seg85-cyc3.txt
+clarinetB1/bcoeffs-n60-seg90-cyc3.txt
+clarinetB1/bcoeffs-n60-seg95-cyc3.txt
+clarinetB1/bcoeffs-n60-seg100-cyc3.txt
+clarinetB1/bcoeffs-n60-seg105-cyc3.txt
+
+

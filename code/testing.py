@@ -29,20 +29,24 @@ def changerow(matrix, row, col, val) :
 print("bcoeffs:  ")
 print(bcoeffs)
 
+print("changing last entry to 13")
 changerow(bcoeffs, 2, 3, 13)
 
 print("modified bcoeffs:  ")
 print(bcoeffs)
 
-
+print("row 0:")
 r0 = bcoeffs[0]
 print(r0)
 
 c0 = bcoeffs[:,0]
+print("col 0:")
 print(c0)
 c1 = bcoeffs[:,1]
+print("col 1:")
 print(c1)
 c2 = bcoeffs[:,2]
+print("col 2:")
 print(c2)
 
 new = torch.zeros(3,4)

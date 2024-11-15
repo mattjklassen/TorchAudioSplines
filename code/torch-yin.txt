@@ -29,6 +29,7 @@ def estimate(
     frame_stride: float = 0.01,
     threshold: float = 0.1,
 ) -> torch.Tensor:
+
     """estimate the pitch (fundamental frequency) of a signal
 
     This function attempts to determine the pitch of a signal via the

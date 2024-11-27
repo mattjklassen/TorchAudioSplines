@@ -13,9 +13,9 @@ KEYS:
 # number of floats in each file determines n = dimension of splines (must all be equal for consistency)
 
 KEY BCOEFFS:
+wavspline-bcoeffs.txt
+wavspline-bcoeffs.txt
 clarinetB1/bcoeffs/bcoeffs-n60-seg101-cyc5.txt
-clarinetB1/bcoeffs/bcoeffs-n60-seg102-cyc2.txt
-clarinetB1/bcoeffs/bcoeffs-n60-seg103-cyc0.txt
 
 # gains can be used to give an envelope by specifying one float per key cycle.
 # this can be useful if bcoeffs are the same for all key cycles
@@ -62,7 +62,7 @@ notes=0
 stat=1
 
 # duration of first note in melody in seconds:
-time0=1.0
+time0=0.6
 
 # duration of entire melody in seconds: (if 0 then use time0 instead, if > 0 then overrides time0)
 total_time=0
@@ -71,7 +71,7 @@ total_time=0
 invert=0
 
 # if retro is 1 then retrograde melody is generated:
-retro=1
+retro=0
 
 # scale y axis of spline, where original values -1 < y < 1 is a span of two octaves, so scale=2 gives 4 octaves:
 scale=2

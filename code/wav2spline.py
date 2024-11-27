@@ -4,14 +4,48 @@
 # [1] wav file 
 # [2] start sample number
 # [3] end sample number
-# [4] n (number of spline interpolation points = dimension of cubic spline vector space)
+# [4] n (number of B-spline coefficients = dimension of cubic spline vector space)
 # output graph with matplot is the original audio graph as piecewise linear function
-# overlayed with spline curve in green and interpolation points highlighted in red.
+# overlayed with spline curve in green spline coefficient points highlighted in red.
+# The spline has coefficients extractly directly from points of the audio waveform
+# and so is called a "pseudo-interpolation".
 #
 # ----- ----- ----- ----- -----
 
 # ------- More Details --------
 # 
+# This script differs from wavspline.py in that there is no interpolation done. Instead,
+# the points from the audio graph are used as B-spline coefficients directly. We call the
+# points from the audio waveform graph "pseudo-interpolation points", since they are set
+# up in a similar way.  For this to make sense positionally, we use input points on the
+# time axis located at the center points of the support of each B-spline.  For simple
+# knot values (evenly spaced, multiplicity one) this is just the center knot of the 5
+# knot values for that B-spline basis function.  For the first and last 3 B-splines,
+# their knot sequence is not simple.  These are, on the left: 
+# [0,0,0,0,1/k], [0,0,0,1/k,2/k], [0,0,1/k,2/k,3/k], and on the right:
+# [(k-3)/k,(k-2)/k,(k-1)/k,1,1], [(k-2)/k,(k-1)/k,1,1,1], [(k-1)/k,1,1,1,1]
+# For these B-splines we use the arg_max for each one, which for the first one is obtained
+# at t= 0, and for the other two (on the left) gives a stationary point
+# in the support of the B-spline, where the derivative is zero.  
+#
+# The derivative can be obtained with the recursive formula:
+# d/dt [ B^3_i(t) ] = 3 * [(t_{i+3}-t_i)^(-1)*B^2_i(t) - (t_{i+4}-t_{i+1})^(-1)*B^2_{i+1}(t)]
+# so for second B-spline (i=1) we get:
+# d/dt [ B^3_1(t) ] = 3 * [(t_4-t_1)^(-1)*B^2_1(t) - (t_5-t_2)^(-1)*B^2_2(t)]
+#      where B^2_1 has knots [0,0,0,1/k] and B^2_2 has knots [0,0,1/k,2/k]
+# = 3 * [k * B^2_1(t) - (k/2) * B^2_2(t)] 
+# = 3k * [B^2_1(t) - (1/2) * B^2_2(t)]
+# 
+# Better to just use an approximation for the arg_max of the B-splines on the ends.
+# We can do this by using c_0 = 0 = c_{n-1}, set delta = (1/3)*(1/k) and then use
+# c_1 = 1/k - delta, c_2 = 1/k + delta, c_3 = 2/k, ... c_{n-4} = (k-2)/k, and
+# c_{n-3} = (k-1)/k - delta, and c_{n-2} = (k-1)/k + delta.  So basically we are
+# using the sequence of k+1 values of endpoints of subintervals when [0,1] is divided up into
+# k subintervals of equal width, and then replacing the values 1/k and (k-1)/k each by two
+# values offset by 1/3 the length of the subintervals to the left and right of those.
+# This gives a sequence of length k+3 = n.
+#
+# Previous details from wavspline.py:
 # Important note: the spline interpolation points are not uniform. We did this when
 # forming splines to model cycles by choosing first a uniform sequence of k subintervals
 # for the cubic spline and a knot sequence for the basis of B-splines for the vector 
@@ -42,10 +76,8 @@ import sys
 
 from computeBsplineVal import newBsplineVal 
 from computeBsplineVal import computeSplineVal 
-from getBcoeffs import export_bcoeffs
 
-
-# print("Argument List:", str(sys.argv))
+print("Argument List:", str(sys.argv))
 
 audiofile = sys.argv[1]
 start_sample = int(sys.argv[2])
@@ -82,6 +114,7 @@ print("length of audio file in seconds:  ", signal_len)
 print("length of selection in samples:  ", count)
 print("length of selection in seconds:  ", length_in_sec)
 
+# assume 16-bit data, short int
 data_int = np.frombuffer(signal, dtype=np.int16)
 data = data_int.astype('float32')
 data /= 32768.0
@@ -93,17 +126,29 @@ short_data = np.zeros(steps)
 for i in range(0, count + 1) :
     short_data[i] = data[start_sample + i]
 
+# Previous comments:
 # We want to match audio data by computing input/output values using piecewise linear function
 # through the audio samples on the time interval I=[start_time, end_time].  We do this to match
 # the type of interpolation points we are choosing for the spline on the interval [0,1], by
 # first setting up k+1=n-2 subinterval endpoints uniformly on the interval I, then inserting two
 # more input values at the midpoints of outer subintervals, to get sequence interp_times.
 
+# New comments:
+# We change this now to use input points matching the above scheme, so now instead of inserting
+# two more values in the middle of the outer subintervals, we replace the values 1/k and (k-1)/k
+# by two values of equal distance (1/3)*(1/k) on either side.  This is still a net gain of one
+# value on either end, so total of k + 3 = n input points.
+
+
+# old version of inputs:
+# temp_times is the sequence of subinterval endpoints, k+1 = n-2 values
 temp_times = np.linspace(start_time, end_time, num=n-2)
 temp_incr = (end_time - start_time) / k
+# now move the first and last values half way toward closest value
 temp_times[0] = start_time + temp_incr / 2
 temp_times[n-3] = end_time - temp_incr / 2
-# we will use this as the middle of the sequence of inputs s_i
+# we will use this as the middle of the sequence of inputs
+
 interp_times = np.zeros(n)
 for i in range(1, n-1) :
     interp_times[i] = temp_times[i-1]
@@ -111,7 +156,13 @@ interp_times[0] = start_time
 interp_times[n-1] = end_time
 # now interp_times play the role of inputs s_i on interval I.
 # (we could also get interp_times just by scaling and shifting inputVals from[0,1])
-# print("interp times:  ", interp_times)
+print("interp times:  ", interp_times)
+
+# new version of inputs:
+interp_times[1] = start_time + (2/3) * temp_incr
+interp_times[2] = interp_times[1] + (2/3) * temp_incr
+interp_times[n-2] = end_time - (2/3) * temp_incr
+interp_times[n-3] = interp_times[n-2] - (2/3) * temp_incr
 
 interp_data = np.zeros(n)
 # end points are same as sample data
@@ -138,11 +189,16 @@ for i in range(1, n - 1) :
     y = c0 * data1 - c1 * data0
     interp_data[i] = y
 
-# print("interp data:  ", interp_data)
+print("interp data:  ", interp_data)
 # continuing with spline setup, targets for spline from audio data:
 targets = interp_data
 
-# print("targets:  ", targets)
+# for this new version we will simply use these targets as the B-spline coefficients.
+
+
+
+
+
 
 # subinterval size:
 incr = 1 / k
@@ -160,7 +216,7 @@ inputVals[n-1] = 1.0
 
 for i in range(3,n-2) :
     inputVals[i] = inputVals[i-1] + incr
-# print("inputs:  ", inputVals)
+print("inputs:  ", inputVals)
 
 for i in range(N+1) :
     knotVals[i] = (i-d) * incr
@@ -168,7 +224,7 @@ for i in range(N+1) :
         knotVals[i] = 0
     if (i > N-d-1) :
         knotVals[i] = 1
-# print("knots:  ", knotVals)
+print("knots:  ", knotVals)
 
 # In previous version we assumed bcoeffs c[0]=0=c[n-1], but now we allow these to be nonzero.
 # Since they still give the function value at the ends, we can simply set c[0]=data[0] and 
@@ -189,29 +245,30 @@ for i in range(N+1) :
 # where s_0=0, s_1=1/2k, s_2=1/k, s_3=2/k, ... , s_{n-3}=1-1/k, s_{n-2}=1-1/2k and s_{n-1}=1
 # row n-1: [B^3_0(s_{n-1}) B^3_1(s_{n-1}) ... B^3_{n-1}(s_{n-1})]
 
-A = torch.zeros(n, n)
+# A = torch.zeros(n, n)
 # print("matrix A =  ", A)
 
-for i in range(n) :
-    for j in range(n) :
-        A[i, j] = newBsplineVal(3, k, j, inputVals[i])
+# for i in range(n) :
+#    for j in range(n) :
+#        A[i, j] = newBsplineVal(3, k, j, inputVals[i])
 # print("matrix A =  ", A)
 
 # print("type(targets):  ", type(targets))
 
-b = torch.from_numpy(targets).float()
+# b = torch.from_numpy(targets).float()
 # print("torch.dtype(b):  ", torch.dtype(b))
 
 # Now need to solve A*c=b for c (bcoeffs vector c) with b = targets
-c = torch.linalg.solve(A, b)
-print("bcoeffs vector c =  ", c)
+# c = torch.linalg.solve(A, b)
+# print("bcoeffs vector c =  ", c)
 
-bcoeffs = []
-for i in range(len(c)) :
-    bcoeffs.append(float(c[i]))
+# in old version we had now computed c = bcoeffs vector, but now we use c = targets
 
-bcoeffs_file = "wavspline-bcoeffs.txt"
-export_bcoeffs(bcoeffs_file, bcoeffs)
+c = targets
+
+# for i in range(n) :
+#    c[i] = c[i] * 1.1
+
 
 # Next graph spline function (xvals, yvals) with the computed coefficients using 1000 points.
 

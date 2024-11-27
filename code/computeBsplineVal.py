@@ -22,6 +22,7 @@
 import numpy as np
 import torch
 
+# computeSplineVal(d, k, bcoeffs, t01)
 
 # computes f(t)
 def computeSplineVal2(d, bcoeffs, knotVals, t) :
@@ -61,6 +62,7 @@ def computeSplineVal2(d, bcoeffs, knotVals, t) :
 def computeSplineVal(d, k, c, t) :
     n = k + d  # dimension of splines
     N = n + d  # last index of knot sequence
+    # c = array of n B-spline coefficients 
 
     # these are the deBoor points, which are set for j=0 to control points c[i]
     controlCoeffs = torch.zeros(n, d+1)

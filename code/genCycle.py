@@ -69,6 +69,7 @@ def insertCycle(waveform, cycle, bcoeffs) :
         # evaluate splines on interval [0,1], so for any t in [a,b]
         # first transform to new t01 = (t-a)/(b-a)
         t01 = float((t - a) / (b - a))
+        # y is computed with knot sequence 0,0,0,0,1/k,...,(k-1)/k,1,1,1,1
         y = computeSplineVal(d, k, bcoeffs, t01)
     #    data[i] = y
         waveform[first_sample + i] = y

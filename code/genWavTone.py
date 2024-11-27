@@ -29,7 +29,7 @@ from computeBsplineVal import newBsplineVal
 from computeBsplineVal import computeSplineVal 
 from genCycle import genCycle, insertCycle, insertCycle2, insertCycle3
 
-
+# same as genWaveTone2 below but this one takes knotVals as parameter
 def genWavTone2(f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, interp_method) :
 
     # inputs:
@@ -153,6 +153,7 @@ def genWavTone2(f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, inter
     return waveform
 
 
+# this is original version without knotVals parameter
 def genWavTone(f0, time, sample_rate, key_bcoeffs, keys, gains, interp_method) :
 
     # inputs:
@@ -389,6 +390,7 @@ def insertWavTone(waveform, start_time, f0, time, sample_rate, key_bcoeffs, keys
         insertCycle(waveform, cycle, bcoeffs)
 
 
+# this one has knotVals as parameter
 def insertWavTone2(waveform, start_time, f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, interp_method) :
 
     # this is same function as genWavTone but instead of returning the waveform of the tone

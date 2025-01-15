@@ -29,6 +29,7 @@ import matplotlib.pyplot as plt
 from getBcoeffs import import_bcoeffs, export_bcoeffs
 from getKnots import import_knots, export_knots
 from getStatVals import getSplineVals, getStatPts
+from matplotlib.backends.backend_pdf import PdfPages
 
 # The next two functions are imported to compute using the deBoor algorithm.  The first one computes
 # the value of a single B-spline basis function for value t in [0,1].  This is necessary in order to

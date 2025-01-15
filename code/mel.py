@@ -8,7 +8,7 @@
 #    Some parameters have been added, such as total_time for melody length.
 #    Also allow overriding of these parameters on command line.
 #
-# 2. polyphony, or voicing:
+# 2. voicing:
 #    in addition to those configs in mel5config.txt we now control the duration
 #    of notes in various ways.  For instance, note durations can all be set with scale=1.5 to
 #    last for half again as long as the designated duration in the melody, so they overlap.

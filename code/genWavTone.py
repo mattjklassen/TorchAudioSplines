@@ -625,8 +625,10 @@ def reset(b) :  # forces a and b to avoid exact integer sample values
     newb = b
     if abs(b - math.floor(b)) < 0.01 :
         newb = math.floor(b) - 0.01
+        print("reset b to floor -0.01")
     if abs(b - math.ceil(b)) < 0.01 :
         newb = math.ceil(b) - 0.01
+        print("reset b to ceil -0.01")
     return newb
 
 # unused functions:

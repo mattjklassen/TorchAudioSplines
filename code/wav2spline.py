@@ -226,6 +226,9 @@ for i in range(N+1) :
         knotVals[i] = 1
 print("knots:  ", knotVals)
 
+# Next, we skip this whole section which solved for bcoeffs with linear system:
+
+########################### ########################### ###########################
 # In previous version we assumed bcoeffs c[0]=0=c[n-1], but now we allow these to be nonzero.
 # Since they still give the function value at the ends, we can simply set c[0]=data[0] and 
 # c[n-1]=data[n-1], then need to solve for remaining c[i].  Also, the points will not all
@@ -261,9 +264,10 @@ print("knots:  ", knotVals)
 # Now need to solve A*c=b for c (bcoeffs vector c) with b = targets
 # c = torch.linalg.solve(A, b)
 # print("bcoeffs vector c =  ", c)
+########################### ########################### ###########################
 
+# MAIN DIFFERENCE HERE:
 # in old version we had now computed c = bcoeffs vector, but now we use c = targets
-
 c = targets
 
 # for i in range(n) :

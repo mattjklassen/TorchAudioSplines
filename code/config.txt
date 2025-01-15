@@ -5,17 +5,29 @@
 
 KEYS:
 0.0
+10.0
 20.0
+30.0
+40.0
+50.0
 60.0
+70.0
+80.0
 
 # key bcoeffs are used to build each tone with cycle interpolation
 # key bcoeffs file names must contain "bcoeffs", and contents must be one float per line (as text)
 # number of floats in each file determines n = dimension of splines (must all be equal for consistency)
 
 KEY BCOEFFS:
-wavspline-bcoeffs.txt
-wavspline-bcoeffs.txt
-clarinetB1/bcoeffs/bcoeffs-n60-seg101-cyc5.txt
+cello189/bcoeffs/bcoeffs-n90-seg20-cyc0.txt
+poly_tones/8-9-10-11/poly_bcoeffs.txt
+cello189/bcoeffs/bcoeffs-n90-seg20-cyc0.txt
+poly_tones/7-8-9-10/poly_bcoeffs.txt
+cello189/bcoeffs/bcoeffs-n90-seg20-cyc0.txt
+poly_tones/6-7-8-9/poly_bcoeffs.txt
+cello189/bcoeffs/bcoeffs-n90-seg20-cyc0.txt
+poly_tones/5-6-7-8/poly_bcoeffs.txt
+cello189/bcoeffs/bcoeffs-n90-seg20-cyc0.txt
 
 # gains can be used to give an envelope by specifying one float per key cycle.
 # this can be useful if bcoeffs are the same for all key cycles
@@ -23,8 +35,14 @@ clarinetB1/bcoeffs/bcoeffs-n60-seg101-cyc5.txt
 # if number of gains is less than number of keys, last value will be repeated
 
 KEY GAINS:
+0.8
+0.9
 1.0
+1.0
+0.8
+0.7
 0.6
+0.4
 0.2
 
 # uncomment key-knots.txt to use a special knot sequence for the key bcoeffs files, otherwise default
@@ -35,7 +53,7 @@ KEY KNOTS:
 # key-knots.txt
 
 MELODIC CONTOUR:
-clarinetB1/bcoeffs/bcoeffs-n60-seg101-cyc5.txt
+cello189/bcoeffs/bcoeffs-n90-seg20-cyc0.txt
 
 # same comments as above for key-knots.txt also apply to mel-knots.txt.
 
@@ -43,7 +61,7 @@ MEL KNOTS:
 mel-knots.txt
 
 AUDIO SOURCE:
-clarinetB1.wav
+cello189.wav
 
 PARAMS:
 # sample rate:
@@ -53,7 +71,7 @@ sample_rate = 44100.0
 interp_method = 1
 
 # fundamental frequency of first note:
-f0=110
+f0=50
 
 # number of notes in melody if using regularly spaced notes (use notes = 0 if stat = 1):
 notes=0
@@ -62,7 +80,7 @@ notes=0
 stat=1
 
 # duration of first note in melody in seconds:
-time0=0.6
+time0=0.4
 
 # duration of entire melody in seconds: (if 0 then use time0 instead, if > 0 then overrides time0)
 total_time=0

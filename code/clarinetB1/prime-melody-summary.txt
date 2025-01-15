@@ -1,19 +1,19 @@
 melody summary:
 
-number of notes =  21,  initial f0 = 110.0
+number of notes =  16,  initial f0 = 50.0
 
-first note duration =  0.6,  total time in seconds = 13.953488372093021
+first note duration =  0.4,  total time in seconds = 5.970149253731344
 
 waveform scalar =  1.0,   melody scalar = 2.0
 
 notes overlap =  1.0,  number of voices = 1
 
 prime sequence of intervals between notes as cent values: 
-1115  -1681  1065  -1010  1414  -470  -1380  2034  -1147  1233  -630  -1218  1133  -1328  1034  -936  1086  -1461  928  -470  
+591  271  -261  230  -1909  107  5  485  -142  1585  -129  91  -1473  364  -138  
 
 prime sequence of intervals relative to initial f0 as 0: 
-0  1115  -565  500  -510  904  433  -946  1088  -59  1173  542  -675  457  -870  163  -772  314  -1147  -218  -689  
+0  591  863  601  831  -1077  -969  -964  -479  -621  963  834  926  -547  -182  -321  
 
 prime sequence of fundamental frequency f0 values: 
-110 209  79  146  81  185  141  63  206  106  216  150  74  143  66  120  70  131  56  96  73  
+50 70  82  70  80  26  28  28  37  34  87  80  85  36  44  41  
 

@@ -3,6 +3,7 @@
 # 
 # Generate waveform given fundamental frequency f0 and key cycles using cycle interpolation. 
 # genWavTone() returns waveform as tensor, insertWavTone writes into larger waveform tensor.
+# genWavTone2() has input for knot_vals
 # inputs:  f0 = fundamental frequency, sample_rate = sample rate
 # time = waveform duration in seconds,
 # key_bcoeffs = B-spline coefficients vectors of each key cycle,
@@ -36,12 +37,12 @@ def genWavTone2(f0, time, sample_rate, key_bcoeffs, knotVals, keys, gains, inter
     # f0 - fundamental frequency in Hz
     # time - in decimal seconds 
     # sample_rate - integer typically 16000 or 48000 or 44100
-    # key_bcoeffs - tensor (m by n matrix) of (row) vectors of bcoeffs for each cycle
-    # keys - integers which give the placement of key cycles within the sequence of all cycles
+    # key_bcoeffs - tensor (m by n matrix) of (row) vectors of n bcoeffs for each cycle
+    # keys - m integers which give the placement of key cycles within the sequence of all cycles
     # (keys need to be less than the total number of cycles for the predicted time) 
-    # gains - a sequence of scalars to multiply each key cycle by 
-    # (the previous three arrays all have the same size)
-    # interp_method - for cycle interpolation, 0 = none (constant), 1 = linear, 2 = quadratic, 3 = cubic
+    # gains - a sequence of m scalars to multiply each key cycle by 
+    # (the previous three arrays all have the same size m)
+    # interp_method - for cycle interpolation, 0 = none (constant hold), 1 = linear, 2 = quadratic, 3 = cubic
     
     # output:
     # tensor of floats as output sample values

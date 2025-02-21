@@ -25,6 +25,19 @@ from computeBsplineVal import newBsplineVal
 # where a,b are float samples, ie. time values measured in samples (typically sub-sample)
 # and time zero is start of waveform, max time is last sample t_max, 0 \leq a < b \leq t_max.
 # Return a list of bcoeffs of size n as PyTorch tensor.
+# Note: the input waveform is processed in a few steps:
+
+# the initial wavefrom tensor typically comes from a call like this:
+# waveform, sample_rate = torchaudio.load(path)
+# np_waveform = waveform.numpy() 
+# num_channels, num_frames = np_waveform.shape
+## i^th sample value is now np_waveform[0,i] (but becomes data below)
+## number of samples = num_frames
+# data = torch.squeeze(waveform).numpy()
+## i^th sample value is now data[i]
+# waveform can also be a segment coming from segments[i] where:
+# segments = torch.split(waveform, segment_size, dim=1)
+
 
 def getBcoeffs(waveform, sample_rate, cycle, n) :
 
@@ -34,8 +47,8 @@ def getBcoeffs(waveform, sample_rate, cycle, n) :
     # use these two sample values to compute interpolated values at a and b: 
     start_sample = math.floor(a) 
     end_sample = math.ceil(b)
-    print("a = ", a, "  b = ", b)
-    print("start_sample = ", start_sample, "  end_sample = ", end_sample)
+    # print("a = ", a, "  b = ", b)
+    # print("start_sample = ", start_sample, "  end_sample = ", end_sample)
 
     # count is the number of samples used to compute all target values in [a,b]
     # and thus also to compute all the B-spline coefficients for the cycle spline.

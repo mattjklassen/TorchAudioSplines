@@ -316,8 +316,6 @@ def plotCycleSpline(waveform, sample_rate, cycle_num, a, b, n) :
     # print("bcoeffs vector c =  ", c)
     bcoeffs = c
     
-    # NEED TO: write bcoeffs to file
-
     # Next graph spline function (xvals, yvals) with the computed coefficients using 1000 points.
     
     xvals = np.linspace(start=0.0, stop=1.0, num=1000)

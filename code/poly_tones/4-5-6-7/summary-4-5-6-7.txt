@@ -1,8 +1,0 @@
-polyphonic tone summary:
-
-ratios and cent values: 
-
-interval 1:  ratio = 5/4 with cent value =  386
-interval 2:  ratio = 6/5 with cent value =  315
-interval 3:  ratio = 7/6 with cent value =  266
-interval 4:  ratio = 7/4 with cent value =  968

@@ -45,7 +45,7 @@ print("Argument List:", str(sys.argv))
 special_knots = 0  # if 0 will default to standard knot sequence 0,0,0,0,1/k,2/k,...,(k-1)/k,1,1,1,1.
 stat = 1   # if stat = 1 will plot stationary points where numerical derivative = 0
 hold = 1   # if hold = 1 will plot sample and hold line segments at stationary points
-scale = 3  # if scale > 1.0 then plot y values * scale
+scale = 1  # if scale > 1.0 then plot y values * scale
 
 bcoeffs_file = sys.argv[1]
 if len(sys.argv) > 2 :

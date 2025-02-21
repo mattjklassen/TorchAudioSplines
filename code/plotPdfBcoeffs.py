@@ -236,7 +236,8 @@ plt.xlabel('time axis')
 print("number of stat_pts: ", stat_num)
 print(stat_pts)
 
-plot_path = head + "/" + "bcoeffs_plot.pdf"
+# plot_path = head + "/" + "bcoeffs_plot.pdf"
+plot_path = "plots/" + "bcoeffs_plot.pdf"
 pp = PdfPages(plot_path)
 plt.savefig(pp, format='pdf')
 plt.close()

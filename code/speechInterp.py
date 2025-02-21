@@ -4,12 +4,12 @@
 # In this script we process a wav file of one second containing a speech sample such as one word.
 # Default sample rate, as for many speech datasets, is 16K
 # This script will find cycles in each segment of length 1000 samples.
-# Each of the cycles should correspond to a fundamental frequency f0 in that segment.
+# Each of the cycles should correspond to a weak fundamental frequency f0 in that segment.
 # Such f0 are predicted with FFT, so that we use an arg_max as weak f0 then use zero crossings.
 # Positive zero crossings (positive slope at each crossing) determine cycle end points.
 #
 # To set some parameters, we will restrict f0 to be in the range 50-500 Hz.  
-# This reasonable for human speech, especially since we will do reconstruction with
+# This is reasonable for human speech, especially since we will do reconstruction with
 # cycle interpolation, where it is not so important if we are representing any particular
 # audio portion with a good f0 or some multiple of it (harmonic) or subharmonic.
 # We will choose 16 cycles, one from each of the 1000-sample segments.
@@ -30,8 +30,8 @@
 # 7 * 53.33 = 373.31 and 7 * 72.73 = 509.11.  The average number of samples per cycle for
 # this interpolation is 450/7 = 64.28.  Using linear interpolation for 7 intermediate cycle
 # lengths, we would have the sum for i = 1 to 7 of (1-i/8)*a+(i/8)*b with a = 72.7 and b = 53.3.
-# This sum is 441, which is reasonably close to 450. The error of about 9 samples could be
-# distributed evenly to each of the intermediate cycle lengths.  
+# This sum is 441, which is reasonably close to 450. We can convert this to quadratic growth
+# of cycle lengths and eliminate the error.
 #
 # In summary, we take the two cycle lengths, say K_0 and K_1 and the number of samples between,
 # say L, and then find integers M so that K_0 < L/M < K_1 or K_0 > L/M > K_1.  M should also
@@ -40,7 +40,7 @@
 # string of consecutive such M, choose M in the middle.)  M is the number of intermediate cycles.
 # Next, use linear interpolation between K_0 and K_1 and sample with M equally spaced points to
 # find values for the intermediate cycle lengths, I_1,...,I_M.  These will not necessarily add up
-# to L, but this doesn't really matter.
+# to L, so we use quadratic solution.
 #
 # For a more extreme example, suppose K_0 = 40 and K_1 = 300, and L = 560.  Then we have the 
 # possible values for M = 14 (560/14 = 40), 13, 12, ... , 3 (560/3 = 186), 2 (560/2 = 230).
@@ -50,10 +50,7 @@
 # M = 4: 680, M = 3: 510, the winner.  The cycle lengths are 105, 170, and 235.  These can
 # obviously be adjusted to get closer to 560, but it's a start.  
 # 
-# It might work better to choose midpoints of intermediate cycles, then allow the endpoints to
-# line up and still maintain the full interval between as length L.  This would go something like:
-# Set J_0 and J_1 to be the midpoints of C_0 and C_1.   
-
+# The above was written before we worked out the quadratic method ...
 
 
 

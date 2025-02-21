@@ -81,7 +81,11 @@ def getCycles(waveform, sample_rate, weakf0) :
     # loop over samples in waveform to find zeros with positive slope:
     for i in range(int(num_frames - 2)) :
         y0 = np_waveform[0,i]
+        if abs(y0) < 0.00001 :
+            y0 = -0.00001
         y1 = np_waveform[0,i+1]
+        if abs(y1) < 0.00001 :
+            y1 = -0.00001
         if (y0 < 0) and (y1 > 0) :  # positive slope and zero crossing conditions met
             print("found positive zero crossing:")
             print("sample ", i, " : ", y0)
